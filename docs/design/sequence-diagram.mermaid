@@ -1,0 +1,112 @@
+%% JLPT N3 词汇学习 App — 关键时序图
+%% 单文件、单图（mermaid 仅允许一个 title）；用 Note 分隔三条主链路
+%% 参与对象均为设计中定义的真实类/端口
+sequenceDiagram
+  autonumber
+  title JLPT N3 App — 关键时序：链路①学习跳转 / 链路②TTS / 链路③数据流
+
+  actor U as 用户
+  participant P0 as P0 Home
+  participant ACT as store/actions
+  participant SS as studySession
+  participant SRS as engine/srs
+  participant JR as engine/jumpRules
+  participant P2 as P2 Study
+  participant C2 as C2 DetailSheet
+  participant P3 as P3 VocabDetail
+  participant P5 as P5 GrammarDetail
+  participant NAV as router/navigation
+  participant TB as TtsButton/热区
+  participant TC as ttsController
+  participant TF as engine/tts facade
+  participant TP as tts.native/web
+  participant UI as 视觉反馈
+  participant GEN as scripts/gen-data
+  participant VAL as validate
+  participant JSON as data/build/*.json
+  participant REPO as data/repository
+  participant SEL as store/selectors
+  participant GL as engine/graph view+layout
+
+  Note over U,UI: ═══ 链路①：首页 → ❨续学❩ → P2 → 自评「不认识」→ jumpRules → C2 → P3 → 例句语法 → P5 ═══
+
+  U->>P0: 点「继续学习」
+  P0->>ACT: startStudy(moduleId)
+  ACT->>SS: startStudy(moduleId)
+  SS->>SS: 读 SESSION.lastWordIndex → 计算词序
+  SS-->>NAV: goStudy(moduleId)
+  NAV-->>P2: 渲染 P2 当前卡
+  Note over P2: 点整卡热区 → ttsController.speak(word.kana)（见链路②）
+
+  U->>ACT: 点「不认识」
+  ACT->>SRS: applySelfEval(p, '不认识', now)
+  SRS-->>ACT: Progress(state='需强化', wrongCount+1, seen=true)
+  ACT->>JR: evaluate(JumpContext, 'selfEval')
+  JR-->>ACT: JumpDecision[]（J1 / J2 / J5 / J6）
+
+  alt 首次遇词 (word.seen===false) → J1 自动详解
+    ACT->>C2: openDetailedSheet()
+    C2-->>U: 半屏引导「要不要看看详解」
+    U->>C2: 点「查看详解」
+    C2->>NAV: goVocab(wordId)
+    NAV-->>P3: 渲染 P3（读音/活用表J5/释义/例句/关联chipsJ6）
+  else 会话连错 ≥2 → J2 引导
+    ACT->>C2: openPromptSheet()
+    C2-->>U: 弹「要不要看看详解」
+    alt 确认
+      C2->>NAV: goVocab(wordId)
+      NAV-->>P3: 渲染 P3
+    else 忽略
+      C2-->>P2: 继续下一张卡
+    end
+  end
+
+  U->>P3: 点例句内高亮语法
+  Note over P3: J3 判定 grammar.learned===false → 已高亮+下划线
+  P3->>NAV: goGrammar(grammarId)
+  NAV-->>P5: 渲染 P5（接续/场景/例句TTS/近义辨析/涉及词汇）
+
+  Note over U,UI: ═══ 链路②：TTS 从点击到发声（含降级分支） ═══
+
+  U->>TB: tap 发音热区
+  TB->>TC: speak(word.kana, {rate, pitch})
+  TC->>UI: 立即置 speaking=true（≤100ms 视觉反馈）
+  TC->>TF: getCapability()
+  TF-->>TC: 'supported' | 'unsupported' | 'gesture-required'
+
+  alt unsupported
+    TC->>UI: 明确提示「当前浏览器不支持语音，建议用 App/系统浏览器」+「复制假名」
+    Note over UI: 零静默失败
+  else gesture-required（iOS 首次非手势内）
+    TC->>UI: 首屏静音解锁 / 提示「点击试听」
+  else supported
+    TC->>TF: speak(text, opts)
+    alt 原生
+      TF->>TP: NativeModules.TTSEngine.speak(text, rate, pitch)
+    else Web
+      TF->>TP: speechSynthesis.speak(utt, lang='ja-JP')
+      Note over TP: 按 ja 前缀过滤 voice + voiceschanged 兜底
+    end
+    TP-->>TF: TtsResult
+    TF-->>TC: TtsResult
+    alt ok
+      TC->>UI: 播放 → 结束置 speaking=false
+    else 失败 no-ja-voice / blocked / error
+      TC->>UI: 明确提示（不静默）
+    end
+  end
+  Note over TC,TP: 朗读文本恒取 WORD.kana；'main thread' 内禁止调用 Native Module
+
+  Note over GEN,GL: ═══ 链路③：数据从构建期 JSON 到页面渲染 ═══
+
+  GEN->>GEN: 读取 data/source/seed/* 并 build-*
+  GEN->>JSON: 产出 5 个构建文件
+  GEN->>VAL: 校验（schema + 引用完整性 + 枚举）
+  VAL-->>GEN: 通过→入库 / 失败→退出码≠0
+  Note over REPO: rspeedy 打包进 bundle 后
+  REPO->>JSON: import（构建产物）
+  REPO->>REPO: 建索引 byId / byModule / sentencesByWord
+  SEL->>REPO: 查询（今日队列/阶段完成度/当前词序）
+  GL->>REPO: 查询（图谱节点/关系）
+  REPO-->>P0: 纯查询结果（无来源分支）
+  Note over REPO,P0: 真实数据替换仅改 JSON，页面/引擎零改动
