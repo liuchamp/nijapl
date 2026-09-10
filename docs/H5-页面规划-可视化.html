@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="L9PCBGn9ptt9dE5wXFB2Lu">
+<head data-page-node-id="PYFp6PfVPAWhJOgjW0tBsP">
+<meta charset="UTF-8" data-page-node-id="TdGNqKvnERbEPh3ipxRw48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="dnOb89XgS9yyhB5NUeeyAf">
+<title>JLPT N3 词汇学习 H5 · 页面规划</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --text:#1f2933; --muted:#6b7684;
+    --line:#e4e7eb; --blue:#1565c0; --blue-bg:#e3f2fd;
+    --amber:#ef6c00; --amber-bg:#fff3e0; --green:#2e7d32; --green-bg:#e8f5e9;
+    --purple:#6a1b9a; --purple-bg:#f3e5f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.7;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 24px 80px}
+  header{background:linear-gradient(135deg,#1565c0,#1976d2);color:#fff;border-radius:16px;
+    padding:32px 34px;margin-bottom:32px;box-shadow:0 8px 24px rgba(21,101,192,.18)}
+  header h1{margin:0 0 8px;font-size:27px;letter-spacing:.5px}
+  header p{margin:0;opacity:.9;font-size:14px}
+  .badges{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+  .badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+    padding:4px 12px;border-radius:20px;font-size:12.5px}
+  h2{font-size:21px;margin:44px 0 16px;padding-left:12px;border-left:5px solid var(--blue)}
+  h3{font-size:16px;margin:26px 0 10px;color:#374151}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:24px 26px;margin-bottom:18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}
+  th{background:#f0f3f7;text-align:left;padding:10px 12px;font-weight:600;
+    border-bottom:2px solid var(--line);white-space:nowrap}
+  td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  .idx{font-weight:700;color:var(--blue);white-space:nowrap}
+  .diagram{background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:18px;margin:14px 0;overflow-x:auto}
+  .diagram .title{font-size:13px;font-weight:700;color:var(--muted);
+    text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+  .diagram svg{max-width:100%;height:auto}
+  .note{background:#fff8e1;border-left:4px solid #f9a825;padding:12px 16px;
+    border-radius:0 8px 8px 0;font-size:14px;margin:14px 0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+  .pbox{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fbfcfd}
+  .pbox .pid{display:inline-block;background:var(--blue);color:#fff;font-size:11.5px;
+    font-weight:700;padding:2px 9px;border-radius:6px;margin-bottom:8px}
+  .pbox .pname{font-weight:700;font-size:15px;margin-bottom:4px}
+  .pbox .pdesc{font-size:13px;color:var(--muted)}
+  ul{margin:8px 0;padding-left:22px}
+  li{margin:5px 0;font-size:14.5px}
+  code{background:#eef1f5;padding:2px 6px;border-radius:4px;font-size:13px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .tag{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:5px;margin-right:4px}
+  .t-blue{background:var(--blue-bg);color:var(--blue)}
+  .t-amber{background:var(--amber-bg);color:var(--amber)}
+  .t-green{background:var(--green-bg);color:var(--green)}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:50px}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:10px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+</style>
+</head>
+<body data-page-node-id="Qu5g6wIXtjqv7d5XE9XMan">
+<div class="wrap" data-page-node-id="7ZGs59N4b0GbekoQPUpoi9">
+
+<header data-page-node-id="ESyJmFGAhJKw6A0gU0wz4V" style="background:linear-gradient(135deg,#6b7684,#5f6b7a)">
+  <h1 data-page-node-id="abxHFrogfYg6x6b748h2Hj">JLPT N3 词汇学习 H5 · 页面规划 v1.0（已过期）</h1>
+  <p style="background:rgba(255,255,255,.95);color:#8a4b00;padding:10px 14px;border-radius:8px;margin:0 0 12px;font-weight:600">⚠️ 本页为 v1.0 历史展示稿，技术方案（React/Vite/mermaid/localStorage/Web Speech）已作废。<br/>最新规划请以 <code style="background:#f5e6c8;color:#6b3a00">docs/词汇学习应用-页面规划-v1.1.md</code> 为准 —— 运行时已改为 Lynx 跨平台（可打包 H5）。</p>
+  <p data-page-node-id="arimU5D1BEPu2TKghBRMxE">角色：产品经理 ｜ 目标：把 992 词条 + 230 句型做成「能学、能听、看得见进度、跳得进详解、理得清关系」的移动端应用</p>
+  <div class="badges" data-page-node-id="ii8Z1sfnX6Q5OaMDJmxSQE">
+    <span class="badge" data-page-node-id="VmIb2NbCg2yBaiKqbBpobs">992 词条</span>
+    <span class="badge" data-page-node-id="FFyQqvELXrWnBKUMdbFZRR">3 阶段 / 41 模块</span>
+    <span class="badge" data-page-node-id="Lpue0BexbSQXDNo7yopPA8">230 语法句型</span>
+    <span class="badge" data-page-node-id="XDiIND7DNTtPeTkdAcio8a">10 页面 + 2 全局组件</span>
+    <span class="badge" data-page-node-id="mVOj2GRJbuwZIaoqpZHDED">Mermaid 知识图谱</span>
+  </div>
+</header>
+
+<h2 data-page-node-id="LFn4THHv1Q1H9ubpfWk9Bv">一、需求 → 功能映射</h2>
+<div class="card" data-page-node-id="rKeqQVpqVt8uttWzvq1S3d">
+<table data-page-node-id="KOjXLroRzqc6Gof8C6oDzE">
+  <tr data-page-node-id="cH5CbGNcScEYhH9MFlEILN"><th style="width:38px" data-page-node-id="9iA8QaJK0U9Xzxt5CqORUm">#</th><th data-page-node-id="aCfEvaUJpvMvG21xVNyJMq">原始需求</th><th data-page-node-id="L5nuCpYBWeXMAVvKeLHv0j">产品解读</th><th data-page-node-id="WsdBaPkwCtIAei7joT9LFX">承担页面</th></tr>
+  <tr data-page-node-id="5ageh6bpZRyA8xbOqd9eb3"><td class="idx" data-page-node-id="K9s7vdmXZepQBrGhMXDhhA">1</td><td data-page-node-id="oGNRxtXDQMmAtRts3dscoB">词汇学习功能</td><td data-page-node-id="8ihws0FFlnJGJVuYldv43b">按「阶段 → 模块 → 词条」三级组织，卡片式学习 + SRS 复习</td><td data-page-node-id="q7lGeFCnrZtFM1lp04kGxF">P1 / P2 / P7</td></tr>
+  <tr data-page-node-id="LLE859NXMwyQslgAvvc02a"><td class="idx" data-page-node-id="ujOWvqWQNs6BZboHEiMs5p">2</td><td data-page-node-id="GjR0RITA8Cszny5x8eGeGs">点击词汇可以发音</td><td data-page-node-id="2oL2FcyZhiorcghhGrE8Oj">全局 TTS 引擎，点词点句即读，日语音色</td><td data-page-node-id="zy6sE6c0YEJDpbcBI8YTUk">C1 + P2/P3/P5/P8</td></tr>
+  <tr data-page-node-id="LvMBtCGYJBSeEefdCn2XBC"><td class="idx" data-page-node-id="8sjfGLCO0ArgV81bjQbLk4">3</td><td data-page-node-id="MRlCDfuKcwsTgdbpmHMGra">按阶段看学习进度</td><td data-page-node-id="uCCtCOF71Ov9EpyKFPlLt0">阶段 → 模块 → 词条 三级完成度可视化</td><td data-page-node-id="mcLmS2wxSLwSSDybmfVdeO">P0 / P1</td></tr>
+  <tr data-page-node-id="Q0uWGKJVHUDYP0OvDnrYzk"><td class="idx" data-page-node-id="RlieqHszk5yAdHceSQYCMJ">4</td><td data-page-node-id="hZ5hDWVXdB51DZgAMn8Dgw">词汇语法可详解、适时跳转</td><td data-page-node-id="NvOfiPPzaLyP7iGnvqfzK1">详解页 + <b data-page-node-id="cGJAWlTnzVCjAM5xohwxq2">跳转时机规则引擎</b>，而不是让用户自己找</td><td data-page-node-id="f3TfqGrPKnmxqqPwAXm4Md">P3 / P5 / C2</td></tr>
+  <tr data-page-node-id="nck0klXKMzLhD0NaUXFRzn"><td class="idx" data-page-node-id="SKziYWisFgjfrtRv6TnZVD">5</td><td data-page-node-id="0PtH22SB3KZp6vvMGDJrgg">脑图呈现关联知识点</td><td data-page-node-id="HPWTxL8dAfrJNJRR4H5xkt">知识图谱页，三视图 + 节点可点跳转</td><td data-page-node-id="s1MYW6GAFn4PxvE8VDT0Il">P6</td></tr>
+</table>
+</div>
+
+<h2 data-page-node-id="jQFqco7rof1xjhAwYAqpxE">二、页面清单（10 页 + 2 组件）</h2>
+<div class="card" data-page-node-id="LWgorCwoOZxFgYAVGm0LWe">
+<div class="grid" data-page-node-id="mkFx1EH9S9HFj1JhsxDHtE">
+  <div class="pbox" data-page-node-id="Lrpj6JiZnDGKawdzcC3Oxh"><span class="pid" data-page-node-id="EfV0XJ4SmEBRDKdNEHUePa">P0</span><div class="pname" data-page-node-id="aAfn7UyQzWyKjeyXBSJnOR">首页 · 学习仪表盘</div><div class="pdesc" data-page-node-id="GRXYggnRCoeEf0RXREe146">今天学什么、学到哪了、还差多少（Tab）</div></div>
+  <div class="pbox" data-page-node-id="ed2ahQWTzasO6t2Ik1k04g"><span class="pid" data-page-node-id="pxUxraYANl2DYmNmB4fwte">P1</span><div class="pname" data-page-node-id="3ek6E3EMSpwCT52FdhbvhB">阶段地图</div><div class="pdesc" data-page-node-id="EhtFpElFgu4keKpICSoPg0">全局进度树：阶段 → 模块 → 词条（Tab）</div></div>
+  <div class="pbox" data-page-node-id="AK2drLdpCbLhoiRsqKsHHe"><span class="pid" data-page-node-id="hajBFjis5VCDZA0VxM00C1">P2</span><div class="pname" data-page-node-id="wyjCWTMb6XtMB2dDYW5LIU">词汇学习</div><div class="pdesc" data-page-node-id="kHLyQj1b7uWBkf6wCLEMSB">卡片流，点词发音，三档自评（核心枢纽）</div></div>
+  <div class="pbox" data-page-node-id="nzZLQ9uGC6LaCPuAQdsz1S"><span class="pid" data-page-node-id="JNSAlwdogDQUyDdGUbDShn">P3</span><div class="pname" data-page-node-id="jz0C2DmFeyUG7LJxJbcw3h">词汇详解</div><div class="pdesc" data-page-node-id="CI4ORbuS9CMMbtNrhymBDa">单词全档案 + 例句 + 关联跳转</div></div>
+  <div class="pbox" data-page-node-id="btZ3h4pQ40wsRrp7EO3lPB"><span class="pid" data-page-node-id="jeOJF94eHCYbffta9VPLcd">P4</span><div class="pname" data-page-node-id="fuIBBmddzh8mkj2kgvWmgx">语法列表</div><div class="pdesc" data-page-node-id="YTN4hg7zsdUnNOvYQpUJ82">230 句型按周次 / 层级检索（Tab）</div></div>
+  <div class="pbox" data-page-node-id="NWTvfLk3CHpU5tR7MbpIfG"><span class="pid" data-page-node-id="zaX0VxMcdsgQPtFbt4VcrE">P5</span><div class="pname" data-page-node-id="erPAqo5KCG4TIf3LBtH8Hj">语法详解</div><div class="pdesc" data-page-node-id="WDVpllEP2CyvFFJrU4m8tm">接续 + 场景 + 近义辨析 + 关联</div></div>
+  <div class="pbox" data-page-node-id="2QxUI2FtW3ZSW392moFHY9"><span class="pid" data-page-node-id="kYf1ayXcZL8FUGpKteZaeY">P6</span><div class="pname" data-page-node-id="G15iigKh4pATkNJGHaXLYP">知识图谱</div><div class="pdesc" data-page-node-id="OCWSD9PFNTRDnkMyYdlOe0">脑图 / 关系图，节点可点跳转</div></div>
+  <div class="pbox" data-page-node-id="0gGG2bPNbjeVn0yjV4HiEP"><span class="pid" data-page-node-id="9sNbtYF7D3ehL7n6r3m1OL">P7</span><div class="pname" data-page-node-id="qlLgEc89os7GGNIIlXQMdn">复习</div><div class="pdesc" data-page-node-id="hO1phxXE5Sz2Un3asiYSoz">今日待复习 + 错词本（Tab）</div></div>
+  <div class="pbox" data-page-node-id="yJB4uk02rBmJeUiF46lU0O"><span class="pid" data-page-node-id="Z7fF1TWT1znQi56TotUkUJ">P8</span><div class="pname" data-page-node-id="VKQnPu0neKHCqRSK23tojx">自测</div><div class="pdesc" data-page-node-id="YFHrACPYL9HUskfcxArRXz">日→中 / 中→日 / 听音选词</div></div>
+  <div class="pbox" data-page-node-id="pwBSZ4GzXFzDVsSjGUDZ4D"><span class="pid" data-page-node-id="ZUiOqPxYU7Xd0qthxvztfW">P9</span><div class="pname" data-page-node-id="MSPskAEf5fAtDnSvFbNe2b">我的</div><div class="pdesc" data-page-node-id="jCrGIuf5vkHqmQKBFkcOh1">发音设置、目标、统计、导出（Tab）</div></div>
+</div>
+<div style="margin-top:16px" data-page-node-id="szS5R9MLGpoqPhAc2AlGm2">
+<span class="tag t-green" data-page-node-id="DLGzFII2M2PeiAl87P0eyF">C1 全局 TTS 播放器</span>
+<span class="tag t-green" data-page-node-id="0dt4kcwI4NF9QscR8Lwypv">C2 详解跳转浮层</span>
+<span style="font-size:13.5px;color:var(--muted)" data-page-node-id="vNB4MA2clHxlh8CzdHCg5E">底部 Tab 定为 5 个：<b data-page-node-id="lbAVIob2ypvcqPDJoMnTd7">首页 / 阶段 / 语法 / 复习 / 我的</b></span>
+</div>
+</div>
+
+<h2 data-page-node-id="GMQsmuJDwQ3f4mwDPOOULz">三、页面关系总图（站点地图）</h2>
+<div class="card" data-page-node-id="offq6c5cFNIVc0GKkZnKVC">
+<div class="diagram" data-page-node-id="JQy7eJ9utFRsIVqRG8PODA"><div class="title" data-page-node-id="k2rb0r3CKVRCYgxTDCEeTp">图 1 · 站点地图与导航关系</div><div id="d1" data-page-node-id="2EBcKOhadeeTgsn2thogu8"></div></div>
+<div class="legend" data-page-node-id="xuPsp1UvIQVy53T7oDz8EE">
+  <span data-page-node-id="FGYZTOpyDAGUQSG1FwSkL0"><i style="background:#e3f2fd;border:1px solid #1565c0" data-page-node-id="arNrHC87yh9iuNr8NjB9iA"></i>Tab 主页面</span>
+  <span data-page-node-id="qyqZEdMdtjIs5rhLrYB65C"><i style="background:#fff8e1;border:1px solid #f9a825" data-page-node-id="Xd2sVyI7KZYOkpIpbmZAYE"></i>二级页面</span>
+  <span data-page-node-id="Cge2wMIzGrMcuvufGHlWDo"><i style="background:#e8f5e9;border:1px solid #2e7d32" data-page-node-id="HY5DRdhym6Fh91Y8QjEqLO"></i>全局组件</span>
+</div>
+<div class="note" data-page-node-id="fQ66gJ1TLnYiBzRmNpehnB"><b data-page-node-id="4wDCUPkgg1ydKa4gQFYi1p">关系要点</b><br data-page-node-id="Z7LkP0a1wpB6F0rBXhSWJW">
+• <b data-page-node-id="GXbibYKCL24yaT5sf9XBcE">P2 是流量枢纽</b>：首页、阶段地图、复习三条主路径都汇入它，所有学习行为在此发生。<br data-page-node-id="RXhdzytucdo7SAKPAlPYJV">
+• <b data-page-node-id="uzXsmDaztxTACI5U8spBH4">P3 / P5 是知识沉淀层</b>：出口一律是 P6（图谱）或回到 P2，不再外扩。<br data-page-node-id="orP2pnG6rfA0ZSM9XuqeFC">
+• <b data-page-node-id="8VpDRsySCFilCyf3iM9cKE">P6 是连接器</b>：不生产内容，只把 P2 / P3 / P5 横向串起来，是需求 5 的落点。<br data-page-node-id="ZdSDpiwEweIcCWmkBIAAQ6">
+• <b data-page-node-id="rEBRu12LuOBjotVu1c2WtW">C1 横切所有页面</b>：发音不是某一页的功能，而是全局能力。</div>
+</div>
+
+<h2 data-page-node-id="Grt9ZWgEVImZWrWDHe9y3D">四、跳转触发规则（需求 4 的「适当时候」）</h2>
+<div class="card" data-page-node-id="cW1CBE58MUt7ITlcJDAzeo">
+<div class="diagram" data-page-node-id="oYlCuTiUAOrlv7DkCpNtFY"><div class="title" data-page-node-id="B7sknP6Ji9B6NHIJgLKbfI">图 2 · 何时跳详解的决策流</div><div id="d2" data-page-node-id="oPXt0wSxJRW2AIIOwTGCyY"></div></div>
+<h3 data-page-node-id="x8oi6ptrIMv5NPc9YgaYPG">规则表（可直接写成配置 jumpRules.ts）</h3>
+<table data-page-node-id="Zpg7sCiCBUeMaYqFOfHIFx">
+  <tr data-page-node-id="CCZ1SatG71SoZ7J53JxoWp"><th data-page-node-id="29ugySSuhv2V9q1urP2qAa">触发时机</th><th data-page-node-id="HxifAFcRdBhD4gaBNNZ4Bz">条件</th><th data-page-node-id="3mdDQhd1uIZbfmWtsAfrdk">动作</th><th data-page-node-id="XXj8M5drm0WvH3GodgeejY">目标</th></tr>
+  <tr data-page-node-id="WqCGekjjnDkwX6KR8SUmMJ"><td data-page-node-id="jWNLHooARX4YM9pHydlgLo">首次遇词</td><td data-page-node-id="L6deHDJURudAQtqh1qSG3C"><code data-page-node-id="dKlh57wy99BS3YRKGiKEMV">word.seen === false</code> 且自评「不认识」</td><td data-page-node-id="8jBqzOBUA9uiz3Q4tE7h0v">自动展开详解浮层</td><td data-page-node-id="O0kaEDgCPRvhbzzJStheYR">P3</td></tr>
+  <tr data-page-node-id="IROZ01CJlaVmNE3cDVDhec"><td data-page-node-id="UNNsmo6iA6AJS8YGbm4C8J">连续答错</td><td data-page-node-id="2fRem2YuAffILZUO5bIDhQ"><code data-page-node-id="HBOOyGvF9ERnDdkOePPckO">word.wrongCount &gt;= 2</code></td><td data-page-node-id="xVs0XEoI5TibNFqXCI93bE">弹「要不要看看详解」</td><td data-page-node-id="tdxlzGqFsG2CoFvv8Elw64">P3（确认后）</td></tr>
+  <tr data-page-node-id="DiVC5UrJt1EPtU9Wy7hMsU"><td data-page-node-id="azI013DyrGwPjlj4VIneLH">例句含生语法</td><td data-page-node-id="yhCJkRBCowYR2Qm5XowuId"><code data-page-node-id="q2B2Xf0CmrP8og6nEAAqqP">grammar.learned === false</code></td><td data-page-node-id="riysJwEs8HOaxG3oj0Heh8">语法文字高亮 + 下划线</td><td data-page-node-id="4VHKNG5IT0MH1NDXyclRNc">P5（点击后）</td></tr>
+  <tr data-page-node-id="mRVOY4gGA1JL9dhi2x4RnD"><td data-page-node-id="rP4XoC12H84ag5rMngaOUW">模块学完</td><td data-page-node-id="Lom4gCewWOaosHIxzbunps"><code data-page-node-id="GZKzVzzzfvBAbNjbLf5ZYO">learned / total === 1</code></td><td data-page-node-id="otre25qv9FMyU7Qk8I8SdT">弹「本模块知识脑图」</td><td data-page-node-id="ZhaUBCqDJtml7MGUPFy0Tn">P6</td></tr>
+  <tr data-page-node-id="hBm8VVpqLxFDrLB1Q0gni1"><td data-page-node-id="aGd3q9w08my2fYyUHDhscc">词性为动词</td><td data-page-node-id="ZUqkiboNtVS0CBLD01GyUm"><code data-page-node-id="u1b3ww1sETdd7JrXhOyIBS">pos ∈ {五, 一, サ, 不}</code></td><td data-page-node-id="SHU9ou0bm785h00dYG1MPp">详解页自动附「变形表」区块</td><td data-page-node-id="8ktO4vPXWuqRpT6BzFtfdO">P3 内锚点</td></tr>
+  <tr data-page-node-id="C94BWQZwIK4KWeacDPYRfj"><td data-page-node-id="XX2mzn1Ss9DkbylbqW80jB">存在近义/反义</td><td data-page-node-id="iUuemXHycokYVHQhqVhQOL"><code data-page-node-id="wvYRBlALm8JQetISrYF4fH">word.related.length &gt; 0</code></td><td data-page-node-id="qLjbB8q9OdrV2bMkrEcMac">详解页显示关联 chips</td><td data-page-node-id="UhXf4aMFAJlwxSALgBF3zg">P3 → P3</td></tr>
+</table>
+</div>
+
+<h2 data-page-node-id="SCjwHg3O5pKkDtXVO9QEb6">五、学习状态机与数据模型</h2>
+<div class="card" data-page-node-id="PmqzE1h7G8O6IogT6WxgCY">
+<div class="diagram" data-page-node-id="HsRnh6GfXLKHFD2t4WAIhB"><div class="title" data-page-node-id="9DsORp1Db7MkDePUcoCJml">图 3 · 词条 SRS 状态流转</div><div id="d3" data-page-node-id="Df7Bwk39sJ3W1Sy4GmNHPN"></div></div>
+<div class="diagram" data-page-node-id="BrRewVY0KBwh9xICY904Bo"><div class="title" data-page-node-id="P8DnZ3CXxKoAI7Xqq5vtZk">图 4 · 数据模型 ER</div><div id="d4" data-page-node-id="umvwNdD79ximkeqRhzXo0Q"></div></div>
+<div class="note" data-page-node-id="DmXLhwTQRWpIXOX1PmtWmi"><b data-page-node-id="HD7cOo9BjFlJoZJslDUAPi">PM 备注（数据缺口）</b>：备考计划是「基础期 / 强化期 / 冲刺期」三段，而词汇表只有三个「阶段」。
+建议显式映射：第一阶段→基础期、第二阶段→强化期前半、第三阶段→强化期后半，<b data-page-node-id="35WSV0A3cPZTGo5HcEQ8ga">冲刺期无新词、仅复习模考</b>。
+阶段地图应渲染 <b data-page-node-id="sjEJMJa4Ox2owyJO9sABdn">4 个阶段节点</b>，第 4 个标注「冲刺期 · 纯复习」，避免用户以为内容缺失。</div>
+</div>
+
+<h2 data-page-node-id="2Bm1jxPQn9XGQ0MlDj442J">六、知识图谱（需求 5）</h2>
+<div class="card" data-page-node-id="yudqT56iHE3SCsjyyW7e4P">
+<table data-page-node-id="qGcAxMDF1orSKAzjL7wvLT">
+  <tr data-page-node-id="3xeT8KXiyPtyzxmIadPQbq"><th data-page-node-id="FxRSx1TGGIZOh5YhMMv7WR">视图</th><th data-page-node-id="99Fx7Zbp5G5d9cazuaMY78">内容</th><th data-page-node-id="Kk5U599bse0wLy7ekhMC8J">入口</th></tr>
+  <tr data-page-node-id="1S9iJ3BFcAzCFMXytnKrZo"><td data-page-node-id="TMN6zBc0mTuIDM9YgUcf5v">全景脑图</td><td data-page-node-id="hSQHq1TUDaKOzeeMsy7JH3">3 阶段 → 41 模块 全展开</td><td data-page-node-id="oNuLKAIaAI4YiQjkkd5VI9">P1 长按模块 / P0 入口</td></tr>
+  <tr data-page-node-id="NqXjBEHH9MNGXO0JJLMej5"><td data-page-node-id="KncHkfaIPyNs7zpQcsMK3d">词条局部图</td><td data-page-node-id="xny3NCZE6q79ZJxDzJLEEo">中心词 → 近义 / 反义 / 同模块 / 派生 / 相关语法</td><td data-page-node-id="EmQRRAKB51lax1w0sy1S16">P3「查看关系图」按钮</td></tr>
+  <tr data-page-node-id="P4Bg2HTDFVOYFBsMH0TUIJ"><td data-page-node-id="lIhLPW4c6Tu6SgPkUuZIH4">语法关系图</td><td data-page-node-id="TP1Jq2HEIADUJ1WYtjmtxI">句型 → 上位 / 下位 / 近义 / 对立</td><td data-page-node-id="0xDhUgIINrwOADO8FpkYHR">P5「打开脑图」按钮</td></tr>
+</table>
+<div class="diagram" data-page-node-id="1chMOEieIbPRrhKrYsvfeC"><div class="title" data-page-node-id="bOwAwEwt6Jg9hJ4v3UwknN">图 5 · 全景脑图（mermaid mindmap）</div><div id="d5" data-page-node-id="JKT33efVbNxmmM7gxsPQr2"></div></div>
+<div class="diagram" data-page-node-id="DFrz9ZZHZ4moBhv8hC89Dc"><div class="title" data-page-node-id="Ev0lQnJIbAtc7zD1oKCA8n">图 6 · 词条局部关系图（点击「関係」时）</div><div id="d6" data-page-node-id="EfRTD23Qc0JH15T23LRI0f"></div></div>
+<div class="note" data-page-node-id="5eA7JjxmivudqVJAkoyZS3">交互：节点可点跳转、双指缩放、聚焦高亮（当前节点实线，其余淡化）、已掌握节点打勾。
+图谱由数据驱动生成 mermaid 源码，<b data-page-node-id="E9WlRk1T6fIh3m9d9vQdxf">改数据即改图</b>，无需手绘。</div>
+</div>
+
+<h2 data-page-node-id="tSdHxuCBGRnFEAcM1ST57k">七、一次学习会话（发音 + 跳转时序）</h2>
+<div class="card" data-page-node-id="DVD8WMUAnXXmbhj32J9UOP">
+<div class="diagram" data-page-node-id="KdGiU1hF4Zpwr4J6roCVnm"><div class="title" data-page-node-id="i4iCTJl68jH3aosOvzr8c9">图 7 · 学习会话时序图</div><div id="d7" data-page-node-id="qBXDgQe7Z1aXAJnAfruWka"></div></div>
+</div>
+
+<h2 data-page-node-id="fVPv2IfsUvJEvICUakpjdU">八、发音方案（需求 2）</h2>
+<div class="card" data-page-node-id="t51hqQJsJPBFrFIiIS5Htd">
+<table data-page-node-id="03GhmvkKzdaUfdCpufd7Fr">
+  <tr data-page-node-id="5zWgGvPjjnIEfzZJdplrfw"><th data-page-node-id="hYB1ZhX7kWED3SjFiuMcGz">层级</th><th data-page-node-id="E0WsBrmBLfClffvGuVpOs6">方案</th><th data-page-node-id="TeAjdtQR2lxxaq2b2geeNH">说明</th></tr>
+  <tr data-page-node-id="fiCSsS9jsbsjntBvxkL3tl"><td data-page-node-id="gPasFaXHpR65rBtPa6m35z">首选</td><td data-page-node-id="j4BMVBNnlMPFRLtB8WkSKE">Web Speech API <code data-page-node-id="IVcfcr8zgGoWbqidTMpE1a">speechSynthesis</code>，<code data-page-node-id="6wwdKrkbO5AXyLSJK7ooqN">lang="ja-JP"</code></td><td data-page-node-id="WLXICZKS8C0YpaDsrKgmLc">零成本零体积，iOS / Android / Chrome 均支持</td></tr>
+  <tr data-page-node-id="se3LwlHA038ZJ6vvqG3Blp"><td data-page-node-id="ii56jj1WfEvEbZTKxGuWsR">增强</td><td data-page-node-id="bxFa0aSbyCcyeRO70VFgoD">优先挑选 Google 日本語 / Otoya / Kyoko 等 ja 音色</td><td data-page-node-id="lg1D5srRs2harMWWiRpypD">音色列表在 P9 可切换</td></tr>
+  <tr data-page-node-id="qAAIHg4ufdHuMsPp88IhAR"><td data-page-node-id="N0Hwl8xEUBAELPYLxllDfQ">降级</td><td data-page-node-id="OuNyBlNIlAgb3w89AfTOFk">音色缺失时提示安装日语语音包，允许预置 mp3</td><td data-page-node-id="TWInEmAiFlhzNqY6zB565j">保证不出现「点了没声音」</td></tr>
+  <tr data-page-node-id="DAMCCCByQuuCDIiyQPwR2r"><td data-page-node-id="K3yUMHIvnV3PHu210QiDvt">关键坑</td><td data-page-node-id="9hCndBXjDGTcmfFZeaN3tr">iOS Safari 必须在<b data-page-node-id="ggvPWeq5YaN7I0gDZWiJHD">用户手势内</b>首次调用</td><td data-page-node-id="hTQuTTUZxHtHf0ZjIAlKrD">首屏静音解锁 + P9 提供「试听」</td></tr>
+</table>
+<p style="font-size:14px" data-page-node-id="ppCQU9or4EekRUTUJUt8l3"><b data-page-node-id="7Qv44RLBp9saAkwB3I5LA6">可配置项（P9）</b>：语速 0.5–1.5、音调、卡出现即读、训读/音读选择。</p>
+<p style="font-size:14px" data-page-node-id="9MYnEfxqKQahIobMovSKmm"><b data-page-node-id="JmFnlnEsfDE9mL8BtMLiBI">交互设计</b>：发音热区 = <b data-page-node-id="MttsOJtyvPV88slMPNpgAR">整张卡片</b>，不只是小喇叭图标；例句整句也可点朗读。</p>
+</div>
+
+<h2 data-page-node-id="iqnlayuMj23ge3q0gKEy6T">九、技术方案</h2>
+<div class="card" data-page-node-id="eDmYzQZIJcId07bEBHlY9J">
+<table data-page-node-id="DbgXXZp0NSfKwxidMM7ALb">
+  <tr data-page-node-id="LK8Kr26sFVOptLf6ECCoLQ"><th data-page-node-id="WlQq1KleHH0nUVHi106gLz">项</th><th data-page-node-id="hIf5ktyjyDZwF4Bahln4hJ">选型</th><th data-page-node-id="bRvDVTCKdozr48ymQcgpU8">理由</th></tr>
+  <tr data-page-node-id="3LPn6D6LaB7qYELuoU4eH7"><td data-page-node-id="DnvfBrOEU371dHuLmS9NI3">框架</td><td data-page-node-id="fQrOxBn6sXF1GBkmgWtEEi">React 18 + Vite + TypeScript</td><td data-page-node-id="wcTJypm55G0TBvkX2tfxlc">沿用现有 Vite 技术栈</td></tr>
+  <tr data-page-node-id="S6G2MfMMt0D0wU5IsjY8Jw"><td data-page-node-id="xBNPVYjFxGM4NiHfiWoG3l">状态</td><td data-page-node-id="94uy05YEOe2EEwf8dE6K5D">Zustand + 持久化</td><td data-page-node-id="SDbEExQGBtrX5sOKlNKayW">轻量，localStorage 一行接入</td></tr>
+  <tr data-page-node-id="g4HB0ajDk9ZFNDf59yWJfk"><td data-page-node-id="QRUhlYQEAgHb8WqmPT1wo4">存储</td><td data-page-node-id="hY1nmvttfIMrF8smeUHfAz">localStorage（v1）→ IndexedDB</td><td data-page-node-id="uotjDhQMzMF5PUBb75L1XO">992 条进度数据 localStorage 足够</td></tr>
+  <tr data-page-node-id="M4l0Nioi6AIZi1izNNxR0g"><td data-page-node-id="SmgPeSC6nVnJAgf0r0f3kY">脑图</td><td data-page-node-id="gLi25afcx1iFcpGlTgvl7E"><b data-page-node-id="U3IHXhyTuSiGvIFyMOK7sB">mermaid.js</b>（mindmap / flowchart）</td><td data-page-node-id="HuiDTNT837QjbPCGpOMWj7">需求指定，数据驱动</td></tr>
+  <tr data-page-node-id="eMuCh7XlVco0qo3UDuHYVb"><td data-page-node-id="o1YkbUxgFQadHz59aoX9kU">数据</td><td data-page-node-id="NonBom1L6YIlPafqT8ssSC">构建期 CSV → JSON 打进包</td><td data-page-node-id="KyUw89UT6pv1p96TRMSL0f">992 条全量离线，无后端</td></tr>
+  <tr data-page-node-id="JzWr2ZkSB0uggGMsgWCqlf"><td data-page-node-id="zBy1cpvzB1W5gFHTDS9zpe">部署</td><td data-page-node-id="HzoG1MdwWmUp3B0bTDHQK8">静态站点 + PWA</td><td data-page-node-id="IKcP7C2XVyE0y6XwvL0qVr">手机桌面图标，离线可学</td></tr>
+</table>
+<h3 data-page-node-id="FmQhs6SWBYVy49aAQNsrqI">目录结构</h3>
+<pre style="background:#1f2933;color:#e8eef5;padding:16px 18px;border-radius:10px;overflow-x:auto;font-size:13px;margin:8px 0" data-page-node-id="UdHTzk50uFA6TdXSFdsQz2"><code data-page-node-id="l2hQ0dG4ZSYAxxTgJP0lSd">src/
+  data/        # words.json / grammar.json / stages.json（CSV 构建产物）
+  engine/
+    tts.ts       # C1 全局发音引擎
+    srs.ts       # 间隔重复调度
+    jumpRules.ts # 需求4 跳转规则
+    progress.ts  # 阶段/模块/词条 三级进度
+  pages/
+    Home/ StageMap/ Study/ VocabDetail/
+    Grammar/ GrammarDetail/ Graph/ Review/ Quiz/ Me/
+  components/
+    WordCard/ TtsButton/ DetailSheet/ MindMap/ ProgressRing/</code></pre>
+</div>
+
+<h2 data-page-node-id="SrXlAeRwnrjNW8bNehcPw4">十、MVP 范围与验收</h2>
+<div class="card" data-page-node-id="BRumQ7ISN0LaEfuEHfACCk">
+<p style="font-size:14.5px" data-page-node-id="GQIY7QBa5zviEVwbcU8hCo">
+<b data-page-node-id="kTfUbDoxUBFQ3rnF3MCyY6">v1.0（2 周）</b>：P0 P1 P2 P3 P4 P5 P6 P7 + C1 + C2，992 词 / 230 语法全量导入，发音、进度、详解跳转、脑图全部打通。<br data-page-node-id="2YcYFnOhBTEK2MzDdhkzj3">
+<b data-page-node-id="3fE26Net5Eo85mJDfwAEST">v1.1</b>：P8 自测、错词本强化、学习统计图表。<br data-page-node-id="RmvdFEW1GFnXT6OaH6hKPF">
+<b data-page-node-id="JRoOpAeRnus0JVyLclldHO">v1.2</b>：例句音频预生成、自定义词表导入、Anki 导出同步、深色模式。<br data-page-node-id="8MH1Sb0i8S8EGaoZADyQCE">
+<b data-page-node-id="eI27UTu0i9gsU5q1ZaEbdL">明确不做</b>：社区、账号体系、云端同步、社交打卡。</p>
+<table data-page-node-id="w9VClqsHhycqttsc8bjxnm">
+  <tr data-page-node-id="57FutvzmWaI9o2syJkmJSC"><th data-page-node-id="fERXbxVCieWgSG84BpvxA0">需求</th><th data-page-node-id="dwTSTdDtlYCpOQqRjEocDP">验收点</th></tr>
+  <tr data-page-node-id="UInUDGSp4zOoD9giMUKgR9"><td data-page-node-id="IU3zllESVdjpf1dAkjdAAm">1 词汇学习</td><td data-page-node-id="Vp5v8s0ODLSvFs7lui9owm">3 次点击内开始任一模块学习；三档自评后进度实时更新</td></tr>
+  <tr data-page-node-id="ENubvyOQCqr3MObBASSgN3"><td data-page-node-id="RZ4FdTMdLJuAqN0tSXMbov">2 点击发音</td><td data-page-node-id="9ZUIJ4H7axJl49dYKyJqzz">点卡片热区 200ms 内出声；日语音色正确；无声环境有明确提示</td></tr>
+  <tr data-page-node-id="4gvLBMkerTKlHZyFJXAUdl"><td data-page-node-id="xwa7pPAHBmzFi2iExYR1B5">3 阶段进度</td><td data-page-node-id="1MSAgfDQCEy2D9u3UgPTLi">三级完成度与本地数据一致，误差 0</td></tr>
+  <tr data-page-node-id="bAX1RHMu5JHEAN9wuWQKr8"><td data-page-node-id="3WKI9FsqLXT2SdLAcRCuuU">4 详解跳转</td><td data-page-node-id="GP7CP9KswYIJfKaULtxMVM">首次不认识→自动详解；连续错 2 次→引导详解；例句语法可点进 P5</td></tr>
+  <tr data-page-node-id="HQI8r4As12la7cCm1s00PS"><td data-page-node-id="vXSUeMCyBwqnbNbTqMQXGZ">5 知识脑图</td><td data-page-node-id="SRxNt5tmYHIlHYNlttP9Pd">三视图均可渲染，节点点击正确跳转，已掌握状态有视觉区分</td></tr>
+</table>
+</div>
+
+<footer data-page-node-id="czOnxSdtKkVWlj34Gxrb2c">数据来源：JLPT-N3-词汇总表-Anki.csv / 三阶段词汇表 / 语法句型总表 / 备考计划</footer>
+</div>
+
+<script>
+const diagrams = {
+d1: `graph TD
+    subgraph TAB["底部 Tab 栏"]
+        P0["P0 首页<br/>学习仪表盘"]
+        P1["P1 阶段地图<br/>全局进度"]
+        P4["P4 语法列表<br/>230 句型"]
+        P7["P7 复习<br/>SRS 队列"]
+        P9["P9 我的<br/>设置与统计"]
+    end
+    P2["P2 词汇学习<br/>卡片流 + TTS"]
+    P3["P3 词汇详解"]
+    P5["P5 语法详解"]
+    P6["P6 知识图谱<br/>脑图"]
+    P8["P8 自测"]
+    C1(["C1 全局 TTS 播放器"])
+    C2(["C2 详解跳转浮层"])
+    P0 -->|继续学习| P2
+    P0 -->|查看全部进度| P1
+    P0 -->|今日复习| P7
+    P0 -->|薄弱项| P4
+    P0 -->|开始自测| P8
+    P1 -->|选择模块| P2
+    P1 -->|长按模块| P6
+    P2 -->|点击词汇发音| C1
+    P2 -->|自评不认识 或 连错2次| C2
+    C2 -->|查看详解| P3
+    P2 -->|上滑卡片| P3
+    P2 -->|例句语法高亮| P5
+    P2 -->|本模块学完| P6
+    P3 -->|点读音与例句| C1
+    P3 -->|关联语法| P5
+    P3 -->|关联词与近义| P3
+    P3 -->|查看关系图| P6
+    P3 -->|加入复习| P7
+    P4 -->|点击句型| P5
+    P5 -->|例句朗读| C1
+    P5 -->|涉及词汇| P3
+    P5 -->|近义辨析| P5
+    P5 -->|打开脑图| P6
+    P6 -->|点击词节点| P3
+    P6 -->|点击语法节点| P5
+    P6 -->|点击模块节点| P2
+    P7 -->|开始复习| P2
+    P8 -->|听音选词| C1
+    P8 -->|查看解析| P3
+    P9 -->|试听发音| C1
+    classDef tab fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1
+    classDef sub fill:#fff8e1,stroke:#f9a825,stroke-width:2px,color:#795548
+    classDef comp fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20
+    class P0,P1,P4,P7,P9 tab
+    class P2,P3,P5,P6,P8 sub
+    class C1,C2 comp`,
+
+d2: `flowchart LR
+    A["用户在 P2 看到卡片"] --> B{"自评结果"}
+    B -->|认识| C["标记已掌握<br/>进入下一张"]
+    B -->|模糊| D["加入复习队列<br/>轻微提示"]
+    B -->|不认识| E{"是否首次<br/>遇到该词"}
+    E -->|是| F["自动展开 P3 详解<br/>底部浮层"]
+    E -->|否 累计错误≥2| G["C2 浮层引导<br/>建议看详解"]
+    E -->|否 错误数小于2| H["标红高亮<br/>继续下一张"]
+    F --> I["P3 词汇详解"]
+    G -->|用户确认| I
+    G -->|用户忽略| H
+    I --> J{"详解内是否<br/>含未学语法"}
+    J -->|是| K["例句语法高亮<br/>点击进 P5"]
+    J -->|否| L["返回 P2 继续"]
+    K --> M["P5 语法详解"]
+    M --> N["返回 P2 或<br/>进 P6 看关系图"]
+    classDef hot fill:#ffebee,stroke:#c62828,color:#b71c1c
+    classDef ok fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
+    class F,G,I,M hot
+    class C,L,N ok`,
+
+d3: `stateDiagram-v2
+    [*] --> 未学
+    未学 --> 学习中: 首次出现
+    学习中 --> 模糊: 自评模糊
+    学习中 --> 已掌握: 自评认识
+    学习中 --> 需强化: 自评不认识
+    模糊 --> 需强化: 复习再错
+    模糊 --> 已掌握: 复习答对
+    需强化 --> 模糊: 复习答对
+    需强化 --> 需强化: 连续错误触发详解
+    已掌握 --> 模糊: 超过间隔未复习
+    已掌握 --> [*]: 该阶段完成
+    note right of 需强化
+      复习间隔 10分钟 1天
+      3天 7天 15天 30天
+    end note`,
+
+d4: `erDiagram
+    STAGE ||--o{ MODULE : contains
+    MODULE ||--o{ WORD : contains
+    WORD ||--o{ WORD_RELATION : has
+    WORD }o--o{ GRAMMAR : "例句引用"
+    GRAMMAR ||--o{ GRAMMAR_RELATION : has
+    MODULE ||--o{ GRAMMAR : "周次归属"
+    WORD ||--|| PROGRESS : tracks
+    GRAMMAR ||--|| PROGRESS : tracks
+    STAGE {
+        string id "N5基础期 N4强化期 N3强化期 冲刺期"
+        string name
+        int order
+        int weekRange
+    }
+    MODULE {
+        string id
+        string stageId
+        string name "如 人称与称呼"
+        int wordCount
+    }
+    WORD {
+        string id "假名+汉字"
+        string kana
+        string kanji
+        string pos
+        string meaning
+        string moduleId
+    }
+    GRAMMAR {
+        int id "1-230"
+        string pattern
+        string connection
+        string scene
+        int week
+    }
+    PROGRESS {
+        string targetId
+        string state "未学 学习中 模糊 已掌握 需强化"
+        int wrongCount
+        date nextReview
+        int intervalLevel
+    }`,
+
+d5: `mindmap
+  root((JLPT N3 词汇体系))
+    N5基础期
+      人称与称呼
+        わたし 私
+        あなた 貴方
+        彼 かれ
+      家庭与亲属
+        家族 かぞく
+        両親 りょうしん
+      动作动词
+        食べる
+        行く
+        来る
+      语法
+        「は です」
+        「てください」
+    N4强化期
+      副词与频率
+        ときどき
+        たまに
+      自他动词对
+        開く 開ける
+        始まる 始める
+      语法
+        被动形
+        使役形
+        敬语体系
+    N3强化期
+      抽象名词
+        関係
+        影響
+      サ变动词群
+        参加する
+        賛成する
+      语法
+        「ばかり」
+        「一方だ」
+    冲刺期
+      纯复习
+      真题模考`,
+
+d6: `graph LR
+    W["関係 かんけい<br/>【名】关系"]
+    W --- S1["同模块 影響"]
+    W --- S2["同模块 程度"]
+    W --- SYN["近义 関わり"]
+    W --- ANT["反义 無関係"]
+    W --- DRV["派生 関係する サ变"]
+    W --- G1{{"语法 に関する"}}
+    W --- G2{{"语法 において"}}
+    DRV --- G3{{"语法 によって"}}
+    classDef word fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
+    classDef gram fill:#fff3e0,stroke:#ef6c00,color:#e65100
+    class W,S1,S2,SYN,ANT,DRV word
+    class G1,G2,G3 gram`,
+
+d7: `sequenceDiagram
+    actor U as 用户
+    participant P2 as P2 词汇学习
+    participant C1 as C1 TTS 引擎
+    participant R as jumpRules 规则引擎
+    participant P3 as P3 词汇详解
+    participant DB as 本地进度库
+    U->>P2: 进入模块开始学习
+    P2->>DB: 读取本模块词条与进度
+    P2-->>U: 展示卡片 わたし 私
+    U->>P2: 点击卡片热区
+    P2->>C1: speak わたし lang ja-JP
+    C1-->>U: 播放日语发音
+    U->>P2: 自评 不认识
+    P2->>R: 查询跳转规则
+    R-->>P2: 首次遇词 触发自动详解
+    P2->>P3: 展开详解浮层
+    P3-->>U: 释义 例句 关联语法
+    U->>C1: 点击例句朗读
+    U->>P3: 点击关联语法
+    P3->>P3: 跳转 P5 语法详解
+    U->>P2: 返回继续
+    P2->>DB: 写入状态 需强化 与复习时间`
+};
+
+mermaid.initialize({ startOnLoad:false, securityLevel:'loose', theme:'base',
+  themeVariables:{ fontFamily:'-apple-system,PingFang SC,Microsoft YaHei,sans-serif',
+    fontSize:'14px', primaryColor:'#e3f2fd', primaryBorderColor:'#1565c0',
+    primaryTextColor:'#1f2933', lineColor:'#8a97a8' },
+  mindmap:{ padding:18 } });
+
+(async function render(){
+  for (const [id, code] of Object.entries(diagrams)) {
+    const el = document.getElementById(id);
+    try {
+      const { svg } = await mermaid.render('mm-' + id, code);
+      el.innerHTML = svg;
+    } catch (e) {
+      el.innerHTML = '<pre style="white-space:pre-wrap;font-size:12px;color:#c62828">'+
+        String(e && e.message || e).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))+
+        '</pre>';
+    }
+  }
+})();
+</script>
+</body>
+</html>
