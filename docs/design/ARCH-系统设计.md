@@ -634,7 +634,7 @@ graph TD
 ### 8.5 线程与指令（红线）
 - ReactLynx 业务 JS 默认**后台线程**，端口（Native Module）调用即在此，无需额外指令。
 - `'main thread'` **仅**用于手势跟手（图谱拖拽/缩放）。**该函数内禁止**调用 Native Module / TTS / Storage。
-- 跨线程间接调用需显式 `'background only'`（见 `src/useFlappy.ts` 现有写法）。
+- 跨线程间接调用需显式 `'background only'` 指令（原示例 `src/useFlappy.ts` 已随脚手架清理移除；**约定本身仍然有效**，新增跨线程调用时仍须标注）。
 
 ### 8.6 i18n 决策
 - **本期不引入 i18n 运行时**：界面为中文静态文案（集中 `src/constants/strings.ts`），日语为**数据内容**（来自 JSON），二者分离。
