@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "lynx-devtool": {
+      "source": "lynx-community/skills",
+      "sourceType": "github",
+      "skillPath": "skills/lynx-devtool/SKILL.md",
+      "computedHash": "e549c14f1cd42311eb66bc42b8b819afcba973d17eb4727d7dd39eac1db4d1ea"
+    },
+    "rspeedy-bundle-size": {
+      "source": "lynx-community/skills",
+      "sourceType": "github",
+      "skillPath": "skills/rspeedy-bundle-size/SKILL.md",
+      "computedHash": "152f008895705b8add73f4e45e13a5310f68860c5cc61ac633aeec955e456b73"
+    }
+  }
+}
