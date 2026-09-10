@@ -7,10 +7,16 @@
     "check": "biome check --write",
     "dev": "rspeedy dev",
     "format": "biome format --write",
-    "preview": "rspeedy preview"
+    "gen:data": "tsx scripts/gen-data/index.ts",
+    "preview": "rspeedy preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -b"
   },
   "dependencies": {
-    "@lynx-js/react": "^0.126.0"
+    "@lynx-js/react": "^0.126.0",
+    "react-router": "^6.28.0",
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.3",
@@ -20,8 +26,12 @@
     "@lynx-js/rspeedy": "^0.17.1",
     "@lynx-js/types": "4.1.0",
     "@rsbuild/plugin-type-check": "1.6.0",
+    "@types/node": "^22.10.0",
     "@types/react": "^19.2.18",
-    "typescript": "~6.0.3"
+    "tsx": "^4.19.0",
+    "typescript": "~6.0.3",
+    "vitest": "^3.2.0",
+    "zod": "^3.23.8"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
