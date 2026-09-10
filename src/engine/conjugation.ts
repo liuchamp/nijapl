@@ -9,7 +9,7 @@ export interface ConjugationRow {
   value: string
 }
 
-/** 五段动词：う段 → い段（用于ます形 / ない形）。 */
+/** 五段动词：う段 → い段（用于ます形）。 */
 const GODAN_I_ROW: Record<string, string> = {
   う: 'い',
   く: 'き',
@@ -20,6 +20,22 @@ const GODAN_I_ROW: Record<string, string> = {
   ぶ: 'び',
   む: 'み',
   る: 'り',
+}
+
+/**
+ * 五段动词：う段 → あ段（未然形，用于ない形）。
+ * 注意 う 的未然形是 **わ**（つかう → つかわない），不是 あ。
+ */
+const GODAN_A_ROW: Record<string, string> = {
+  う: 'わ',
+  く: 'か',
+  ぐ: 'が',
+  す: 'さ',
+  つ: 'た',
+  ぬ: 'な',
+  ぶ: 'ば',
+  む: 'ま',
+  る: 'ら',
 }
 
 /** 五段动词：て形 / た形 词尾。 */
@@ -92,13 +108,21 @@ export function buildConjugationTable(word: Word): ConjugationRow[] {
       const base = stem(kana)
       const last = lastChar(kana)
       const iRow = GODAN_I_ROW[last] ?? ''
-      const te = `${base}${GODAN_TE_FORM[last] ?? ''}`
+      const aRow = GODAN_A_ROW[last] ?? ''
+
+      // 例外①：行く → て/た 为 いって / いった（其余く结尾为 いて / いた）。
+      const teSuffix = kana === 'いく' ? 'って' : (GODAN_TE_FORM[last] ?? '')
+      const te = `${base}${teSuffix}`
       const ta = te.endsWith('て')
         ? `${te.slice(0, -1)}た`
         : te.endsWith('で')
           ? `${te.slice(0, -1)}だ`
           : te
-      return rows(kana, `${base}${iRow}ます`, te, ta, `${base}${iRow}ない`)
+
+      // 例外②：ある → ない形为「ない」（而非 あらない）。
+      const nai = kana === 'ある' ? 'ない' : `${base}${aRow}ない`
+
+      return rows(kana, `${base}${iRow}ます`, te, ta, nai)
     }
     default:
       return []

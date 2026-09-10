@@ -1,58 +1,32 @@
-import { useCallback, useEffect, useState } from '@lynx-js/react'
-
 import './App.css'
-import arrow from './assets/arrow.png'
-import lynxLogo from './assets/lynx-logo.png'
-import reactLynxLogo from './assets/react-logo.png'
-import { useFlappy } from './useFlappy.js'
+import { AppRouter } from './router/index.js'
+import { useHydrated } from './store/hooks.js'
 
+/**
+ * 应用外壳（架构 §2.8）。
+ *
+ * - **hydration 门控**：持久化恢复完成前渲染极简启动态，避免用默认态闪一帧
+ *   （异步存储耗时由门控吸收；另有 store 侧看门狗兜底，绝不永久停留启动态）；
+ * - 恢复完成后挂载 `AppRouter`（`MemoryRouter` + 路由表 + 条件 TabBar）；
+ * - 已移除脚手架内容（Lynx logo / flappy 动画 / `useFlappy` 引用）。
+ */
 export function App() {
-  const [alterLogo, setAlterLogo] = useState(false)
-  const [logoY, jump] = useFlappy()
+  const hydrated = useHydrated()
 
-  useEffect(() => {
-    console.info('Hello, ReactLynx')
-  }, [])
-
-  const onTap = useCallback(() => {
-    'background only'
-    setAlterLogo(prevAlterLogo => !prevAlterLogo)
-  }, [])
+  if (!hydrated) {
+    return (
+      <view className="App">
+        <view className="Splash">
+          <text className="Splash-title">JLPT N3 単語</text>
+          <text className="Splash-hint">正在恢复学习进度…</text>
+        </view>
+      </view>
+    )
+  }
 
   return (
-    <view bindtap={jump}>
-      <view className='Background' />
-      <view className='App'>
-        <view className='Banner'>
-          <view
-            className='Logo'
-            style={{ transform: `translateY(${logoY}px)` }}
-            bindtap={onTap}
-          >
-            {alterLogo
-              ? <image src={reactLynxLogo} className='Logo--react' />
-              : <image src={lynxLogo} className='Logo--lynx' />}
-          </view>
-          <text className='Title'>React</text>
-          <text className='Subtitle'>on Lynx</text>
-        </view>
-        <view className='Content'>
-          <image src={arrow} className='Arrow' />
-          <text className='Description'>Tap the logo and have fun!</text>
-          <text className='Hint'>
-            Edit<text
-              style={{
-                fontStyle: 'italic',
-                color: 'rgba(255, 255, 255, 0.85)',
-              }}
-            >
-              {' src/App.tsx '}
-            </text>
-            to see updates!
-          </text>
-        </view>
-        <view style={{ flex: 1 }} />
-      </view>
+    <view className="App">
+      <AppRouter />
     </view>
   )
 }

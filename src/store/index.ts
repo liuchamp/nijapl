@@ -1,0 +1,116 @@
+import { persist } from 'zustand/middleware'
+import { createStore } from 'zustand/vanilla'
+import type {
+  JumpDecision,
+  Progress,
+  Session,
+  StudySettings,
+} from '../types/progress.js'
+import type { Actions, DetailSheetMode } from './actions.js'
+import { createActions } from './actions.js'
+import {
+  createInitialSession,
+  createInitialSettings,
+  createPersistOptions,
+} from './persistence.js'
+
+/**
+ * 全局 store（架构 §1.3 / §2.6）：zustand v4 **vanilla** `createStore`
+ * + 四片 state 合并 + `persist` 挂载。
+ *
+ * 分片：
+ * - `progress`：PROGRESS map（持久化）
+ * - `session`：断点续学 / 打卡 / 配额（持久化）
+ * - `settings`：发音与解锁开关（持久化）
+ * - `runtime`：当前学习位置 / 会话错题数 / 浮层状态（**不持久化**）
+ *
+ * 写操作全部收敛到 `actions.ts`；派生查询在 `selectors.ts`；React 绑定在 `hooks.ts`。
+ */
+
+/** 持久化分片：词条 / 语法点进度表。 */
+export interface ProgressSlice {
+  progress: Record<string, Progress>
+}
+
+/** 持久化分片：断点续学 / 打卡 / 今日配额。 */
+export interface SessionSlice {
+  session: Session
+}
+
+/** 持久化分片：学习设置。 */
+export interface SettingsSlice {
+  settings: StudySettings
+}
+
+/** 半屏详解浮层状态（C2）。 */
+export interface DetailSheetState {
+  visible: boolean
+  wordId: string | null
+  mode: DetailSheetMode | null
+}
+
+/** 易失分片：仅存在于本次运行，不落盘。 */
+export interface RuntimeState {
+  /** 持久化是否已恢复完成（hydration 门控）。 */
+  hydrated: boolean
+  /** 当前学习模块 id（null 表示未进入学习）。 */
+  currentModuleId: string | null
+  /** 当前词条在模块内的序号。 */
+  currentIndex: number
+  /** 会话内累计答错（J2 依据），进入模块时清零。 */
+  sessionWrongCount: number
+  /** 半屏浮层状态。 */
+  detailSheet: DetailSheetState
+  /** 最近一次自评命中的跳转决策（便于页面读取）。 */
+  lastDecisions: JumpDecision[]
+}
+
+/** 易失分片容器。 */
+export interface RuntimeSlice {
+  runtime: RuntimeState
+}
+
+/** 完整应用状态 = 四片 + 写操作。 */
+export type AppState = ProgressSlice &
+  SessionSlice &
+  SettingsSlice &
+  RuntimeSlice &
+  Actions
+
+/** 易失分片初值。 */
+export function createInitialRuntime(): RuntimeState {
+  return {
+    hydrated: false,
+    currentModuleId: null,
+    currentIndex: 0,
+    sessionWrongCount: 0,
+    detailSheet: { visible: false, wordId: null, mode: null },
+    lastDecisions: [],
+  }
+}
+
+/** 全局单例 store。 */
+export const appStore = createStore<AppState>()(
+  persist(
+    (set, get) => ({
+      progress: {},
+      session: createInitialSession(),
+      settings: createInitialSettings(),
+      runtime: createInitialRuntime(),
+      ...createActions(set, get),
+    }),
+    createPersistOptions(),
+  ),
+)
+
+/**
+ * 兜底解门控：若因平台差异导致 `persist` 的恢复回调未触发，
+ * 超时后强制置 `hydrated=true`，避免应用永久停留在启动态。
+ */
+const HYDRATION_WATCHDOG_MS = 2500
+
+setTimeout(() => {
+  if (!appStore.getState().runtime.hydrated) {
+    appStore.getState().setHydrated(true)
+  }
+}, HYDRATION_WATCHDOG_MS)
