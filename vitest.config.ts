@@ -10,6 +10,7 @@ export default defineConfig({
     include: [
       'src/engine/__tests__/**/*.test.ts',
       'scripts/gen-data/__tests__/**/*.test.ts',
+      'tests/qa/**/*.test.ts',
     ],
   },
 })
