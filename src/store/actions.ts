@@ -2,6 +2,7 @@ import type { StoreApi } from 'zustand/vanilla'
 import { repository } from '../data/index.js'
 import { evaluate } from '../engine/jumpRules.js'
 import {
+  applyPresented,
   applyReviewResult,
   applySelfEval,
   applySkip,
@@ -40,6 +41,11 @@ export interface Actions {
   setHydrated(hydrated: boolean): void
   /** 确保某目标存在进度记录（幂等）。 */
   ensureProgress(targetId: string): Progress
+  /**
+   * 卡片**首次可见**时调用（PRD §5.5 展示即转态）：`未学 → 学习中`，幂等。
+   * 这是「学习中」态的唯一入口；不调用则 `applySkip` 无意义。
+   */
+  markPresented(targetId: string, now?: number): void
   /** 提交三档自评；返回本次命中的跳转决策（页面据此决定是否开浮层）。 */
   submitSelfEval(
     targetId: string,
@@ -124,8 +130,12 @@ function isWrongSelfEval(selfEval: SelfEval): boolean {
   return selfEval !== '认识'
 }
 
-/** 构造跳转评估上下文：把 store 状态 + 仓库数据拼成引擎所需输入。 */
-function buildJumpContext(
+/**
+ * 构造跳转评估上下文：把 store 状态 + 仓库数据拼成引擎所需输入。
+ *
+ * 导出以便 `services/studySession.ts` 复用（scene 触发评估），避免重复实现。
+ */
+export function buildJumpContext(
   state: AppState,
   word: Word,
   wordProgress: Progress,
@@ -183,6 +193,26 @@ export function createActions(set: StoreSet, get: StoreGet): Actions {
         progress: { ...state.progress, [targetId]: progress },
       }))
       return progress
+    },
+
+    markPresented(targetId: string, now?: number): void {
+      const at = now ?? Date.now()
+      const state = get()
+      const existing = state.progress[targetId]
+      if (existing === undefined) {
+        set({
+          progress: {
+            ...state.progress,
+            [targetId]: applyPresented(initialProgress(targetId), at),
+          },
+        })
+        return
+      }
+      const next = applyPresented(existing, at)
+      if (next === existing) {
+        return
+      }
+      set({ progress: { ...state.progress, [targetId]: next } })
     },
 
     submitSelfEval(

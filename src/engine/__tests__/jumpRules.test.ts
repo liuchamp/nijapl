@@ -4,7 +4,12 @@ import { POS_VERB } from '../../constants/pos.js'
 import type { Grammar, Word } from '../../types/domain.js'
 import type { JumpContext } from '../../types/progress.js'
 import { evaluate } from '../jumpRules.js'
-import { initialProgress } from '../srs.js'
+import {
+  applyPresented,
+  applySelfEval,
+  applySkip,
+  initialProgress,
+} from '../srs.js'
 
 const grammarById = (_id: string): Grammar | undefined => undefined
 
@@ -216,5 +221,71 @@ describe('jumpRules · 未命中', () => {
       'selfEval',
     )
     expect(rules(decisions)).toEqual(expect.arrayContaining(['J1', 'J5', 'J6']))
+  })
+})
+
+describe('jumpRules · J1 必须显式 selfEval（F4 边界）', () => {
+  it('selfEval 缺省 → 不触发 J1（不得因缺省而误穿）', () => {
+    const decisions = evaluate(makeCtx({ selfEval: undefined }), 'selfEval')
+    expect(rules(decisions)).not.toContain('J1')
+  })
+
+  it("selfEval='模糊' → 不触发 J1", () => {
+    const decisions = evaluate(makeCtx({ selfEval: '模糊' }), 'selfEval')
+    expect(rules(decisions)).not.toContain('J1')
+  })
+
+  it("selfEval='认识' → 不触发 J1", () => {
+    const decisions = evaluate(makeCtx({ selfEval: '认识' }), 'selfEval')
+    expect(rules(decisions)).not.toContain('J1')
+  })
+
+  it("selfEval='不认识' 且未出现 → 触发 J1（正向基线）", () => {
+    const decisions = evaluate(makeCtx({ selfEval: '不认识' }), 'selfEval')
+    expect(rules(decisions)).toContain('J1')
+  })
+
+  it('收紧 J1 不影响其它规则（模糊 + 连错 2 仍触发 J2）', () => {
+    const decisions = evaluate(
+      makeCtx({ selfEval: '模糊', sessionWrongCount: 2 }),
+      'selfEval',
+    )
+    expect(rules(decisions)).not.toContain('J1')
+    expect(rules(decisions)).toContain('J2')
+  })
+})
+
+describe('jumpRules · J1 与「展示即转态」协同（F3 × J1 链路可达性）', () => {
+  it('仅被展示过（学习中 / seen=true / history 空）→ 首次自评「不认识」仍触发 J1', () => {
+    const presented = applyPresented(initialProgress('w-01'), 1_000)
+    expect(presented.seen).toBe(true)
+    expect(presented.state).toBe('学习中')
+    const decisions = evaluate(
+      makeCtx({ wordProgress: presented, selfEval: '不认识' }),
+      'selfEval',
+    )
+    expect(rules(decisions)).toContain('J1')
+  })
+
+  it('已作答过（history 非空）→ 再次「不认识」不触发 J1', () => {
+    const answered = applySelfEval(initialProgress('w-01'), '不认识', 1_000)
+    expect(answered.history.length).toBeGreaterThan(0)
+    const decisions = evaluate(
+      makeCtx({ wordProgress: answered, selfEval: '不认识' }),
+      'selfEval',
+    )
+    expect(rules(decisions)).not.toContain('J1')
+  })
+
+  it('已跳过（history 含 skip）→ 不视为首次遇词', () => {
+    const skipped = applySkip(
+      applyPresented(initialProgress('w-01'), 1_000),
+      2_000,
+    )
+    const decisions = evaluate(
+      makeCtx({ wordProgress: skipped, selfEval: '不认识' }),
+      'selfEval',
+    )
+    expect(rules(decisions)).not.toContain('J1')
   })
 })

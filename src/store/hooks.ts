@@ -62,6 +62,7 @@ const initialState: AppState = appStore.getState()
 export const appActions: Actions = {
   setHydrated: initialState.setHydrated,
   ensureProgress: initialState.ensureProgress,
+  markPresented: initialState.markPresented,
   submitSelfEval: initialState.submitSelfEval,
   skipWord: initialState.skipWord,
   submitReviewResult: initialState.submitReviewResult,

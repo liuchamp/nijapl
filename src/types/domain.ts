@@ -20,6 +20,8 @@ export interface Stage {
   /** 备考周次区间（左闭右闭的周序号）。 */
   weekRange: { start: number; end: number }
   hasContent: boolean
+  /** 数据来源标记（阶段同样是种子数据，见 PRD §7.2）。 */
+  source: Source
 }
 
 /** 学习模块，隶属于某个阶段。 */
@@ -28,6 +30,8 @@ export interface Module {
   stageId: string
   name: string
   wordCount: number
+  /** 数据来源标记（PRD §7.2）。 */
+  source: Source
 }
 
 /** 词条关联关系。 */
@@ -82,10 +86,16 @@ export interface SentenceWord {
   end?: number
 }
 
-/** 例句中出现的语法点。 */
+/**
+ * 例句中出现的语法点。
+ * `start`/`end` 为可选高亮偏移，指向 `Sentence.ja` 的字符下标（左闭右开）；
+ * 缺失时由渲染层退化为「目标词优先」的策略定位。
+ */
 export interface SentenceGrammar {
   sentenceId: string
   grammarId: string
+  start?: number
+  end?: number
 }
 
 /** 例句。 */

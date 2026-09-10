@@ -42,6 +42,27 @@ export function initialProgress(targetId: string): Progress {
 }
 
 /**
+ * 卡片「展示即转态」（PRD §5.5）：`未学 → 学习中`，并置 `seen = true`。
+ *
+ * - 这是「学习中」态的唯一入口；不调用它则五态中的「学习中」不可达，
+ *   `applySkip`（学习中 → 未学）也随之失去意义；
+ * - 转入时为该词排定**首个间隔**（10 分钟），使其不会立刻混入「今日到期」队列；
+ * - 对已是「学习中 / 模糊 / 已掌握 / 需强化」的**保持幂等**：直接返回原对象，
+ *   不倒退状态、不改动 `intervalLevel` / `nextReview` / `wrongCount` / `history`。
+ */
+export function applyPresented(p: Progress, now: number): Progress {
+  if (p.state !== '未学') {
+    return p
+  }
+  return {
+    ...p,
+    state: '学习中',
+    seen: true,
+    nextReview: now + intervalAt(0),
+  }
+}
+
+/**
  * 自评后推进状态机（纯函数）。
  *
  * - 认识 → 已掌握，间隔推进到下一档；

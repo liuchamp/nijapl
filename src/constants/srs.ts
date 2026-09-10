@@ -33,3 +33,22 @@ export const MASTERED_THRESHOLD = 2
  * 用于 `hasContent=false` 的冲刺期，避免出现 0/0 = NaN。
  */
 export const NO_CONTENT = -1
+
+/**
+ * 阶段解锁阈值：上一**含词**阶段完成度达到该比例才解锁当前阶段
+ * （可在设置中用 `unlockRuleEnabled` 关闭）。
+ */
+export const STAGE_UNLOCK_RATIO = 0.8
+
+/**
+ * 每日目标：新学 / 复习词条数（P0 首页「今日目标」进度环分母）。
+ * 数值为产品默认值，未随设置持久化，便于后续迭代为可配置项。
+ */
+export const DAILY_NEW_GOAL = 20
+export const DAILY_REVIEW_GOAL = 20
+
+/**
+ * 阶段 / 模块节点展示态：`locked`（未满足解锁条件）+ SRS 五态。
+ * 阶段树节点与模块节点共用（架构 §7 T04 完成判据 7）。
+ */
+export type NodeState = 'locked' | SrsState

@@ -1,0 +1,211 @@
+/* Home：P0 首页仪表盘 */
+
+.Home {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: var(--space-md);
+}
+
+.Home-head {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.Home-greeting {
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.Home-appName {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.Home-goal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+}
+
+.Home-goalSide {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-left: var(--space-lg);
+}
+
+.Home-goalTitle {
+  font-size: var(--font-md);
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+}
+
+.Home-goalLine {
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
+}
+
+.Home-stats {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: var(--space-md);
+}
+
+.Home-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.Home-statValue {
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.Home-statLabel {
+  margin-top: var(--space-xs);
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.Home-primary {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+
+.Home-primaryLabel {
+  font-size: var(--font-md);
+  font-weight: 700;
+  color: var(--color-bg);
+}
+
+.Home-hint {
+  margin-top: var(--space-sm);
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.Home-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: var(--space-lg);
+}
+
+.Home-sectionHead {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.Home-sectionTitle {
+  font-size: var(--font-md);
+  font-weight: 700;
+}
+
+.Home-sectionEmpty {
+  margin-top: var(--space-sm);
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+.Home-graphEntry {
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  background-color: var(--color-primary-soft);
+  border-radius: var(--radius-pill);
+}
+
+.Home-graphLabel {
+  font-size: var(--font-xs);
+  color: var(--color-primary);
+}
+
+.Home-weakList {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: var(--space-sm);
+}
+
+.Home-weakItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-sm);
+  margin-top: var(--space-xs);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+}
+
+.Home-weakKana {
+  font-size: var(--font-md);
+}
+
+.Home-weakMeaning {
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+.Home-stageList {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: var(--space-sm);
+}
+
+.Home-stageItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-sm);
+  margin-top: var(--space-xs);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+}
+
+.Home-stageLeft {
+  display: flex;
+  flex-direction: column;
+}
+
+.Home-stageName {
+  font-size: var(--font-md);
+}
+
+.Home-stagePercent {
+  margin-top: var(--space-xs);
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}

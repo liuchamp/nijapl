@@ -50,7 +50,7 @@ export interface StudySettings {
 /**
  * 跳转规则评估上下文。
  * `selfEval` / `grammarIds` 为对架构 §3.3 的向后兼容扩展（可选）：
- * - `selfEval` 缺省时 J1 退化为仅依据 `wordProgress.seen`；
+ * - `selfEval` 必须**显式**为「不认识」才可能触发 J1（缺省 / 其它档位一律不触发，F4）；
  * - `grammarIds` 供 J3 判定当前句涉及的语法点。
  */
 export interface JumpContext {

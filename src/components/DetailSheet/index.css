@@ -1,0 +1,112 @@
+/* DetailSheet：C2 半屏详解浮层 */
+
+.Sheet {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.Sheet-mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+.Sheet-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--space-lg);
+  background-color: var(--color-surface);
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+  border-top: 1rpx solid var(--color-border);
+}
+
+.Sheet-title {
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.Sheet-body {
+  margin-top: var(--space-xs);
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+.Sheet-word {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+}
+
+.Sheet-wordKana {
+  font-size: var(--font-xl);
+  font-weight: 700;
+}
+
+.Sheet-wordKanji {
+  margin-top: var(--space-xs);
+  font-size: var(--font-md);
+  color: var(--color-text-muted);
+}
+
+.Sheet-wordMeaning {
+  margin-top: var(--space-sm);
+  font-size: var(--font-md);
+}
+
+.Sheet-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.Sheet-dismiss {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.Sheet-dismissLabel {
+  font-size: var(--font-md);
+  color: var(--color-text-muted);
+}
+
+.Sheet-confirm {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+
+.Sheet-confirmLabel {
+  font-size: var(--font-md);
+  font-weight: 700;
+  color: var(--color-bg);
+}

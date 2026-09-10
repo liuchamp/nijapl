@@ -30,6 +30,7 @@ export const StageSchema = z.object({
   order: z.number().int(),
   weekRange: z.object({ start: z.number().int(), end: z.number().int() }),
   hasContent: z.boolean(),
+  source: SourceSchema,
 })
 
 export const ModuleSchema = z.object({
@@ -37,6 +38,7 @@ export const ModuleSchema = z.object({
   stageId: z.string().min(1),
   name: z.string().min(1),
   wordCount: z.number().int().nonnegative(),
+  source: SourceSchema,
 })
 
 export const WordRelationSchema = z.object({
@@ -86,6 +88,8 @@ export const SentenceWordSchema = z.object({
 export const SentenceGrammarSchema = z.object({
   sentenceId: z.string().min(1),
   grammarId: z.string().min(1),
+  start: z.number().int().nonnegative().optional(),
+  end: z.number().int().nonnegative().optional(),
 })
 
 export const SentenceSchema = z.object({

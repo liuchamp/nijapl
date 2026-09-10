@@ -116,10 +116,11 @@ describe('QA · J1 首次遇词（seen 门控）', () => {
     ).not.toContain('J1')
   })
 
-  it('【观察性断言】selfEval 缺省 + trigger=selfEval + seen=false 会触发 J1', () => {
-    // 设计 §3.3 备注允许缺省退化；此处记录其对「非不认识」自评的潜在穿透风险。
+  it('【F4 修复后】selfEval 缺省 + trigger=selfEval + seen=false → 不再触发 J1', () => {
+    // 原为「观察性断言」，记录缺省 selfEval 会穿透 J1 的风险；
+    // 交付总监裁决 F4：J1 必须显式要求 selfEval === '不认识'，故断言翻转为「不触发」。
     const d = evaluate(makeCtx(), 'selfEval')
-    expect(rules(d)).toContain('J1')
+    expect(rules(d)).not.toContain('J1')
   })
 })
 

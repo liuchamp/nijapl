@@ -1,0 +1,126 @@
+import type { NodeState } from './srs.js'
+
+/**
+ * 中文 UI 文案集中（架构 §2.2 / §8.6）。
+ *
+ * 本期不引入 i18n 运行时：界面为中文静态文案，日语为**数据内容**（来自 JSON）。
+ * 所有页面 / 组件不得硬编码中文，一律引用本文件，便于未来替换为 i18n 调用点。
+ */
+export const STRINGS = {
+  app: {
+    name: 'JLPT N3 単語',
+    loading: '正在恢复学习进度…',
+  },
+  common: {
+    confirm: '确认',
+    cancel: '取消',
+    back: '返回',
+    next: '下一张',
+    prev: '上一张',
+    skip: '跳过',
+    flip: '看释义',
+    flipBack: '看假名',
+    empty: '暂无内容',
+    times: '次',
+  },
+  tts: {
+    tapToSpeak: '点击卡片发音',
+    replay: '再听一次',
+    unsupportedTitle: '当前环境不支持语音',
+    unsupportedBody:
+      '当前运行环境不支持日语语音合成，请用「复制假名」自行朗读。',
+    noJaVoice: '当前环境缺少日语语音包，已降级为「复制假名」。',
+    blocked: '首次播放需在点击内触发，请再点一次「试听」。',
+    error: '语音播放失败，请重试或使用「复制假名」。',
+    copyKana: '复制假名',
+    copied: '假名已复制到剪贴板',
+    copyFallback: '当前环境无剪贴板权限，假名如下，请手动复制',
+    copyTitle: '假名',
+  },
+  nodeState: {
+    locked: '未解锁',
+    未学: '未学',
+    学习中: '学习中',
+    模糊: '模糊',
+    已掌握: '已掌握',
+    需强化: '需强化',
+  } satisfies Record<NodeState, string>,
+  home: {
+    greeting: '欢迎回来',
+    todayGoal: '今日目标',
+    newLearned: '新学',
+    reviewed: '复习',
+    streak: '连续打卡',
+    dayUnit: '天',
+    dueToday: '今日到期',
+    continueLearning: '继续学习',
+    startLearning: '开始学习',
+    weakWarning: '薄弱预警',
+    weakEmpty: '暂无薄弱词条',
+    stageProgress: '阶段进度',
+    graphEntry: '知识图谱',
+    noSessionHint: '还未开始学习，从第一个模块开始吧',
+    sprintHint: '冲刺期以复习与自测为主',
+  },
+  stage: {
+    title: '阶段地图',
+    subtitle: '按顺序解锁：上一含词阶段完成度达标后开放',
+    module: '模块',
+    wordCount: '词',
+    wordCountUnit: '词',
+    lockedHint: '需上一含词阶段完成度 ≥ 80%',
+    sprintTitle: '冲刺期',
+    sprintBody:
+      '本阶段无词条内容，完成度不参与计算（冲刺期以复习与自测为主）。',
+    unlockRuleOff: '解锁规则已在设置中关闭',
+    ruleLabel: '解锁规则',
+    ruleToggleOn: '已开启',
+    ruleToggleOff: '已关闭',
+    weekLabel: '备考周',
+  },
+  study: {
+    title: '词汇学习',
+    reviewTitle: '复习模式',
+    emptyModule: '该模块暂无词条',
+    webFallbackHint: '当前平台不支持翻页卡片，已降级为逐页浏览',
+    cardProgress: '卡片进度',
+    selfEvalUnknown: '不认识',
+    selfEvalVague: '模糊',
+    selfEvalKnown: '认识',
+    detailedEntry: '进入详解',
+    sessionWrong: '本次答错',
+  },
+  detailSheet: {
+    autoTitle: '第一次遇到这个词',
+    autoBody: '要不要看看它的详解？',
+    promptTitle: '连续答错了',
+    promptBody: '建议先看详解，再继续学习。',
+    confirm: '查看详解',
+    dismiss: '忽略，继续',
+  },
+  vocab: {
+    title: '词汇详解',
+    kana: '读音',
+    pos: '词性',
+    meaning: '释义',
+    conjugation: '动词变形',
+    related: '关联词',
+    sentences: '例句',
+    memory: '记忆状态',
+    wrongCount: '累计答错',
+    noSentences: '暂无例句',
+    notFound: '未找到该词条',
+    form: '形',
+  },
+  review: {
+    title: '复习',
+    dueTitle: '今日到期',
+    weakTitle: '错词本',
+    dueCount: '待复习',
+    start: '开始复习',
+    dueEmpty: '今日没有到期内容',
+    weakEmpty: '暂无错词，继续保持！',
+  },
+} as const
+
+export type Strings = typeof STRINGS

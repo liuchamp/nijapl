@@ -1,4 +1,5 @@
-import { NO_CONTENT } from '../constants/srs.js'
+import type { NodeState } from '../constants/srs.js'
+import { NO_CONTENT, STAGE_UNLOCK_RATIO } from '../constants/srs.js'
 import { repository } from '../data/index.js'
 import {
   moduleCompletion,
@@ -6,8 +7,8 @@ import {
   stageCompletion,
 } from '../engine/progress.js'
 import { dueTargetIds } from '../engine/srs.js'
-import type { BuildData, Word } from '../types/domain.js'
-import type { Progress } from '../types/progress.js'
+import type { BuildData, Stage, Word } from '../types/domain.js'
+import type { Progress, SrsState } from '../types/progress.js'
 import type { AppState } from './index.js'
 
 /**
@@ -169,4 +170,123 @@ export function selectGraphSource(): BuildData {
     grammars: repository.getAllGrammars(),
     sentences: repository.getAllSentences(),
   }
+}
+
+/**
+ * 把多个词条态聚合为一个节点展示态（阶段 / 模块节点用）。
+ *
+ * 规则：任一「需强化」→ 需强化；全部「已掌握」→ 已掌握；
+ * 否则只要出现过（学习中 / 模糊 / 已掌握）→ 学习中；否则未学。
+ */
+export function aggregateNodeState(states: SrsState[]): NodeState {
+  if (states.length === 0) {
+    return '未学'
+  }
+  let allMastered = true
+  let anySeen = false
+  for (const state of states) {
+    if (state === '需强化') {
+      return '需强化'
+    }
+    if (state !== '已掌握') {
+      allMastered = false
+    }
+    if (state === '学习中' || state === '模糊' || state === '已掌握') {
+      anySeen = true
+    }
+  }
+  if (allMastered) {
+    return '已掌握'
+  }
+  return anySeen ? '学习中' : '未学'
+}
+
+/** 某模块的节点展示态。 */
+export function selectModuleNodeState(
+  state: AppState,
+  moduleId: string,
+): NodeState {
+  const words = repository.getModuleWords(moduleId)
+  return aggregateNodeState(
+    words.map((word) => state.progress[word.id]?.state ?? '未学'),
+  )
+}
+
+/**
+ * 某阶段是否已解锁（T04 判据 7）。
+ *
+ * 解锁规则：**上一含词阶段**完成度 ≥ {@link STAGE_UNLOCK_RATIO}。
+ * - `settings.unlockRuleEnabled === false` 时全部解锁（快捷入口可切换）；
+ * - 无上一含词阶段（首个阶段）→ 解锁；
+ * - 上一含词阶段为冲刺期（完成度 = {@link NO_CONTENT} 哨兵）→ 视为解锁，避免死角。
+ */
+export function selectStageUnlocked(state: AppState, stageId: string): boolean {
+  if (!state.settings.unlockRuleEnabled) {
+    return true
+  }
+  const stages = repository.getStages()
+  const stage = stages.find((candidate) => candidate.id === stageId)
+  if (stage === undefined) {
+    return true
+  }
+  let previous: Stage | undefined
+  for (const candidate of stages) {
+    if (candidate.order >= stage.order || !candidate.hasContent) {
+      continue
+    }
+    if (previous === undefined || candidate.order > previous.order) {
+      previous = candidate
+    }
+  }
+  if (previous === undefined) {
+    return true
+  }
+  const score = selectStageCompletion(state, previous.id)
+  if (score === NO_CONTENT) {
+    return true
+  }
+  return score >= STAGE_UNLOCK_RATIO
+}
+
+/** 某阶段的节点展示态：未解锁 → `locked`；否则由所属词条聚合。 */
+export function selectStageNodeState(
+  state: AppState,
+  stageId: string,
+): NodeState {
+  if (!selectStageUnlocked(state, stageId)) {
+    return 'locked'
+  }
+  const states: SrsState[] = []
+  for (const module of repository.getModules(stageId)) {
+    for (const word of repository.getModuleWords(module.id)) {
+      states.push(state.progress[word.id]?.state ?? '未学')
+    }
+  }
+  return aggregateNodeState(states)
+}
+
+/** 进入 P2 的续学目标（首页「继续学习 / 开始学习」）。 */
+export interface ContinueTarget {
+  moduleId: string
+  index: number
+}
+
+/**
+ * 续学目标：优先恢复会话断点；无会话则取首个含词阶段的首个模块。
+ * 无法定位（数据为空）时返回 `null`。
+ */
+export function selectContinueTarget(state: AppState): ContinueTarget | null {
+  const moduleId = state.session.moduleId
+  if (moduleId !== '' && repository.getModuleWords(moduleId).length > 0) {
+    return { moduleId, index: state.session.lastWordIndex }
+  }
+  const firstStage = repository.getStages().find((stage) => stage.hasContent)
+  if (firstStage === undefined) {
+    return null
+  }
+  const firstModule = repository.getModules(firstStage.id)[0]
+  if (firstModule === undefined) {
+    return null
+  }
+  return { moduleId: firstModule.id, index: 0 }
 }

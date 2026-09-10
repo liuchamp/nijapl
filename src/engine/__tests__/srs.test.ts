@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { SRS_INTERVALS_MS } from '../../constants/srs.js'
 import {
+  applyPresented,
   applyReviewResult,
   applySelfEval,
   applySkip,
@@ -123,5 +124,54 @@ describe('srs · 到期判定', () => {
     const fresh = initialProgress('c')
     const ids = dueTargetIds({ a: future, b: due, c: fresh }, NOW)
     expect(ids).toEqual(['b'])
+  })
+})
+
+describe('srs · 展示即转态 applyPresented（F3：让「学习中」可达）', () => {
+  it('未学 → 学习中，置 seen=true 并排定首个间隔', () => {
+    const p = applyPresented(initialProgress('w-01'), NOW)
+    expect(p.state).toBe('学习中')
+    expect(p.seen).toBe(true)
+    expect(p.intervalLevel).toBe(0)
+    expect(p.nextReview).toBe(NOW + SRS_INTERVALS_MS[0])
+    expect(p.wrongCount).toBe(0)
+  })
+
+  it('学习中再次展示 → 幂等（返回同一对象，字段不变）', () => {
+    const learning = applyPresented(initialProgress('w-01'), NOW)
+    const again = applyPresented(learning, NOW + 5_000)
+    expect(again).toBe(learning)
+    expect(again).toEqual(learning)
+  })
+
+  it('模糊 / 已掌握 / 需强化 → 不倒退状态、不动 intervalLevel / nextReview', () => {
+    const vague = applySelfEval(initialProgress('a'), '模糊', NOW)
+    const mastered = applySelfEval(initialProgress('b'), '认识', NOW)
+    const weak = applySelfEval(initialProgress('c'), '不认识', NOW)
+    expect(vague.state).toBe('模糊')
+    expect(mastered.state).toBe('已掌握')
+    expect(weak.state).toBe('需强化')
+    for (const p of [vague, mastered, weak]) {
+      const after = applyPresented(p, NOW + 999)
+      expect(after).toBe(p)
+      expect(after.state).toBe(p.state)
+      expect(after.intervalLevel).toBe(p.intervalLevel)
+      expect(after.nextReview).toBe(p.nextReview)
+    }
+  })
+
+  it('学习中 → 跳过（applySkip）回到未学且不计分（F3 闭环）', () => {
+    const learning = applyPresented(initialProgress('w-01'), NOW)
+    expect(learning.state).toBe('学习中')
+    const skipped = applySkip(learning, NOW + 1)
+    expect(skipped.state).toBe('未学')
+    expect(skipped.wrongCount).toBe(0)
+    expect(skipped.history.at(-1)?.result).toBe('skip')
+  })
+
+  it('展示后不会立刻混入「今日到期」队列', () => {
+    const p = applyPresented(initialProgress('w-01'), NOW)
+    expect(isDue(p, NOW)).toBe(false)
+    expect(isDue(p, p.nextReview)).toBe(true)
   })
 })

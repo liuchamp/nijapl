@@ -35,6 +35,7 @@ const stages: Stage[] = [
     order: 1,
     weekRange: { start: 1, end: 6 },
     hasContent: true,
+    source: 'seed',
   },
   {
     id: 's4',
@@ -42,10 +43,11 @@ const stages: Stage[] = [
     order: 4,
     weekRange: { start: 23, end: 26 },
     hasContent: false,
+    source: 'seed',
   },
 ]
 const modules: Module[] = [
-  { id: 'm01', stageId: 's1', name: '模块一', wordCount: 2 },
+  { id: 'm01', stageId: 's1', name: '模块一', wordCount: 2, source: 'seed' },
 ]
 const words: Word[] = [
   makeWord('w-01', 's1', 'm01'),

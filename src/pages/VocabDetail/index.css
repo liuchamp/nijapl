@@ -1,0 +1,192 @@
+/* VocabDetail：P3 词汇详解 */
+
+.Vocab {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: var(--space-md);
+}
+
+.Vocab-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.Vocab-back {
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.Vocab-backLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.Vocab-title {
+  font-size: var(--font-md);
+  font-weight: 700;
+}
+
+.Vocab-notFound {
+  margin-top: var(--space-xl);
+  text-align: center;
+  font-size: var(--font-md);
+  color: var(--color-text-muted);
+}
+
+.Vocab-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: var(--space-md);
+  padding: var(--space-lg);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+}
+
+.Vocab-kana {
+  font-size: var(--font-xl);
+  font-weight: 700;
+}
+
+.Vocab-kanji {
+  margin-top: var(--space-xs);
+  font-size: var(--font-lg);
+  color: var(--color-text-muted);
+}
+
+.Vocab-heroRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: var(--space-md);
+}
+
+.Vocab-pos {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.Vocab-block {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+}
+
+.Vocab-blockHead {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.Vocab-blockTitle {
+  font-size: var(--font-md);
+  font-weight: 700;
+}
+
+.Vocab-meaning {
+  margin-top: var(--space-sm);
+  font-size: var(--font-lg);
+}
+
+.Vocab-memoryLine {
+  margin-top: var(--space-sm);
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+.Vocab-conjTable {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: var(--space-sm);
+}
+
+.Vocab-conjRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1rpx solid var(--color-border);
+}
+
+.Vocab-conjForm {
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+.Vocab-conjValue {
+  font-size: var(--font-md);
+}
+
+.Vocab-chips {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: var(--space-sm);
+}
+
+.Vocab-chip {
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  margin-right: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  background-color: var(--color-primary-soft);
+  border-radius: var(--radius-pill);
+}
+
+.Vocab-chipLabel {
+  font-size: var(--font-sm);
+  color: var(--color-primary);
+}
+
+.Vocab-empty {
+  margin-top: var(--space-sm);
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+.Vocab-sentence {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+}
+
+.Vocab-sentenceZh {
+  margin-top: var(--space-xs);
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+.Vocab-sentenceFallback {
+  margin-top: var(--space-xs);
+  font-size: var(--font-xs);
+  color: var(--color-primary);
+}

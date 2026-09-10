@@ -3,10 +3,28 @@ import {
   WRONG_THRESHOLD,
 } from '../constants/jumpRules.js'
 import { isVerb } from '../constants/pos.js'
-import type { JumpContext, JumpDecision } from '../types/progress.js'
+import type { JumpContext, JumpDecision, Progress } from '../types/progress.js'
 
 /** 触发场景：自评后（selfEval） / 页面渲染场景（scene）。 */
 export type JumpTrigger = 'selfEval' | 'scene'
+
+/**
+ * 是否「首次遇词」（J1 门控，PRD §5.5 / §J1）。
+ *
+ * 语义为「**作答前**从未出现过」：
+ * 1. `seen === false` —— 从未作答（最直接）；
+ * 2. 或仅由「展示即转态」标记过（`state === '学习中'` 且 `history` 为空）——
+ *    卡片刚首次可见、尚未作答（T04 `applyPresented` 会置 `seen=true`，
+ *    若 J1 只看 `seen` 则真实链路中 J1 永不可达，与 PRD 链路①冲突）。
+ *
+ * 一旦发生任意作答（`history` 非空：correct / wrong / skip），即不再是首次遇词。
+ */
+function isFirstEncounter(p: Progress): boolean {
+  if (!p.seen) {
+    return true
+  }
+  return p.state === '学习中' && p.history.length === 0
+}
 
 /** J1：首次遇词且自评「不认识」→ 自动展开详解。 */
 function evaluateJ1(
@@ -16,10 +34,11 @@ function evaluateJ1(
   if (trigger !== 'selfEval') {
     return null
   }
-  if (ctx.wordProgress.seen) {
+  // 必须**显式**为「不认识」：`selfEval` 缺省（scene 场景 / 旧调用方）不得误判。
+  if (ctx.selfEval !== '不认识') {
     return null
   }
-  if (ctx.selfEval !== undefined && ctx.selfEval !== '不认识') {
+  if (!isFirstEncounter(ctx.wordProgress)) {
     return null
   }
   return { rule: 'J1', kind: 'autoDetailed', target: 'P3' }
