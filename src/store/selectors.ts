@@ -145,6 +145,7 @@ export function selectCurrentWord(state: AppState): Word | undefined {
 export interface TodayStats {
   newCount: number
   reviewCount: number
+  grammarCount: number
   streakDays: number
   lastStudyDate: string
   dueCount: number
@@ -155,6 +156,7 @@ export function selectTodayStats(state: AppState, now: number): TodayStats {
   return {
     newCount: state.session.todayNewCount,
     reviewCount: state.session.todayReviewCount,
+    grammarCount: state.session.todayGrammarCount,
     streakDays: state.session.streakDays,
     lastStudyDate: state.session.lastStudyDate,
     dueCount: selectTodayReviewQueue(state, now).length,

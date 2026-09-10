@@ -52,6 +52,12 @@ export interface Actions {
     selfEval: SelfEval,
     now?: number,
   ): JumpDecision[]
+  /** 提交语法点掌握度自评（P5）：复用同一 SRS 状态机，累加今日语法配额。 */
+  submitGrammarSelfEval(
+    targetId: string,
+    selfEval: SelfEval,
+    now?: number,
+  ): void
   /** 跳过词条：`学习中 → 未学`，不计分。 */
   skipWord(targetId: string, now?: number): void
   /** 提交复习结果（对 / 错）。 */
@@ -117,6 +123,7 @@ function rollSessionDay(session: Session, now: number): Session {
     lastStudyDate: today,
     todayNewCount: 0,
     todayReviewCount: 0,
+    todayGrammarCount: 0,
     streakDays: nextStreakDays(
       session.lastStudyDate,
       today,
@@ -253,6 +260,27 @@ export function createActions(set: StoreSet, get: StoreGet): Actions {
         },
       })
       return decisions
+    },
+
+    submitGrammarSelfEval(
+      targetId: string,
+      selfEval: SelfEval,
+      now?: number,
+    ): void {
+      const at = now ?? Date.now()
+      const state = get()
+      const existing = state.progress[targetId] ?? initialProgress(targetId)
+      const next = applySelfEval(existing, selfEval, at)
+      const session = rollSessionDay(state.session, at)
+      set({
+        progress: { ...state.progress, [targetId]: next },
+        session: {
+          ...session,
+          todayGrammarCount: existing.seen
+            ? session.todayGrammarCount
+            : session.todayGrammarCount + 1,
+        },
+      })
     },
 
     skipWord(targetId: string, now?: number): void {

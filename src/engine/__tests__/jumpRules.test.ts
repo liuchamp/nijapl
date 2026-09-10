@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { POS_VERB } from '../../constants/pos.js'
 import type { Grammar, Word } from '../../types/domain.js'
 import type { JumpContext } from '../../types/progress.js'
-import { evaluate } from '../jumpRules.js'
+import { evaluate, isFirstEncounter } from '../jumpRules.js'
 import {
   applyPresented,
   applySelfEval,
@@ -54,11 +54,10 @@ describe('jumpRules · J1 首次遇词', () => {
     })
   })
 
-  it('seen=true → 不触发 J1（会话内不再打断）', () => {
-    const seen = initialProgress('w-01')
-    seen.seen = true
+  it('已评估过（history 非空）→ 不触发 J1（会话内不再打断）', () => {
+    const answered = applySelfEval(initialProgress('w-01'), '认识', 1_000)
     const decisions = evaluate(
-      makeCtx({ wordProgress: seen, selfEval: '不认识' }),
+      makeCtx({ wordProgress: answered, selfEval: '不认识' }),
       'selfEval',
     )
     expect(rules(decisions)).not.toContain('J1')
@@ -255,11 +254,24 @@ describe('jumpRules · J1 必须显式 selfEval（F4 边界）', () => {
   })
 })
 
-describe('jumpRules · J1 与「展示即转态」协同（F3 × J1 链路可达性）', () => {
-  it('仅被展示过（学习中 / seen=true / history 空）→ 首次自评「不认识」仍触发 J1', () => {
+describe('jumpRules · J1 首次遇词语义裁决（Ruling 1：history.length === 0）', () => {
+  it('isFirstEncounter：history 为空 → true；有评估记录 → false', () => {
+    expect(isFirstEncounter(initialProgress('w-01'))).toBe(true)
+    // 仅展示（applyPresented）不写 history → 仍视为首次遇词
+    expect(
+      isFirstEncounter(applyPresented(initialProgress('w-01'), 1_000)),
+    ).toBe(true)
+    expect(
+      isFirstEncounter(applySelfEval(initialProgress('w-01'), '认识', 1_000)),
+    ).toBe(false)
+  })
+
+  it('(a) 展示后自评「不认识」→ J1 触发', () => {
+    // 展示即转态：seen=true / 学习中，但 history 仍为空
     const presented = applyPresented(initialProgress('w-01'), 1_000)
     expect(presented.seen).toBe(true)
     expect(presented.state).toBe('学习中')
+    expect(presented.history).toHaveLength(0)
     const decisions = evaluate(
       makeCtx({ wordProgress: presented, selfEval: '不认识' }),
       'selfEval',
@@ -267,8 +279,21 @@ describe('jumpRules · J1 与「展示即转态」协同（F3 × J1 链路可达
     expect(rules(decisions)).toContain('J1')
   })
 
-  it('已作答过（history 非空）→ 再次「不认识」不触发 J1', () => {
-    const answered = applySelfEval(initialProgress('w-01'), '不认识', 1_000)
+  it('(b) 跳过后再展示并自评「不认识」→ J1 仍触发（history 未被跳过污染）', () => {
+    const presented = applyPresented(initialProgress('w-01'), 1_000)
+    const skipped = applySkip(presented, 2_000)
+    // 跳过不计分、不写评估历史
+    expect(skipped.history).toHaveLength(0)
+    expect(isFirstEncounter(skipped)).toBe(true)
+    const decisions = evaluate(
+      makeCtx({ wordProgress: skipped, selfEval: '不认识' }),
+      'selfEval',
+    )
+    expect(rules(decisions)).toContain('J1')
+  })
+
+  it('(c) 已评估过（history 非空）后再自评「不认识」→ J1 不触发', () => {
+    const answered = applySelfEval(initialProgress('w-01'), '认识', 1_000)
     expect(answered.history.length).toBeGreaterThan(0)
     const decisions = evaluate(
       makeCtx({ wordProgress: answered, selfEval: '不认识' }),
@@ -277,15 +302,15 @@ describe('jumpRules · J1 与「展示即转态」协同（F3 × J1 链路可达
     expect(rules(decisions)).not.toContain('J1')
   })
 
-  it('已跳过（history 含 skip）→ 不视为首次遇词', () => {
-    const skipped = applySkip(
-      applyPresented(initialProgress('w-01'), 1_000),
-      2_000,
-    )
-    const decisions = evaluate(
-      makeCtx({ wordProgress: skipped, selfEval: '不认识' }),
-      'selfEval',
-    )
-    expect(rules(decisions)).not.toContain('J1')
+  it('(d) selfEval 缺省 / 「模糊」/ 「认识」→ J1 不触发', () => {
+    for (const selfEval of [undefined, '模糊', '认识'] as const) {
+      const decisions = evaluate(
+        makeCtx({ selfEval, wordProgress: initialProgress('w-01') }),
+        'selfEval',
+      )
+      expect(rules(decisions), `selfEval=${String(selfEval)}`).not.toContain(
+        'J1',
+      )
+    }
   })
 })

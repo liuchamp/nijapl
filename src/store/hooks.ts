@@ -64,6 +64,7 @@ export const appActions: Actions = {
   ensureProgress: initialState.ensureProgress,
   markPresented: initialState.markPresented,
   submitSelfEval: initialState.submitSelfEval,
+  submitGrammarSelfEval: initialState.submitGrammarSelfEval,
   skipWord: initialState.skipWord,
   submitReviewResult: initialState.submitReviewResult,
   startStudy: initialState.startStudy,

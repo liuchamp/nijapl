@@ -1,10 +1,15 @@
 import { describe, expect, it } from 'vitest'
 
-import { POS_LIST, POS_VERB, isVerb } from '../../../src/constants/pos.js'
+import { isVerb, POS_LIST, POS_VERB } from '../../../src/constants/pos.js'
+import { evaluate } from '../../../src/engine/jumpRules.js'
+import {
+  applyPresented,
+  applySelfEval,
+  applySkip,
+  initialProgress,
+} from '../../../src/engine/srs.js'
 import type { Grammar, Word } from '../../../src/types/domain.js'
 import type { JumpContext } from '../../../src/types/progress.js'
-import { evaluate } from '../../../src/engine/jumpRules.js'
-import { initialProgress } from '../../../src/engine/srs.js'
 
 /** QA 独立验证 —— T02 `jumpRules.ts`（J1–J6 与 POS_VERB 边界攻击）。 */
 
@@ -78,14 +83,21 @@ describe('QA · POS_VERB 显式枚举契约（红线）', () => {
   })
 
   it('isVerb：非动词词性为 false', () => {
-    for (const p of ['名詞', '代名詞', 'い形容詞', 'な形容詞', '副詞', '接続詞']) {
+    for (const p of [
+      '名詞',
+      '代名詞',
+      'い形容詞',
+      'な形容詞',
+      '副詞',
+      '接続詞',
+    ]) {
       expect(isVerb(p), p).toBe(false)
     }
   })
 })
 
-describe('QA · J1 首次遇词（seen 门控）', () => {
-  it('seen=false + 自评「不认识」→ 触发 J1(autoDetailed→P3)', () => {
+describe('QA · J1 首次遇词（N1：history.length === 0 口径）', () => {
+  it('history 空 + 自评「不认识」→ 触发 J1(autoDetailed→P3)', () => {
     const d = evaluate(makeCtx({ selfEval: '不认识' }), 'selfEval')
     expect(d.find((x) => x.rule === 'J1')).toMatchObject({
       kind: 'autoDetailed',
@@ -93,20 +105,48 @@ describe('QA · J1 首次遇词（seen 门控）', () => {
     })
   })
 
-  it('seen=true + 自评「不认识」→ 不触发（会话内重复不打断）', () => {
-    const seen = { ...initialProgress('w-01'), seen: true }
+  it('(a) 展示（applyPresented，history 仍空）+ 自评「不认识」→ 触发 J1', () => {
+    const presented = applyPresented(initialProgress('w-01'), 1_000)
+    expect(presented.seen).toBe(true)
+    expect(presented.state).toBe('学习中')
+    expect(presented.history).toHaveLength(0)
     const d = evaluate(
-      makeCtx({ wordProgress: seen, selfEval: '不认识' }),
+      makeCtx({ wordProgress: presented, selfEval: '不认识' }),
+      'selfEval',
+    )
+    expect(rules(d)).toContain('J1')
+  })
+
+  it('(b) 跳过后（history 未被污染）+ 自评「不认识」→ 仍触发 J1', () => {
+    const skipped = applySkip(
+      applyPresented(initialProgress('w-01'), 1_000),
+      2_000,
+    )
+    // N2：跳过不向 history 追加记录
+    expect(skipped.history).toHaveLength(0)
+    const d = evaluate(
+      makeCtx({ wordProgress: skipped, selfEval: '不认识' }),
+      'selfEval',
+    )
+    expect(rules(d)).toContain('J1')
+  })
+
+  it('(c) 已评估过（history 非空）+ 自评「不认识」→ 不触发 J1', () => {
+    const answered = applySelfEval(initialProgress('w-01'), '认识', 1_000)
+    expect(answered.history.length).toBeGreaterThan(0)
+    const d = evaluate(
+      makeCtx({ wordProgress: answered, selfEval: '不认识' }),
       'selfEval',
     )
     expect(rules(d)).not.toContain('J1')
   })
 
-  it('seen=false + 自评「模糊」/「认识」→ 不触发 J1', () => {
-    for (const evalr of ['模糊', '认识'] as const) {
-      expect(rules(evaluate(makeCtx({ selfEval: evalr }), 'selfEval'))).not.toContain(
-        'J1',
-      )
+  it('(d) selfEval 缺省 /「模糊」/「认识」→ 不触发 J1', () => {
+    for (const evalr of [undefined, '模糊', '认识'] as const) {
+      expect(
+        rules(evaluate(makeCtx({ selfEval: evalr }), 'selfEval')),
+        `selfEval=${String(evalr)}`,
+      ).not.toContain('J1')
     }
   })
 
@@ -116,7 +156,7 @@ describe('QA · J1 首次遇词（seen 门控）', () => {
     ).not.toContain('J1')
   })
 
-  it('【F4 修复后】selfEval 缺省 + trigger=selfEval + seen=false → 不再触发 J1', () => {
+  it('【F4 修复后】selfEval 缺省 + trigger=selfEval → 不再触发 J1', () => {
     // 原为「观察性断言」，记录缺省 selfEval 会穿透 J1 的风险；
     // 交付总监裁决 F4：J1 必须显式要求 selfEval === '不认识'，故断言翻转为「不触发」。
     const d = evaluate(makeCtx(), 'selfEval')
@@ -207,13 +247,17 @@ describe('QA · J4 模块学完（total>0 门控）', () => {
 
   it('total=0 → 不触发（无 0/0=NaN）', () => {
     expect(
-      rules(evaluate(makeCtx({ moduleLearned: 0, moduleTotal: 0 }), 'selfEval')),
+      rules(
+        evaluate(makeCtx({ moduleLearned: 0, moduleTotal: 0 }), 'selfEval'),
+      ),
     ).not.toContain('J4')
   })
 
   it('learned<total → 不触发', () => {
     expect(
-      rules(evaluate(makeCtx({ moduleLearned: 4, moduleTotal: 5 }), 'selfEval')),
+      rules(
+        evaluate(makeCtx({ moduleLearned: 4, moduleTotal: 5 }), 'selfEval'),
+      ),
     ).not.toContain('J4')
   })
 
@@ -235,7 +279,13 @@ describe('QA · J5 动词变形（POS_VERB 显式枚举，非单字匹配）', (
   })
 
   it('非动词 → 不触发 J5', () => {
-    for (const pos of ['名詞', 'い形容詞', 'な形容詞', '副詞', '接続詞'] as const) {
+    for (const pos of [
+      '名詞',
+      'い形容詞',
+      'な形容詞',
+      '副詞',
+      '接続詞',
+    ] as const) {
       const d = evaluate(makeCtx({ word: makeWord({ pos }) }), 'selfEval')
       expect(rules(d), `pos=${pos}`).not.toContain('J5')
     }
@@ -277,7 +327,9 @@ describe('QA · J6 关联词 chips', () => {
 
   it('related=[] 或 undefined → 不触发', () => {
     expect(
-      rules(evaluate(makeCtx({ word: makeWord({ pos: '名詞', related: [] }) }))),
+      rules(
+        evaluate(makeCtx({ word: makeWord({ pos: '名詞', related: [] }) })),
+      ),
     ).not.toContain('J6')
     expect(
       rules(evaluate(makeCtx({ word: makeWord({ pos: '名詞' }) }))),

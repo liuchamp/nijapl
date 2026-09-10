@@ -60,6 +60,7 @@ export function createInitialSession(): Session {
     lastStudyDate: '',
     todayNewCount: 0,
     todayReviewCount: 0,
+    todayGrammarCount: 0,
     streakDays: 0,
   }
 }
@@ -99,6 +100,10 @@ function readSession(value: unknown): Session {
     lastStudyDate: readString(value.lastStudyDate, base.lastStudyDate),
     todayNewCount: readNumber(value.todayNewCount, base.todayNewCount),
     todayReviewCount: readNumber(value.todayReviewCount, base.todayReviewCount),
+    todayGrammarCount: readNumber(
+      value.todayGrammarCount,
+      base.todayGrammarCount,
+    ),
     streakDays: readNumber(value.streakDays, base.streakDays),
   }
 }

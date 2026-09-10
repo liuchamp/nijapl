@@ -99,14 +99,16 @@ describe('srs · 复习结果（applyReviewResult）', () => {
 })
 
 describe('srs · 跳过（applySkip）', () => {
-  it('学习中 → 未学，且不计分', () => {
+  it('学习中 → 未学，且不计分、不写评估历史（Ruling 1）', () => {
     const learning = applySelfEval(initialProgress('w-01'), '不认识', NOW)
     const p = applySkip(learning, NOW + 1)
     expect(p.state).toBe('未学')
     expect(p.wrongCount).toBe(learning.wrongCount)
     expect(p.intervalLevel).toBe(0)
     expect(p.nextReview).toBe(0)
-    expect(p.history.at(-1)?.result).toBe('skip')
+    // 跳过不产生评估记录：history 原样保留（长度不变）
+    expect(p.history).toHaveLength(learning.history.length)
+    expect(p.history).toBe(learning.history)
   })
 })
 
@@ -160,13 +162,15 @@ describe('srs · 展示即转态 applyPresented（F3：让「学习中」可达�
     }
   })
 
-  it('学习中 → 跳过（applySkip）回到未学且不计分（F3 闭环）', () => {
+  it('学习中 → 跳过（applySkip）回到未学且不计分（F3 闭环，不写历史）', () => {
     const learning = applyPresented(initialProgress('w-01'), NOW)
     expect(learning.state).toBe('学习中')
+    expect(learning.history).toHaveLength(0)
     const skipped = applySkip(learning, NOW + 1)
     expect(skipped.state).toBe('未学')
     expect(skipped.wrongCount).toBe(0)
-    expect(skipped.history.at(-1)?.result).toBe('skip')
+    // 跳过不计分、不写历史：history 仍为空（未被 skip 污染）
+    expect(skipped.history).toHaveLength(0)
   })
 
   it('展示后不会立刻混入「今日到期」队列', () => {

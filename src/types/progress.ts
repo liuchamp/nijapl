@@ -36,6 +36,8 @@ export interface Session {
   lastStudyDate: string
   todayNewCount: number
   todayReviewCount: number
+  /** 今日已评估的语法点数（P0「今日任务」第三项配额分母 `DAILY_GRAMMAR_GOAL`）。 */
+  todayGrammarCount: number
   streakDays: number
 }
 

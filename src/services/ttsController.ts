@@ -2,6 +2,7 @@ import { STRINGS } from '../constants/strings.js'
 import { ttsPort } from '../engine/tts/index.js'
 import type { TtsCapability, TtsResult } from '../types/ports.js'
 import type { StudySettings } from '../types/progress.js'
+import { copyText } from './clipboard.js'
 
 /**
  * C1 语音单例控制器（架构 §2.7 / §4.2）。
@@ -52,54 +53,6 @@ function describeTtsFailure(reason: string): string {
     default:
       return STRINGS.tts.error
   }
-}
-
-/**
- * 尝试写剪贴板：优先 Lynx 宿主能力，其次 Web `navigator.clipboard`。
- *
- * 说明：本项目未定义 Clipboard 端口（T03 端口范围仅 TTS/Storage），
- * 故此处用**受保护的运行时探测**实现「复制假名」；两者都不可用时返回 `false`，
- * 由 UI 明确提示「假名如下，请手动复制」并显示假名（不是静默失败）。
- */
-function tryClipboard(text: string): boolean {
-  const g = globalThis as unknown as {
-    lynx?: { setClipboardData?: (options: { text: string }) => void }
-    navigator?: { clipboard?: { writeText?: (text: string) => Promise<void> } }
-  }
-
-  const viaLynx = (): boolean => {
-    const setter = g.lynx?.setClipboardData
-    if (typeof setter !== 'function') {
-      return false
-    }
-    setter.call(g.lynx, { text })
-    return true
-  }
-  const viaNavigator = (): boolean => {
-    const clipboard = g.navigator?.clipboard
-    const write = clipboard?.writeText
-    if (typeof write !== 'function') {
-      return false
-    }
-    void write.call(clipboard, text)
-    return true
-  }
-
-  try {
-    if (viaLynx()) {
-      return true
-    }
-  } catch {
-    // Lynx 剪贴板不可用 → 继续尝试 Web 剪贴板。
-  }
-  try {
-    if (viaNavigator()) {
-      return true
-    }
-  } catch {
-    // Web 剪贴板被拒绝（非安全上下文 / 权限）→ 明确降级。
-  }
-  return false
 }
 
 /** 语音控制器。 */
@@ -228,7 +181,7 @@ class TtsController {
 
   /** 复制假名（无剪贴板能力时明确降级并仍返回文本）。 */
   copyKana(text: string): string {
-    const copied = tryClipboard(text)
+    const copied = copyText(text)
     this.patch({
       copyNotice: copied ? STRINGS.tts.copied : STRINGS.tts.copyFallback,
       fallbackText: text,

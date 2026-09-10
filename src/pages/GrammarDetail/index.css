@@ -1,0 +1,187 @@
+/* GrammarDetail：P5 语法详解 */
+
+.GrammarDetail {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: var(--space-md);
+}
+
+.GrammarDetail-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--space-md);
+}
+
+.GrammarDetail-back {
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.GrammarDetail-backLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.GrammarDetail-title {
+  flex: 1;
+  text-align: center;
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.GrammarDetail-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-lg);
+}
+
+.GrammarDetail-pattern {
+  font-size: var(--font-xl);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.GrammarDetail-meta {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
+}
+
+.GrammarDetail-block {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+}
+
+.GrammarDetail-blockHead {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.GrammarDetail-blockTitle {
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xs);
+}
+
+.GrammarDetail-body {
+  font-size: var(--font-md);
+  color: var(--color-text);
+}
+
+.GrammarDetail-chips {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.GrammarDetail-chip {
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  margin-right: var(--space-xs);
+  margin-bottom: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.GrammarDetail-chip--link {
+  border: 1rpx solid var(--color-primary);
+}
+
+.GrammarDetail-chipLabel {
+  font-size: var(--font-xs);
+  color: var(--color-text);
+}
+
+.GrammarDetail-sentence {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1rpx solid var(--color-border);
+}
+
+.GrammarDetail-sentenceJa {
+  font-size: var(--font-md);
+  color: var(--color-text);
+}
+
+.GrammarDetail-sentenceZh {
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
+  margin-bottom: var(--space-xs);
+}
+
+.GrammarDetail-empty {
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+.GrammarDetail-eval {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-top: var(--space-sm);
+}
+
+.GrammarDetail-evalBtn {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
+  margin-right: var(--space-sm);
+  border-radius: var(--radius-md);
+  border: 1rpx solid var(--color-border);
+}
+
+.GrammarDetail-evalBtn--unknown {
+  background-color: rgba(255, 95, 109, 0.16);
+}
+
+.GrammarDetail-evalBtn--vague {
+  background-color: rgba(240, 180, 74, 0.16);
+}
+
+.GrammarDetail-evalBtn--known {
+  background-color: rgba(57, 196, 122, 0.16);
+}
+
+.GrammarDetail-evalLabel {
+  font-size: var(--font-md);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.GrammarDetail-notFound {
+  font-size: var(--font-md);
+  color: var(--color-text-muted);
+  margin-top: var(--space-lg);
+}

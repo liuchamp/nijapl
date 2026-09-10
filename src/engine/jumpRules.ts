@@ -11,19 +11,21 @@ export type JumpTrigger = 'selfEval' | 'scene'
 /**
  * 是否「首次遇词」（J1 门控，PRD §5.5 / §J1）。
  *
- * 语义为「**作答前**从未出现过」：
- * 1. `seen === false` —— 从未作答（最直接）；
- * 2. 或仅由「展示即转态」标记过（`state === '学习中'` 且 `history` 为空）——
- *    卡片刚首次可见、尚未作答（T04 `applyPresented` 会置 `seen=true`，
- *    若 J1 只看 `seen` 则真实链路中 J1 永不可达，与 PRD 链路①冲突）。
+ * **语义裁决（team-lead Ruling 1）**：`首次遇词` = 「该词从未被用户**评估**过」，
+ * 即 `Progress.history` 中不存在任何**评估**记录 → `history.length === 0`。
  *
- * 一旦发生任意作答（`history` 非空：correct / wrong / skip），即不再是首次遇词。
+ * - `seen` 的语义收敛为「**卡片展示过**」，**不再参与**首次遇词判定：
+ *   `applyPresented`（展示即转态）会置 `seen = true`，若 J1 依赖 `seen`
+ *   则真实链路（展示 → 自评）中 J1 永不可达，与 PRD 链路①冲突。
+ * - `applySkip`（跳过）**不写入** `history`（PRD §5.5「跳过不计分」），
+ *   因此「跳过后再次展示并自评不认识」仍属首次遇词，J1 仍触发。
+ * - 一旦发生任意**评估**（`history` 非空：correct / wrong），即不再是首次遇词。
+ *
+ * @param p 目标词条的当前进度。
+ * @returns 从未被评估过则为 `true`。
  */
-function isFirstEncounter(p: Progress): boolean {
-  if (!p.seen) {
-    return true
-  }
-  return p.state === '学习中' && p.history.length === 0
+export function isFirstEncounter(p: Progress): boolean {
+  return p.history.length === 0
 }
 
 /** J1：首次遇词且自评「不认识」→ 自动展开详解。 */

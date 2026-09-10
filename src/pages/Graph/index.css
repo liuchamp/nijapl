@@ -1,0 +1,141 @@
+/* Graph：P6 知识图谱 */
+
+.Graph {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: var(--space-md);
+}
+
+.Graph-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--space-sm);
+}
+
+.Graph-back {
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.Graph-backLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.Graph-title {
+  flex: 1;
+  text-align: center;
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.Graph-tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--space-sm);
+}
+
+.Graph-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  margin-right: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.Graph-tab--on {
+  background-color: var(--color-primary);
+}
+
+.Graph-tabLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.Graph-hint {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xs);
+}
+
+.Graph-legend {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: var(--space-sm);
+}
+
+.Graph-legendItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: var(--space-md);
+}
+
+.Graph-legendDot {
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: var(--radius-pill);
+  margin-right: var(--space-xs);
+}
+
+.Graph-legendLabel {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.Graph-empty {
+  font-size: var(--font-md);
+  color: var(--color-text-muted);
+  margin-top: var(--space-lg);
+}
+
+.Graph-detail {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-md);
+  margin-top: var(--space-sm);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+}
+
+.Graph-detailLabel {
+  font-size: var(--font-md);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.Graph-detailBtn {
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+
+.Graph-detailBtnLabel {
+  font-size: var(--font-sm);
+  color: var(--color-bg);
+  font-weight: 700;
+}

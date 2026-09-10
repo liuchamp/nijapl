@@ -41,11 +41,14 @@ export const NO_CONTENT = -1
 export const STAGE_UNLOCK_RATIO = 0.8
 
 /**
- * 每日目标：新学 / 复习词条数（P0 首页「今日目标」进度环分母）。
+ * 每日目标：新学 / 复习词条数 + 语法点数（P0 首页「今日任务」三项进度环分母）。
+ *
+ * **配额对齐（team-lead Ruling 3 / QA N4）**：新 20 / 复习 35 / 语法 2。
  * 数值为产品默认值，未随设置持久化，便于后续迭代为可配置项。
  */
 export const DAILY_NEW_GOAL = 20
-export const DAILY_REVIEW_GOAL = 20
+export const DAILY_REVIEW_GOAL = 35
+export const DAILY_GRAMMAR_GOAL = 2
 
 /**
  * 阶段 / 模块节点展示态：`locked`（未满足解锁条件）+ SRS 五态。

@@ -1,5 +1,5 @@
 import './index.css'
-import { useEffect, useMemo, useRef, useState } from '@lynx-js/react'
+import { useEffect, useMemo, useState } from '@lynx-js/react'
 import { useLocation, useParams } from 'react-router'
 import { DetailSheet } from '../../components/DetailSheet/index.js'
 import { WordCard } from '../../components/WordCard/index.js'
@@ -13,7 +13,6 @@ import {
 } from '../../services/jumpService.js'
 import { detectSlideMode } from '../../services/platform.js'
 import * as studySession from '../../services/studySession.js'
-import { classifySwipe } from '../../services/swipe.js'
 import { ttsController } from '../../services/ttsController.js'
 import { appActions, useAppStore, useSettings } from '../../store/hooks.js'
 import type { SelfEval } from '../../types/progress.js'
@@ -26,15 +25,14 @@ import type { SelfEval } from '../../types/progress.js'
  *   （内部走 `markPresented` → `applyPresented`，「学习中」的唯一入口）；
  * - **整卡 TTS**：点卡片任意空白发音（`WordCard.onSpeak`）；
  * - **三档自评**：全部经 `studySession.applySelfEvaluation`（唯一写入口）；
- * - **J1 自动展开 C2**：自评「不认识」且首次遇到 → 打开半屏详解；确认可跳 P3；
- * - **左滑跳过**：经 `classifySwipe` 判定后调用 `skipCurrentWord`（`学习中 → 未学`）；
- * - **容器降级**：原生 `<viewpager>` / Web `<scroll-view scroll-orientation="horizontal">`；
- *   为避免「分页滑动」与「左滑跳过」手势竞争，两个容器均关闭自身滑动
- *   （`enable-scroll={false}`），翻页由按钮驱动、左滑专用于跳过。
+ * - **J1 自动展开 C2**：自评「不认识」且首次遇到（该词从未被评估过，
+ *   `Progress.history` 为空）→ 打开半屏详解；确认可跳 P3；
+ * - **滑动 = 翻页（Ruling 2 / N3）**：原生 `<viewpager>` / Web
+ *   `<scroll-view scroll-orientation="horizontal">` 均保留**原生手势翻页**，
+ *   不再关闭容器自身滚动，也**不再**把左滑绑成跳过；
+ * - **跳过 = 显式按钮**：同一 `applySkip` 路径（`studySession.skipCurrentWord`），
+ *   与翻页手势彻底解耦，符合 PRD §5.3 的「跳过」交互（**PRD 偏差已于交付说明标注**）。
  */
-
-/** 滑动触发阈值（px）。 */
-const SWIPE_THRESHOLD = 60
 
 /** P2 词汇学习页。 */
 export function StudyPage() {
@@ -52,7 +50,9 @@ export function StudyPage() {
 
   const [revealed, setRevealed] = useState(false)
   const [effect, setEffect] = useState<StudyEffect>(emptyStudyEffect)
-  const touchStart = useRef<{ x: number; y: number } | null>(null)
+  // 程序化翻页令牌：仅在「按钮 / 自评 / 跳过」等主动导航时自增，
+  // 用于让容器重新 seek 到 `index`；**滑动**自身改 `index` 时不重挂载，避免抖动。
+  const [pagerToken, setPagerToken] = useState(0)
 
   const isReview = location.search.includes('mode=review')
   const detailSheet = state.runtime.detailSheet
@@ -64,6 +64,7 @@ export function StudyPage() {
     }
     studySession.beginStudy(moduleId)
     setRevealed(false)
+    setPagerToken((token) => token + 1)
   }, [moduleId])
 
   // 卡片首次可见：展示即转态 + 场景跳转评估（J3 / J4 / J5 / J6）。
@@ -79,6 +80,8 @@ export function StudyPage() {
 
   function advance(delta: number): void {
     studySession.stepIndex(delta)
+    // 主动导航：让容器重新 seek 到新 `index`。
+    setPagerToken((token) => token + 1)
   }
 
   /** 整卡热区发音（朗读文本恒为假名）。 */
@@ -169,41 +172,12 @@ export function StudyPage() {
         <text className="Study-fallback">{STRINGS.study.webFallbackHint}</text>
       ) : null}
 
-      <view
-        className="Study-stage"
-        bindtouchstart={(event) => {
-          if (event.touches.length === 0) {
-            touchStart.current = null
-            return
-          }
-          const touch = event.touches[0]
-          touchStart.current = { x: touch.clientX, y: touch.clientY }
-        }}
-        bindtouchend={(event) => {
-          const start = touchStart.current
-          touchStart.current = null
-          if (start === null || event.changedTouches.length === 0) {
-            return
-          }
-          const touch = event.changedTouches[0]
-          const direction = classifySwipe(
-            touch.clientX - start.x,
-            touch.clientY - start.y,
-            SWIPE_THRESHOLD,
-          )
-          if (direction === 'left') {
-            onSkip()
-          } else if (direction === 'right') {
-            advance(-1)
-          }
-        }}
-      >
+      <view className="Study-stage">
         {slideMode === 'viewpager' ? (
           <viewpager
-            key={`pager-${index}`}
+            key={`pager-${pagerToken}`}
             className="Study-pager"
             initial-select-index={index}
-            enable-scroll={false}
             bindchange={(event) => {
               appActions.setCurrentIndex(event.detail.index)
             }}
@@ -216,10 +190,9 @@ export function StudyPage() {
           </viewpager>
         ) : (
           <scroll-view
-            key={`scroll-${index}`}
+            key={`scroll-${pagerToken}`}
             className="Study-pager"
             scroll-orientation="horizontal"
-            enable-scroll={false}
             initial-scroll-to-index={index}
           >
             {words.map((cardWord, cardIndex) => (

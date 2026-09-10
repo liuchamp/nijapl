@@ -1,7 +1,11 @@
 import './index.css'
 import { NodeStateBadge } from '../../components/NodeStateBadge/index.js'
 import { ProgressRing } from '../../components/ProgressRing/index.js'
-import { DAILY_NEW_GOAL, DAILY_REVIEW_GOAL } from '../../constants/srs.js'
+import {
+  DAILY_GRAMMAR_GOAL,
+  DAILY_NEW_GOAL,
+  DAILY_REVIEW_GOAL,
+} from '../../constants/srs.js'
 import { STRINGS } from '../../constants/strings.js'
 import { repository } from '../../data/index.js'
 import { useNavigation } from '../../router/navigation.js'
@@ -35,7 +39,6 @@ export function HomePage() {
 
   const hasSession = state.session.moduleId !== ''
   const newRatio = stats.newCount / DAILY_NEW_GOAL
-  const reviewRatio = stats.reviewCount / DAILY_REVIEW_GOAL
 
   return (
     <view className="Home">
@@ -52,13 +55,13 @@ export function HomePage() {
         <view className="Home-goalSide">
           <text className="Home-goalTitle">{STRINGS.home.todayGoal}</text>
           <text className="Home-goalLine">
-            {`${STRINGS.home.newLearned} ${stats.newCount}`}
+            {`${STRINGS.home.newLearned} ${stats.newCount}/${DAILY_NEW_GOAL}`}
           </text>
           <text className="Home-goalLine">
-            {`${STRINGS.home.reviewed} ${stats.reviewCount}`}
+            {`${STRINGS.home.reviewed} ${stats.reviewCount}/${DAILY_REVIEW_GOAL}`}
           </text>
           <text className="Home-goalLine">
-            {`${STRINGS.home.reviewed} ${Math.round(reviewRatio * 100)}%`}
+            {`${STRINGS.home.grammarLearned} ${stats.grammarCount}/${DAILY_GRAMMAR_GOAL}`}
           </text>
         </view>
       </view>

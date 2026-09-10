@@ -137,15 +137,19 @@ export function applyReviewResult(
 }
 
 /**
- * 跳过：`学习中 → 未学`，不计分（`wrongCount` 不变、间隔归零），仅记录 skip。
+ * 跳过：`学习中 → 未学`，**不计分且不写入评估历史**（PRD §5.5「跳过不计分」）。
+ *
+ * **语义裁决（team-lead Ruling 1）**：跳过不产生任何**评估**记录，
+ * 因此 `history` 原样保留（`history.length` 不变），使「跳过后再展示并自评不认识」
+ * 仍属首次遇词（J1 仍触发）。`wrongCount` 不变、间隔归零，仅状态回退。
  */
-export function applySkip(p: Progress, now: number): Progress {
+export function applySkip(p: Progress, _now: number): Progress {
   return {
     ...p,
     state: '未学',
     intervalLevel: 0,
     nextReview: 0,
-    history: pushRecord(p.history, now, 'skip', p.state, '未学'),
+    history: p.history,
   }
 }
 

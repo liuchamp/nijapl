@@ -129,7 +129,9 @@ describe('QA · srs 间隔序列推进（含封顶）', () => {
     }
     expect(p.intervalLevel).toBe(SRS_INTERVALS_MS.length - 1)
     const next = applySelfEval(p, '认识', now)
-    expect(next.nextReview - now).toBe(SRS_INTERVALS_MS[SRS_INTERVALS_MS.length - 1])
+    expect(next.nextReview - now).toBe(
+      SRS_INTERVALS_MS[SRS_INTERVALS_MS.length - 1],
+    )
     expect(Number.isFinite(next.nextReview)).toBe(true)
   })
 
@@ -159,7 +161,9 @@ describe('QA · srs 跳过（applySkip）', () => {
     expect(p.intervalLevel).toBe(0)
     expect(p.nextReview).toBe(0)
     expect(p.seen).toBe(true) // 仅状态回退，不抹除「出现过」事实
-    expect(p.history.at(-1)).toMatchObject({ result: 'skip', to: '未学' })
+    // N2（Ruling 1）：跳过不计分、不向 history 追加记录
+    expect(p.history).toHaveLength(learning.history.length)
+    expect(p.history).toHaveLength(0)
   })
 
   it('纯函数：applySkip / applySelfEval / applyReviewResult 均不修改入参', () => {
