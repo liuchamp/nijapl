@@ -56,20 +56,24 @@ export function buildOverview(data: GraphSourceData): GraphView {
 /** 收集某词条的关联词（含反向关联，去重）。 */
 function collectRelatedWords(
   word: Word,
-  all: Word[],
+  data: GraphSourceData,
 ): Array<{ word: Word; type: string }> {
   const result: Array<{ word: Word; type: string }> = []
   const seen = new Set<string>()
 
+  // O(1) 查表：优先用调用方预建的 Map，回退 O(n) 以兼容单测 / 直接构造的 source。
+  const lookupWord = (id: string): Word | undefined =>
+    data.wordById?.get(id) ?? data.words.find((w) => w.id === id)
+
   for (const rel of word.related ?? []) {
-    const target = all.find((w) => w.id === rel.toId)
+    const target = lookupWord(rel.toId)
     if (target !== undefined && !seen.has(target.id)) {
       seen.add(target.id)
       result.push({ word: target, type: rel.type })
     }
   }
 
-  for (const other of all) {
+  for (const other of data.words) {
     if (other.id === word.id) {
       continue
     }
@@ -89,16 +93,19 @@ export function buildWordView(word: Word, data: GraphSourceData): GraphView {
   const nodesById = new Map<string, GraphNode>()
   const edges: GraphEdge[] = []
 
+  // O(1) 查表（见 collectRelatedWords 注释）。
+  const lookupWord = (id: string): Word | undefined =>
+    data.wordById?.get(id) ?? data.words.find((w) => w.id === id)
+  const lookupGrammar = (id: string): Grammar | undefined =>
+    data.grammarById?.get(id) ?? data.grammars.find((g) => g.id === id)
+
   const centerId = wordNodeId(word.id)
   nodesById.set(
     centerId,
     makeNode(centerId, 'word', word.kanji || word.kana, WORD_RADIUS),
   )
 
-  for (const { word: relatedWord, type } of collectRelatedWords(
-    word,
-    data.words,
-  )) {
+  for (const { word: relatedWord, type } of collectRelatedWords(word, data)) {
     const id = wordNodeId(relatedWord.id)
     if (!nodesById.has(id)) {
       nodesById.set(
@@ -123,7 +130,7 @@ export function buildWordView(word: Word, data: GraphSourceData): GraphView {
     }
   }
   for (const grammarId of grammarIds) {
-    const grammar = data.grammars.find((g) => g.id === grammarId)
+    const grammar = lookupGrammar(grammarId)
     if (grammar === undefined) {
       continue
     }
@@ -148,6 +155,12 @@ export function buildGrammarView(
   const nodesById = new Map<string, GraphNode>()
   const edges: GraphEdge[] = []
 
+  // O(1) 查表（见 collectRelatedWords 注释）。
+  const lookupWord = (id: string): Word | undefined =>
+    data.wordById?.get(id) ?? data.words.find((w) => w.id === id)
+  const lookupGrammar = (id: string): Grammar | undefined =>
+    data.grammarById?.get(id) ?? data.grammars.find((g) => g.id === id)
+
   const centerId = grammarNodeId(grammar.id)
   nodesById.set(
     centerId,
@@ -155,7 +168,7 @@ export function buildGrammarView(
   )
 
   for (const rel of grammar.related ?? []) {
-    const target = data.grammars.find((g) => g.id === rel.toId)
+    const target = lookupGrammar(rel.toId)
     if (target === undefined) {
       continue
     }
@@ -193,7 +206,7 @@ export function buildGrammarView(
     }
   }
   for (const wordId of wordIds) {
-    const word = data.words.find((w) => w.id === wordId)
+    const word = lookupWord(wordId)
     if (word === undefined) {
       continue
     }

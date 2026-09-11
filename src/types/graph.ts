@@ -46,5 +46,14 @@ export interface LayoutResult {
   height: number
 }
 
-/** 图谱构造所需的数据源（结构同 `BuildData`，引擎据此保持零端口依赖）。 */
-export type GraphSourceData = BuildData
+/**
+ * 图谱构造所需的数据源（结构同 `BuildData`，引擎据此保持零端口依赖）。
+ *
+ * 可选 `wordById` / `grammarById` 由 `selectGraphSource` 在调用方预建，供引擎
+ * 把 `all.find` / `data.grammars.find` 等 O(n) 查找降为 O(1)，数据规模扩大时
+ * 不会退化。引擎本身仍不依赖 `DataRepository`（架构红线：保持零端口依赖）。
+ */
+export type GraphSourceData = BuildData & {
+  wordById?: Map<string, BuildData['words'][number]>
+  grammarById?: Map<string, BuildData['grammars'][number]>
+}

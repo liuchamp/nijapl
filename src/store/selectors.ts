@@ -8,6 +8,7 @@ import {
 } from '../engine/progress.js'
 import { dueTargetIds } from '../engine/srs.js'
 import type { BuildData, Stage, Word } from '../types/domain.js'
+import type { GraphSourceData } from '../types/graph.js'
 import type { Progress, SrsState } from '../types/progress.js'
 import type { AppState } from './index.js'
 
@@ -163,14 +164,30 @@ export function selectTodayStats(state: AppState, now: number): TodayStats {
   }
 }
 
-/** 图谱数据源：把仓库查询结果组装为 `BuildData`（引擎图谱构造入参）。 */
-export function selectGraphSource(): BuildData {
+/** 图谱数据源：把仓库查询结果组装为 `BuildData`（引擎图谱构造入参）。
+ *
+ * 同时预建 `wordById` / `grammarById` 索引供引擎 O(1) 查找，
+ * 避免 `view.ts` 内 `all.find` 在数据规模增长时退化。
+ * 引擎本身仍不依赖 `DataRepository`（架构红线：保持零端口依赖）。 */
+export function selectGraphSource(): GraphSourceData {
+  const words = repository.getAllWords()
+  const grammars = repository.getAllGrammars()
+  const wordById = new Map<string, (typeof words)[number]>()
+  for (const word of words) {
+    wordById.set(word.id, word)
+  }
+  const grammarById = new Map<string, (typeof grammars)[number]>()
+  for (const grammar of grammars) {
+    grammarById.set(grammar.id, grammar)
+  }
   return {
     stages: repository.getStages(),
     modules: repository.getAllModules(),
-    words: repository.getAllWords(),
-    grammars: repository.getAllGrammars(),
+    words,
+    grammars,
     sentences: repository.getAllSentences(),
+    wordById,
+    grammarById,
   }
 }
 

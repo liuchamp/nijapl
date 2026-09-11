@@ -85,7 +85,19 @@ function readProgress(value: unknown): Record<string, Progress> {
   if (!isRecord(value)) {
     return {}
   }
-  return value as Record<string, Progress>
+  // 字段级净化：每个 Progress 必须至少有 `history: ReviewRecord[]`。
+  // **必须用 `Array.isArray`**，不能用 `value.history?.length` 等真值判断——
+  // `history: 'oops'` 时 `'oops'.length === 4` 会被静默判定为「已评估过」，
+  // 致 todayNewCount 不 +1（不抛错但结果错，比崩溃更难查）。
+  const sanitized: Record<string, Progress> = {}
+  for (const [targetId, raw] of Object.entries(value)) {
+    if (!isRecord(raw)) {
+      continue
+    }
+    const history = Array.isArray(raw.history) ? raw.history : []
+    sanitized[targetId] = { ...raw, history } as Progress
+  }
+  return sanitized
 }
 
 function readSession(value: unknown): Session {
@@ -157,6 +169,17 @@ export function createPersistOptions(): PersistOptions<
     storage: createJSONStorage<PersistedState>(() => portableStorage),
     partialize: partializeState,
     migrate: (persisted: unknown) => migrateState(persisted),
+    // zustand 4.5.7 仅在 `version` 不一致时调用 `migrate`
+    // （见 `node_modules/zustand/esm/middleware.mjs:376-388`）；
+    // 版本一致的存储损坏 / 手改导出 JSON 这条路径完全不经过净化。
+    // 所以必须在 `merge` 内再净化一次：
+    // - `persisted === undefined` 守卫不能省：首次安装 / 空存储时 zustand
+    //   会以 `merge(undefined, current)` 调用一次，若不守卫则会被全默认值覆盖 `current`；
+    // - 复用现有 `migrateState`，逻辑零分叉。
+    merge: (persisted, current) =>
+      persisted === undefined
+        ? current
+        : { ...current, ...migrateState(persisted) },
     onRehydrateStorage: () => (state, error) => {
       if (error !== undefined && error !== null) {
         console.error('[store] 本地进度恢复失败，已回落默认进度：', error)

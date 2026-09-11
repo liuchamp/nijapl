@@ -39,8 +39,6 @@ export type DetailSheetMode = 'auto' | 'prompt'
 export interface Actions {
   /** 持久化恢复完成 / 失败后解除门控。 */
   setHydrated(hydrated: boolean): void
-  /** 确保某目标存在进度记录（幂等）。 */
-  ensureProgress(targetId: string): Progress
   /**
    * 卡片**首次可见**时调用（PRD §5.5 展示即转态）：`未学 → 学习中`，幂等。
    * 这是「学习中」态的唯一入口；不调用则 `applySkip` 无意义。
@@ -190,18 +188,6 @@ export function createActions(set: StoreSet, get: StoreGet): Actions {
       set((state) => ({ runtime: { ...state.runtime, hydrated } }))
     },
 
-    ensureProgress(targetId: string): Progress {
-      const existing = get().progress[targetId]
-      if (existing !== undefined) {
-        return existing
-      }
-      const progress = initialProgress(targetId)
-      set((state) => ({
-        progress: { ...state.progress, [targetId]: progress },
-      }))
-      return progress
-    },
-
     markPresented(targetId: string, now?: number): void {
       const at = now ?? Date.now()
       const state = get()
@@ -232,24 +218,42 @@ export function createActions(set: StoreSet, get: StoreGet): Actions {
       const word = repository.getWordById(targetId)
       const existing = state.progress[targetId] ?? initialProgress(targetId)
 
+      // 脏数据纵深防御：持久化净化（persistence.ts merge / readProgress）是**入 store 时**的兜底，
+      // 但若运行时存在内存破坏 / 第三方扩展直接 setState 等场景让 `history` 不是合法数组，
+      // 在此处显式归零成 []，避免：
+      //   - `applySelfEval` → `pushRecord` → `[...history, ...]` 把 'oops' 展成 ['o','o','p','s',...] 污染记录；
+      //   - `?.length ?? 0` 把 'oops' 当成"已评估过"（length===4）静默不 +1。
+      // 走归零路径（reset 为首次评估）而非抛错回滚，理由：
+      //   - 抛错回滚会让用户看到"点了没反应"，UX 更差；
+      //   - 归零等价于"之前数据作废、按首次评估重新计"，与 Ruling 1「history 由空变非空
+      //     才计一次」一致 —— 既然原数据不可信，等同于从未评估过。
+      const sanitized: Progress = Array.isArray(existing.history)
+        ? existing
+        : { ...existing, history: [] }
+
       // J1 需要「本次自评前」的 seen，故用旧进度评估决策。
       let decisions: JumpDecision[] = [{ rule: 'none' }]
       if (word !== undefined) {
         decisions = evaluate(
-          buildJumpContext(state, word, existing, selfEval),
+          buildJumpContext(state, word, sanitized, selfEval),
           'selfEval',
         )
       }
 
-      const next = applySelfEval(existing, selfEval, at)
+      const next = applySelfEval(sanitized, selfEval, at)
       const session = rollSessionDay(state.session, at)
+      // 判据（修复 P0-1）：用「首次评估」替代 `seen`——`seen` 在 markPresented 后即 true，导致计数恒不递增。
+      // 用「sanitized.history.length === 0」判定（首评后非空），
+      // 配合上方的 Array.isArray 归零防御，确保脏数据下也走正确分支。
+      // 禁止用 `existing.history!.length` 绕类型错误 —— 运行时可能为 undefined。
+      const isFirstEval = sanitized.history.length === 0
       set({
         progress: { ...state.progress, [targetId]: next },
         session: {
           ...session,
-          todayNewCount: existing.seen
-            ? session.todayNewCount
-            : session.todayNewCount + 1,
+          todayNewCount: isFirstEval
+            ? session.todayNewCount + 1
+            : session.todayNewCount,
         },
         runtime: {
           ...state.runtime,
@@ -270,15 +274,23 @@ export function createActions(set: StoreSet, get: StoreGet): Actions {
       const at = now ?? Date.now()
       const state = get()
       const existing = state.progress[targetId] ?? initialProgress(targetId)
-      const next = applySelfEval(existing, selfEval, at)
+      // 同 submitSelfEval 的脏数据纵深防御：history 非数组时归零成 []（见 submitSelfEval 注释）。
+      const sanitized: Progress = Array.isArray(existing.history)
+        ? existing
+        : { ...existing, history: [] }
+      const next = applySelfEval(sanitized, selfEval, at)
       const session = rollSessionDay(state.session, at)
+      // 预防性同改（与 submitSelfEval 同源判据）：即便现状未失效，
+      // 一旦语法点未来接入「展示即转态」也保持口径一致。
+      // 防御语义同 submitSelfEval —— 用 `?.length ?? 0` 防脏数据，禁止 `!` 绕过。
+      const isFirstEval = sanitized.history.length === 0
       set({
         progress: { ...state.progress, [targetId]: next },
         session: {
           ...session,
-          todayGrammarCount: existing.seen
-            ? session.todayGrammarCount
-            : session.todayGrammarCount + 1,
+          todayGrammarCount: isFirstEval
+            ? session.todayGrammarCount + 1
+            : session.todayGrammarCount,
         },
       })
     },
@@ -374,6 +386,9 @@ export function createActions(set: StoreSet, get: StoreGet): Actions {
     },
 
     markStudyDay(now?: number): void {
+      // TODO(P3 接线): 「打卡」入口尚未接入 UI；当前连续天数仅由 `rollSessionDay` 被动推进。
+      // 函数保留：QA 已在测试中调用（tests/audit/p0-cross-day.audit.test.ts:242），
+      // 删除会丢测试钩子。后续在 Me / Home 页加打卡按钮时直接用此 action。
       const at = now ?? Date.now()
       const state = get()
       set({ session: rollSessionDay(state.session, at) })

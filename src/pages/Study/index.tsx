@@ -46,7 +46,11 @@ export function StudyPage() {
 
   const words = useMemo(() => repository.getModuleWords(moduleId), [moduleId])
   const index = state.runtime.currentIndex
-  const word = words[index]
+  // 兜底：冷启动续学时 `useMemo(words)` 已用新 moduleId 重算，
+  // 但 `currentIndex` 仍可能是上一模块残留 / 越界值，
+  // `beginStudy` 在 `useEffect`（渲染后）才纠正 index —— 此间首帧会渲染错的词。
+  // 兜底用 `words[0]` 替代 undefined，避免 DetailSheet 拿到 undefined、J3/J4/J5/J6 错位。
+  const word = words[index] ?? words[0]
 
   const [revealed, setRevealed] = useState(false)
   const [effect, setEffect] = useState<StudyEffect>(emptyStudyEffect)
