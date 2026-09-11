@@ -168,7 +168,7 @@ export function StudyPage() {
           {isReview ? STRINGS.study.reviewTitle : STRINGS.study.title}
         </text>
         <text className="Study-progress">
-          {`${STRINGS.study.cardProgress} ${index + 1}/${words.length}`}
+          {`${STRINGS.study.cardProgress} ${Math.min(index + 1, words.length)}/${words.length}`}
         </text>
       </view>
 
