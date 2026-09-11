@@ -1,6 +1,4 @@
 import { describe, expect, it } from 'vitest'
-
-import type { BuildData, Grammar, Word } from '../../../src/types/domain.js'
 import { layout } from '../../../src/engine/graph/layout.js'
 import { toSvg } from '../../../src/engine/graph/svg.js'
 import {
@@ -8,6 +6,7 @@ import {
   buildOverview,
   buildWordView,
 } from '../../../src/engine/graph/view.js'
+import type { BuildData, Grammar, Word } from '../../../src/types/domain.js'
 
 /** QA 独立验证 —— T02 `graph/view.ts` + `graph/svg.ts`（构造与渲染鲁棒性）。 */
 
@@ -24,7 +23,11 @@ function word(id: string, moduleId: string, related?: Word['related']): Word {
     related,
   }
 }
-function grammar(id: string, stageId: string, related?: Grammar['related']): Grammar {
+function grammar(
+  id: string,
+  stageId: string,
+  related?: Grammar['related'],
+): Grammar {
   return {
     id,
     pattern: `～${id}`,
@@ -40,8 +43,20 @@ function grammar(id: string, stageId: string, related?: Grammar['related']): Gra
 
 const data: BuildData = {
   stages: [
-    { id: 's1', name: 'A', order: 1, weekRange: { start: 1, end: 6 }, hasContent: true },
-    { id: 's2', name: 'B', order: 2, weekRange: { start: 7, end: 13 }, hasContent: true },
+    {
+      id: 's1',
+      name: 'A',
+      order: 1,
+      weekRange: { start: 1, end: 6 },
+      hasContent: true,
+    },
+    {
+      id: 's2',
+      name: 'B',
+      order: 2,
+      weekRange: { start: 7, end: 13 },
+      hasContent: true,
+    },
   ],
   modules: [
     { id: 'm1', stageId: 's1', name: 'M1', wordCount: 2 },

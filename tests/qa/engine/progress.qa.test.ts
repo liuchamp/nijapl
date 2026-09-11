@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
 import { NO_CONTENT } from '../../../src/constants/srs.js'
-import type { Module, Stage, Word } from '../../../src/types/domain.js'
-import type { Progress, SrsState } from '../../../src/types/progress.js'
 import {
   moduleCompletion,
   overallCompletion,
@@ -10,6 +8,8 @@ import {
   wordCompletion,
 } from '../../../src/engine/progress.js'
 import { initialProgress } from '../../../src/engine/srs.js'
+import type { Module, Stage, Word } from '../../../src/types/domain.js'
+import type { Progress, SrsState } from '../../../src/types/progress.js'
 
 /** QA 独立验证 —— T02 `progress.ts`（三级完成度手算比对 + 无 NaN 边界）。 */
 
@@ -42,7 +42,9 @@ describe('QA · wordCompletion 逐态权重', () => {
     expect(wordCompletion(initialProgress('w'))).toBe(0)
   })
   it.each(cases)('state=%s → %s', (state, expected) => {
-    expect(wordCompletion(withState(initialProgress('w'), state))).toBe(expected)
+    expect(wordCompletion(withState(initialProgress('w'), state))).toBe(
+      expected,
+    )
   })
 })
 
@@ -58,9 +60,27 @@ describe('QA · wordCompletion 逐态权重', () => {
  *   overall              = (0.5 + 1)/2 = 0.75
  */
 const stages: Stage[] = [
-  { id: 's1', name: 's1', order: 1, weekRange: { start: 1, end: 6 }, hasContent: true },
-  { id: 's2', name: 's2', order: 2, weekRange: { start: 7, end: 13 }, hasContent: true },
-  { id: 's4', name: 's4', order: 4, weekRange: { start: 23, end: 26 }, hasContent: false },
+  {
+    id: 's1',
+    name: 's1',
+    order: 1,
+    weekRange: { start: 1, end: 6 },
+    hasContent: true,
+  },
+  {
+    id: 's2',
+    name: 's2',
+    order: 2,
+    weekRange: { start: 7, end: 13 },
+    hasContent: true,
+  },
+  {
+    id: 's4',
+    name: 's4',
+    order: 4,
+    weekRange: { start: 23, end: 26 },
+    hasContent: false,
+  },
 ]
 const modules: Module[] = [
   { id: 'm1', stageId: 's1', name: 'm1', wordCount: 2 },

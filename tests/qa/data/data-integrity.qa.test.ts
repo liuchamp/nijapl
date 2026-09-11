@@ -1,9 +1,8 @@
 import { readFileSync } from 'node:fs'
 
 import { describe, expect, it } from 'vitest'
-
-import type { BuildData } from '../../../src/types/domain.js'
 import { validateData } from '../../../scripts/gen-data/validate.js'
+import type { BuildData } from '../../../src/types/domain.js'
 
 /**
  * QA 独立验证 —— T01 数据地基。
@@ -120,9 +119,12 @@ describe('QA · 引用完整性（独立复算）', () => {
   })
   it('每个 sentence.words[].wordId / grammars[].grammarId 存在', () => {
     for (const s of sentences) {
-      for (const sw of s.words) expect(wordIds.has(sw.wordId), `${s.id}:${sw.wordId}`).toBe(true)
+      for (const sw of s.words)
+        expect(wordIds.has(sw.wordId), `${s.id}:${sw.wordId}`).toBe(true)
       for (const sg of s.grammars) {
-        expect(grammarIds.has(sg.grammarId), `${s.id}:${sg.grammarId}`).toBe(true)
+        expect(grammarIds.has(sg.grammarId), `${s.id}:${sg.grammarId}`).toBe(
+          true,
+        )
       }
     }
   })
@@ -136,9 +138,16 @@ describe('QA · SentenceWord.start/end 可选偏移约束', () => {
         const hasEnd = sw.end !== undefined
         expect(hasStart, `${s.id}: start/end 必须同时提供`).toBe(hasEnd)
         if (hasStart && hasEnd) {
-          expect(sw.start!, `${s.id}:${sw.wordId} start>=0`).toBeGreaterThanOrEqual(0)
-          expect(sw.start! < sw.end!, `${s.id}:${sw.wordId} start<end`).toBe(true)
-          expect(sw.end! <= s.ja.length, `${s.id}:${sw.wordId} end<=len`).toBe(true)
+          expect(
+            sw.start!,
+            `${s.id}:${sw.wordId} start>=0`,
+          ).toBeGreaterThanOrEqual(0)
+          expect(sw.start! < sw.end!, `${s.id}:${sw.wordId} start<end`).toBe(
+            true,
+          )
+          expect(sw.end! <= s.ja.length, `${s.id}:${sw.wordId} end<=len`).toBe(
+            true,
+          )
         }
       }
     }
@@ -182,7 +191,9 @@ describe('QA · 校验器拒绝坏数据（负向用例）', () => {
 
   it('高亮偏移越界 end > ja.length → 拒绝', () => {
     const d = clone()
-    const target = d.sentences.find((s) => s.words.some((w) => w.start !== undefined))!
+    const target = d.sentences.find((s) =>
+      s.words.some((w) => w.start !== undefined),
+    )!
     const sw = target.words.find((w) => w.start !== undefined)!
     sw.end = target.ja.length + 5
     expect(validateData(d).ok).toBe(false)
@@ -190,7 +201,9 @@ describe('QA · 校验器拒绝坏数据（负向用例）', () => {
 
   it('高亮偏移 start === end → 拒绝', () => {
     const d = clone()
-    const target = d.sentences.find((s) => s.words.some((w) => w.start !== undefined))!
+    const target = d.sentences.find((s) =>
+      s.words.some((w) => w.start !== undefined),
+    )!
     const sw = target.words.find((w) => w.start !== undefined)!
     sw.end = sw.start
     expect(validateData(d).ok).toBe(false)
@@ -198,7 +211,9 @@ describe('QA · 校验器拒绝坏数据（负向用例）', () => {
 
   it('高亮偏移仅提供 start → 拒绝', () => {
     const d = clone()
-    const target = d.sentences.find((s) => s.words.some((w) => w.start !== undefined))!
+    const target = d.sentences.find((s) =>
+      s.words.some((w) => w.start !== undefined),
+    )!
     const sw = target.words.find((w) => w.start !== undefined)!
     delete sw.end
     expect(validateData(d).ok).toBe(false)

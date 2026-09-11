@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest'
-
-import type { GraphEdge, GraphNode, GraphView } from '../../../src/types/graph.js'
 import { layout } from '../../../src/engine/graph/layout.js'
+import type {
+  GraphEdge,
+  GraphNode,
+  GraphView,
+} from '../../../src/types/graph.js'
 
 /** QA 独立验证 —— T02 `graph/layout.ts`（确定性 + 边界不崩 + 无 NaN 坐标）。 */
 
@@ -72,7 +75,10 @@ describe('QA · layout 边界（不崩 / 无 NaN）', () => {
   })
 
   it('孤立节点（无边）→ 仍得到有限坐标', () => {
-    const r = layout(view([node('a'), node('b'), node('c')], [edge('a', 'b')]), CONFIG)
+    const r = layout(
+      view([node('a'), node('b'), node('c')], [edge('a', 'b')]),
+      CONFIG,
+    )
     expect(r.nodes).toHaveLength(3)
     assertFinite(r)
   })

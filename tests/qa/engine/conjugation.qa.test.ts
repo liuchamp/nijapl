@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
-
-import type { Word } from '../../../src/types/domain.js'
 import { buildConjugationTable } from '../../../src/engine/conjugation.js'
+import type { Word } from '../../../src/types/domain.js'
 
 /** QA 独立验证 —— T02 `conjugation.ts`（按词性生成变形表的正确性）。 */
 
@@ -25,7 +24,13 @@ function table(kana: string, pos: Word['pos']): Record<string, string> {
 
 describe('QA · conjugation 非动词/未知词性安全返回', () => {
   it('非动词词性 → 空数组', () => {
-    for (const pos of ['名詞', 'い形容詞', 'な形容詞', '副詞', '接続詞'] as const) {
+    for (const pos of [
+      '名詞',
+      'い形容詞',
+      'な形容詞',
+      '副詞',
+      '接続詞',
+    ] as const) {
       expect(buildConjugationTable(verb('x', pos)), pos).toEqual([])
     }
   })

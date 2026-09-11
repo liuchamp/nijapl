@@ -47,4 +47,4 @@ module.exports = {
   // strip-mt-telemetry-loader.cjs — jsb-backed telemetry methods to strip on the main-thread layer.
   // ONLY list methods confirmed jsb-backed; never console-backed ones (those run on main-thread).
   TELEMETRY_METHODS: ['reportEvent', 'reportError', 'logEvent', 'track'],
-};
+}
