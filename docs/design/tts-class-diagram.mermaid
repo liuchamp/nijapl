@@ -1,0 +1,197 @@
+%% TTS 集成方案 v2.0 · 类图（对应 docs/design/TTS-集成方案.md §8）
+%% v2.0 变更：来源从「构建期清单」改为「HTTP 合成源」；播放通道保留；TtsResult 加宽。
+%% v1.1 的 AudioCatalog / AudioManifest / AudioSource 已作废，不再出现在图中。
+%% 统一修订：原生播放采用【独立 NativeModules.AudioPlayer 模块】（§1.5），
+%%   不扩展 NativeModules.TTSEngine；两个模块并列、注册状态分别判定。
+%%   由此引入【双通道互斥编排 M1–M5】（§4.5.2 / §12.7）：ResolvingTtsPort 显式编排两条通道。
+classDiagram
+  direction LR
+
+  class TtsPort {
+    <<interface>>
+    +getCapability() TtsCapability
+    +speak(text, opts) Promise~TtsResult~
+    +stop() void
+    +getVoices() Promise~TtsVoice[]~
+    +prime() void
+    +prefetch(text, opts) void
+  }
+
+  class TtsResult {
+    <<union>>
+    +ok : boolean
+    +engine : TtsEngine
+    +reason : TtsFailureReason
+  }
+
+  class TtsEngine {
+    <<union>>
+    +http
+    +native
+    +web
+  }
+
+  class TtsSourcePort {
+    <<interface>>
+    +synthesize(params, gen) Promise~TtsSourceResult~
+    +prefetch(params) void
+    +cancel() void
+  }
+
+  class TtsSourceResult {
+    <<union>>
+    +ok : boolean
+    +clip : TtsAudioClip
+    +reason : TtsSourceFailure
+    +status : number
+    +serviceReason : string
+  }
+
+  class AudioPlayerPort {
+    <<interface>>
+    +getCapability() AudioPlaybackCapability
+    +prime() void
+    +play(clip) Promise~AudioPlayResult~
+    +stop() void
+  }
+
+  class AudioPlayResult {
+    <<union>>
+    +ok : boolean
+    +channel : AudioPlayChannel
+    +reason : AudioPlayFailure
+  }
+
+  class ResolvingTtsPort {
+    -source : TtsSourcePort
+    -player : AudioPlayerPort
+    -realtime : TtsPort
+    -gen : number
+    -lastHttpFailure : TtsSourceFailure
+    +getCapability() TtsCapability
+    +speak(text, opts) Promise~TtsResult~
+    +stop() void
+    +prime() void
+    +prefetch(text, opts) void
+    +getVoices() Promise~TtsVoice[]~
+    +M1_stopRealtimeBeforePlay() void
+    +M2_stopPlayerBeforeRealtime() void
+    +M3_stopBothChannels() void
+  }
+
+  class TtsHttpClient {
+    -cache : TtsAudioCache
+    -inflight : TtsInflight
+    -controller : AbortController
+    -transport : TtsTransport
+    +synthesize(params, gen)
+    +prefetch(params)
+    +cancel()
+  }
+
+  class TtsAudioCache {
+    -entries : Map~string, TtsAudioClip~
+    -totalBytes : number
+    +get(key) TtsAudioClip
+    +put(key, clip) void
+    +clear() void
+  }
+
+  class TtsInflight {
+    -pending : Map
+    +run(key, task) Promise~TtsSourceResult~
+  }
+
+  class TtsSynthesisParams {
+    +text : string
+    +lang : string
+    +voice : string
+    +rate : string
+    +pitch : string
+    +format : TtsAudioFormat
+  }
+
+  class TtsAudioClip {
+    +key : string
+    +mime : string
+    +bytes : Uint8Array
+    +base64 : string
+    +objectUrl : string
+    +voice : string
+    +cached : boolean
+    +byteLength : number
+    +lastUsedAt : number
+  }
+
+  class NativeAudioPlayer {
+    -mod : NativeModules.AudioPlayer
+    +getCapability() AudioPlaybackCapability
+    +prime() void
+    +play(clip) Promise~AudioPlayResult~
+    +stop() void
+  }
+
+  class WebAudioPlayer {
+    -el : HTMLAudioElement
+    -unlocked : boolean
+    +getCapability() AudioPlaybackCapability
+    +prime() void
+    +play(clip) Promise~AudioPlayResult~
+    +stop() void
+  }
+
+  class NativeTtsPort {
+    <<existing>>
+    -engine : NativeModules.TTSEngine
+    +speak(text, rate, pitch)
+    +stop() void
+  }
+
+  class WebTtsPort {
+    <<existing>>
+    +speak(text, opts)
+    +stop() void
+  }
+
+  class AudioPlayerNativeModule {
+    <<NativeModules.AudioPlayer>>
+    +playBytes(base64, mime) void
+    +playUrl(url) void
+    +stopPlayback() void
+    +isPlaying() boolean
+  }
+
+  class TtsEngineNativeModule {
+    <<NativeModules.TTSEngine>>
+    +speak(text, rate, pitch) void
+    +stop() void
+    +isSpeaking() boolean
+  }
+
+  TtsPort <|.. ResolvingTtsPort
+  TtsPort <|.. NativeTtsPort
+  TtsPort <|.. WebTtsPort
+  TtsSourcePort <|.. TtsHttpClient
+  AudioPlayerPort <|.. NativeAudioPlayer
+  AudioPlayerPort <|.. WebAudioPlayer
+
+  ResolvingTtsPort --> TtsSourcePort : source
+  ResolvingTtsPort --> AudioPlayerPort : player
+  ResolvingTtsPort --> TtsPort : realtime
+  ResolvingTtsPort ..> TtsResult : returns
+  ResolvingTtsPort ..> TtsEngine : 取值 http / native / web
+
+  TtsHttpClient --> TtsAudioCache : cache
+  TtsHttpClient --> TtsInflight : inflight
+  TtsHttpClient ..> TtsSourceResult : returns
+  TtsSourcePort ..> TtsSynthesisParams : takes
+
+  TtsAudioCache "1" o-- "*" TtsAudioClip : entries
+  AudioPlayerPort ..> TtsAudioClip : takes
+  AudioPlayerPort ..> AudioPlayResult : returns
+
+  NativeAudioPlayer ..> AudioPlayerNativeModule : playBytes / stopPlayback
+  NativeTtsPort ..> TtsEngineNativeModule : speak / stop
+
+  ResolvingTtsPort ..> AudioPlayerNativeModule : M1/M2/M3 互斥编排
+  ResolvingTtsPort ..> TtsEngineNativeModule : M1/M2/M3 互斥编排

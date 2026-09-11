@@ -110,7 +110,7 @@
 
 - H5 出包走 `@lynx-js/web-core` + 宿主 Rsbuild 工程（本期**不实现宿主工程**，仅保证端口层可替换）。
 - **端口层可替换**：`tts`/`storage` 用平台后缀文件（`.web.ts`）或运行时能力检测切换。
-- **不耦合原生专有 API**：页面/引擎不得直接引用 `NativeModules`（只允许 `src/engine/tts/tts.native.ts`、`src/engine/storage/storage.native.ts` 两处引用）。
+- **不耦合原生专有 API**：页面/引擎不得直接引用 `NativeModules`（**修订 R1，白名单 2→3**：只允许 `src/engine/tts/tts.native.ts`、`src/engine/storage/storage.native.ts`、`src/engine/tts/player.native.ts` 三处引用；`src/typing.d.ts` 只做声明、不计入引用点）。
 - **已知 Web 差异（必须处理）**：`<viewpager>` Web 不支持 → P2 卡片流在 Web 端降级为**横向 `<scroll-view>` 分页**（`snap` 或逐页按钮），见 §9 待明确 T2。
 
 ---
@@ -185,9 +185,16 @@
 | 文件 | 职责 |
 |------|------|
 | `src/engine/tts/types.ts` `[新]` | TTS 端口类型与结果判别联合 (T03) |
-| `src/engine/tts/index.ts` `[新]` | TTS 端口 facade：**运行时能力检测** + 委托平台实现 + 单例 (T03) |
-| `src/engine/tts/tts.native.ts` `[新]` | 原生实现：调 `NativeModules.TTSEngine`；**唯一允许引用 NativeModules 的 TTS 文件** (T03) |
+| `src/engine/tts/index.ts` `[新]` | TTS 端口 facade：**运行时能力检测 + 编排（HTTP → 原生 TTS → Web 合成 → 失败）** + 单例 (T03/T04) |
+| `src/engine/tts/tts.native.ts` `[新]` | 原生实现：调 `NativeModules.TTSEngine`；**允许引用 NativeModules 的 3 个文件之一** (T03) |
 | `src/engine/tts/tts.web.ts` `[新]` | Web 实现：`speechSynthesis` + `ja` 前缀过滤 + `voiceschanged` 兜底 + 存在性检测 (T03) |
+| `src/engine/tts/request.ts` `[新]` | **纯函数**：参数映射（`toRateParam`/`toPitchParam`/`buildSynthesisParams`）、URL / 请求体构造、`cacheKey` (T01) |
+| `src/engine/tts/tts-client.ts` `[新]` | HTTP 合成源（`TtsSourcePort`）：`fetch` + 超时 + 重试 + 错误映射 + 缓存 + 去重 + `cancel()` (T02) |
+| `src/engine/tts/audio-cache.ts` `[新]` | 内存 LRU 音频缓存（条目 + 字节双限；淘汰 revoke `objectUrl`） (T02) |
+| `src/engine/tts/inflight.ts` `[新]` | 客户端 singleflight（并发去重；失败不缓存） (T02) |
+| `src/engine/tts/player.ts` `[新]` | 播放器 facade：探测 native → web → `null`（仅探测 + 委托 + 单例） (T03) |
+| `src/engine/tts/player.native.ts` `[新]` | 原生播放：`NativeModules.AudioPlayer.playBytes/stopPlayback`；**允许引用 NativeModules 的 3 个文件之一** (T03) |
+| `src/engine/tts/player.web.ts` `[新]` | Web 播放：DOM `<audio>` 单例 + Blob URL + `prime()` 解锁 (T03) |
 | `src/engine/storage/types.ts` `[新]` | 存储端口类型（异步 `get/set/remove`）(T03) |
 | `src/engine/storage/index.ts` `[新]` | 存储端口 facade：能力检测 + 内存兜底（未注册原生模块时不崩）+ 单例 (T03) |
 | `src/engine/storage/storage.native.ts` `[新]` | 原生实现：`NativeModules.LynxStorage`（NSUserDefaults / SharedPreferences）(T03) |
@@ -272,8 +279,10 @@
 | 文件 | 职责 |
 |------|------|
 | `src/native/TTSEngine/README.md` `[新]` | iOS `AVSpeechSynthesizer(ja-JP)` / Android `TextToSpeech(Locale.JAPANESE)` / Harmony 注册步骤与 `methodLookup`(T03) |
+| `src/native/AudioPlayer/README.md` `[新]` | **修订 R1 新增**：播放模块 `AudioPlayer`（`playBytes`/`playUrl`/`stopPlayback`/`isPlaying`）的 JS 契约 + base64 理由 + 三端实现要点（iOS `AVAudioPlayer` / Android `MediaPlayer`·`ExoPlayer` / Harmony `AVPlayer`）+ 互斥约定（M4 内部先停后播；跨模块互斥由 JS 侧 M1–M3 编排）+ 验收自检 (T03) |
 | `src/native/LynxStorage/README.md` `[新]` | `NSUserDefaults` / `SharedPreferences` 注册步骤与接口签名 (T03) |
 
+> **原生模块清单（修订 R1）：`TTSEngine`（实时合成）/ `AudioPlayer`（字节播放）/ `LynxStorage`（键值存储）**，三者各自独立注册、独立探测。
 > **文件总数：≈ 78 个**（含页面/组件/引擎/端口/脚本/测试/数据）。
 
 ---
@@ -352,14 +361,23 @@ export function layout(view: GraphView, ctx: LayoutConfig): LayoutResult   // �
 ```ts
 // src/engine/tts/types.ts
 export type TtsCapability = 'supported' | 'unsupported' | 'gesture-required'
+// 修订 R2：TtsEngine 加宽新增 'http'；TtsFailureReason 加宽新增
+// service-unavailable / service-rejected / no-player（详情见 TTS-集成方案 §4.2）。
+export type TtsEngine = 'http' | 'native' | 'web'
+export type TtsFailureReason =
+  | 'no-tts' | 'no-ja-voice' | 'blocked' | 'error'
+  | 'service-unavailable' | 'service-rejected' | 'no-player'
 export type TtsResult =
-  | { ok: true; engine: 'native'|'web' }
-  | { ok: false; reason: 'no-tts'|'no-ja-voice'|'blocked'|'error' }
+  | { ok: true; engine: TtsEngine }
+  | { ok: false; reason: TtsFailureReason }
 export interface TtsPort {
   getCapability(): TtsCapability
   speak(text: string, opts?: { rate?: number; pitch?: number }): Promise<TtsResult>
   stop(): void
   getVoices(): Promise<Array<{ id: string; lang: string; name: string }>>
+  // 可选：手势内同步解锁自动播放（仅 facade 实现）/ 预取（fire-and-forget）。
+  prime?(): void
+  prefetch?(text: string, opts?: { rate?: number; pitch?: number }): void
 }
 
 // src/engine/storage/types.ts
@@ -634,6 +652,8 @@ graph TD
 ### 8.5 线程与指令（红线）
 - ReactLynx 业务 JS 默认**后台线程**，端口（Native Module）调用即在此，无需额外指令。
 - `'main thread'` **仅**用于手势跟手（图谱拖拽/缩放）。**该函数内禁止**调用 Native Module / TTS / Storage。
+- **网络请求（`fetch`）/ 合成 / 音频播放均在后台线程**（含 TTS HTTP 拉流与 `NativeModules.AudioPlayer` 播放），不得置于 `'main thread'` 指令内。
+- **`ttsPort.prime()` 是同步方法，必须在用户手势调用栈内执行**（由 `ttsController.speak()` 的第①步调用，用于 Web 端解锁自动播放）；其内部**不得** `await`、不得发起网络请求。
 - 跨线程间接调用需显式 `'background only'` 指令（原示例 `src/useFlappy.ts` 已随脚手架清理移除；**约定本身仍然有效**，新增跨线程调用时仍须标注）。
 
 ### 8.6 i18n 决策

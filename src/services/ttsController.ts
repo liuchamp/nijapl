@@ -50,6 +50,12 @@ function describeTtsFailure(reason: string): string {
       return STRINGS.tts.noJaVoice
     case 'blocked':
       return STRINGS.tts.blocked
+    case 'service-unavailable':
+      return STRINGS.tts.serviceDown
+    case 'service-rejected':
+      return STRINGS.tts.serviceRejected
+    case 'no-player':
+      return STRINGS.tts.noPlayer
     default:
       return STRINGS.tts.error
   }
@@ -121,6 +127,12 @@ class TtsController {
       notice: null,
       fallbackText: null,
     })
+    // ①' 手势调用栈内**同步**解锁自动播放（Web 必需；端口方法可选、永不 throw）。
+    try {
+      ttsPort.prime?.()
+    } catch {
+      // 端口契约：永不 throw；此处仅兜底。
+    }
     const holdMs = Math.min(
       HOLD_MAX_MS,
       Math.max(HOLD_MIN_MS, text.length * HOLD_PER_CHAR_MS),

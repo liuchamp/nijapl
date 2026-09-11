@@ -15,6 +15,7 @@ import { PAGER_ID, seekPager } from '../../services/pagerSeek.js'
 import { detectSlideMode } from '../../services/platform.js'
 import * as studySession from '../../services/studySession.js'
 import { ttsController } from '../../services/ttsController.js'
+import { ttsPrefetch } from '../../services/ttsPrefetch.js'
 import { appActions, useAppStore, useSettings } from '../../store/hooks.js'
 import type { SelfEval } from '../../types/progress.js'
 
@@ -133,6 +134,11 @@ export function StudyPage() {
     setEffect(studySession.evaluateSceneEffect(word))
     setRevealed(false)
     ttsController.clearNotice()
+    // 预取下一个词的假名（纯优化：失败静默、播放器不可用时不预取，见设计 §5.4）。
+    const nextWord = words[safeIndex + 1]
+    if (nextWord !== undefined) {
+      ttsPrefetch.schedule(nextWord.kana, settings)
+    }
   }, [word?.id])
 
   /** 翻页：只改序号，容器的实际定位由上面的 seek 副作用负责。 */

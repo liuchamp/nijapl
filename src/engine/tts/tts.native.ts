@@ -10,7 +10,10 @@ import type {
  * 原生 TTS 实现（iOS `AVSpeechSynthesizer(ja-JP)` / Android `TextToSpeech(Locale.JAPANESE)`）。
  *
  * 红线（架构 §1.5 / §8.5）：
- * - **本文件是唯一允许引用全局 `NativeModules` 的 TTS 文件**；
+ * - **本文件是唯一允许引用全局 `NativeModules` 的 **TTS 合成** 文件**
+ *   （允许引用 `NativeModules` 的 3 个文件：本文件（`TTSEngine`）、
+ *   `src/engine/tts/player.native.ts`（`AudioPlayer`，音频播放）、
+ *   `src/engine/storage/storage.native.ts`（`LynxStorage`，存储））；
  * - 原生模块仅在 Background Thread Scripting 可用，ReactLynx 业务 JS 默认后台线程，
  *   因此本文件**不得**出现 `'main thread'` 指令；
  * - 端口契约：**永不 throw**，失败一律以 `TtsResult.ok=false` 返回。

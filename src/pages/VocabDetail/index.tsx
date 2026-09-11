@@ -1,5 +1,5 @@
 import './index.css'
-import { useMemo } from '@lynx-js/react'
+import { useEffect, useMemo } from '@lynx-js/react'
 import { useParams } from 'react-router'
 import { GrammarHighlightText } from '../../components/GrammarHighlightText/index.js'
 import { NodeStateBadge } from '../../components/NodeStateBadge/index.js'
@@ -11,6 +11,7 @@ import { useNavigation } from '../../router/navigation.js'
 import { buildSentenceHighlight } from '../../services/highlight.js'
 import { emptyStudyEffect } from '../../services/jumpService.js'
 import * as studySession from '../../services/studySession.js'
+import { ttsPrefetch } from '../../services/ttsPrefetch.js'
 import { useAppStore, useSettings } from '../../store/hooks.js'
 
 /**
@@ -66,6 +67,13 @@ export function VocabDetailPage() {
       })),
     [sentences, wordId, effect.highlightGrammarIds],
   )
+
+  // 预取前 2 条例句（纯优化：失败静默、播放器不可用时不预取，见设计 §5.4）。
+  useEffect(() => {
+    for (const render of sentenceRenders.slice(0, 2)) {
+      ttsPrefetch.schedule(render.sentence.ja, settings)
+    }
+  }, [wordId])
 
   if (word === undefined) {
     return (

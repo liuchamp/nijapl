@@ -11,7 +11,7 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: [
-      'src/engine/__tests__/**/*.test.ts',
+      'src/engine/**/__tests__/**/*.test.ts',
       'src/services/__tests__/**/*.test.ts',
       'src/store/__tests__/**/*.test.ts',
       'scripts/gen-data/__tests__/**/*.test.ts',
