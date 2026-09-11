@@ -14,4 +14,7 @@ export default defineConfig({
     pluginReactLynx(),
     pluginTypeCheck(),
   ],
+  environments: {
+    lynx: {},
+  },
 })
