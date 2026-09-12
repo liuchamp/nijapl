@@ -277,6 +277,78 @@ describe('K 域 · 每日配额隔离', () => {
   })
 })
 
+/**
+ * K 域 · 错音计数隔离。
+ *
+ * 与配额隔离同源，但**方向相反**：配额是「K 域别占 W 域的名额」，
+ * 这里还要保证「W 域的会话错音别被 K 域顺手清零」。
+ *
+ * 历史实现是「进关时把共享的 `sessionWrongCount` 清零」，代价是
+ * 「词条 → 假名 → 词条」中途串门的用户会丢掉已累计的会话错音，
+ * 回到词条后 J2（≥2 次提示详解）失准。现在按域分流到
+ * `sessionWrongCount`（W，J2）与 `kanaSessionWrongCount`（K，仅 K1 展示）。
+ */
+describe('K 域 · 错音计数隔离', () => {
+  it('VERDICT · 假名错音只进 K 域计数器，不累加词条 J2 依据', () => {
+    const words = repository.getModuleWords('m01')
+    appActions.startStudy('m01', NOW)
+    appActions.markPresented(words[0].id, NOW)
+    appActions.submitSelfEval(words[0].id, '不认识', NOW)
+    expect(read().runtime.sessionWrongCount).toBe(1)
+
+    appActions.startKanaGroup('g01', NOW)
+    for (const kana of repository.getKanaByGroup('g01').slice(0, 3)) {
+      const targetId = kanaProgressKey(kana.id)
+      appActions.markPresented(targetId, NOW)
+      appActions.submitSelfEval(targetId, '不认识', NOW)
+    }
+
+    // 3 次假名错音全进 K 域计数器 —— K1「本关错音」显示的正是它。
+    expect(read().runtime.kanaSessionWrongCount).toBe(3)
+    // 词条侧计数**分毫未动**：假名不参与 J2，也就不该污染 J2 的输入。
+    expect(read().runtime.sessionWrongCount).toBe(1)
+  })
+
+  it('VERDICT · 进 K 域不清零词条会话错音（W→K 串门不丢 J2 信号）', () => {
+    const words = repository.getModuleWords('m01')
+    appActions.startStudy('m01', NOW)
+    for (const word of words.slice(0, 2)) {
+      appActions.markPresented(word.id, NOW)
+      appActions.submitSelfEval(word.id, '模糊', NOW)
+    }
+    expect(read().runtime.sessionWrongCount).toBe(2)
+
+    // 中途拐去学假名：W 域计数必须原样保留（这正是旧实现破坏的那一点）。
+    appActions.startKanaGroup('g01', NOW)
+    expect(read().runtime.sessionWrongCount).toBe(2)
+    // K 域计数器独立从 0 开始，不受 W 域既有值影响。
+    expect(read().runtime.kanaSessionWrongCount).toBe(0)
+  })
+
+  it('VERDICT · 重新进关清零 K 域计数、不动 W 域计数；resetKanaProgress 只清 K 域', () => {
+    const words = repository.getModuleWords('m01')
+    appActions.startStudy('m01', NOW)
+    appActions.markPresented(words[0].id, NOW)
+    appActions.submitSelfEval(words[0].id, '不认识', NOW)
+
+    appActions.startKanaGroup('g01', NOW)
+    const kana = repository.getKanaByGroup('g01')[0]
+    appActions.markPresented(kanaProgressKey(kana.id), NOW)
+    appActions.submitSelfEval(kanaProgressKey(kana.id), '不认识', NOW)
+    expect(read().runtime.kanaSessionWrongCount).toBe(1)
+
+    // 重新进关：K 域计数归零（每关独立计数），W 域计数不受牵连。
+    appActions.startKanaGroup('g01', NOW)
+    expect(read().runtime.kanaSessionWrongCount).toBe(0)
+    expect(read().runtime.sessionWrongCount).toBe(1)
+
+    // resetKanaProgress 是 K 域重置入口，同样只清 K 域计数器。
+    appActions.resetKanaProgress()
+    expect(read().runtime.kanaSessionWrongCount).toBe(0)
+    expect(read().runtime.sessionWrongCount).toBe(1)
+  })
+})
+
 describe('K 域 · 派生统计', () => {
   it('VERDICT · selectKanaMasteredCount 与总体完成度、树顶节点态同向', () => {
     const empty = read()

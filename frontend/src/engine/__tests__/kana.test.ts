@@ -185,10 +185,11 @@ describe('engine/kana · 解锁（A5：79% 锁定 / 80% 解锁）', () => {
 })
 
 describe('engine/kana · 续学定位与结业判据（A9）', () => {
-  it('首个未掌握音的序号；全掌握回落到 0', () => {
+  it('首个未掌握音的序号；全掌握返回越界哨兵（= 音数）', () => {
     const group = makeGroup('g', ['a', 'i', 'u'])
     expect(firstUnmasteredIndex(group, {})).toBe(0)
     expect(firstUnmasteredIndex(group, pmOf([['a', '已掌握']]))).toBe(1)
+    // 全掌握**不回落 0**：0 与「第 0 个音未掌握」同值，漏判 isFull 的调用方会原地空转。
     expect(
       firstUnmasteredIndex(
         group,
@@ -198,7 +199,7 @@ describe('engine/kana · 续学定位与结业判据（A9）', () => {
           ['u', '已掌握'],
         ]),
       ),
-    ).toBe(0)
+    ).toBe(3)
   })
 
   it('缺 1 音即未结业', () => {
@@ -489,6 +490,20 @@ describe('K 域 · 拆音（P3 衔接，设计 §5.6）', () => {
 
   it('非假名字符各自成拍，不与相邻假名合并', () => {
     expect(splitKanaMora('a・きゃ')).toEqual(['a', '・', 'きゃ'])
+  })
+
+  it('连续小写假名不链式合并（守卫按上一拍**末字符**判定）', () => {
+    // 合并过一拍后 previous 是 2 个字符，若拿整拍去查 KANA_SMALL_KANA（单字符表）
+    // 守卫恒失效，会把 `きゃゃ` 并成 1 拍。回归锁定。
+    expect(splitKanaMora('きゃゃ')).toEqual(['きゃ', 'ゃ'])
+    expect(splitKanaMora('キャャ')).toEqual(['キャ', 'ャ'])
+    // 三段非法输入同理：只并前两拍，第三个仍独立。
+    expect(splitKanaMora('きゃゃゃ')).toEqual(['きゃ', 'ゃ', 'ゃ'])
+  })
+
+  it('合拗音 ゎ / ヮ 参与合并（刻意保留，不是漏项）', () => {
+    expect(splitKanaMora('くゎ')).toEqual(['くゎ'])
+    expect(splitKanaMora('クヮ')).toEqual(['クヮ'])
   })
 
   it('空串返回空数组', () => {

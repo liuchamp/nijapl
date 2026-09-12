@@ -378,7 +378,7 @@ export function KanaStudyPage() {
         </div>
         <div className="KanaStudy-wrong" onClick={() => undefined}>
           <span className="KanaStudy-wrongLabel">
-            {`${STRINGS.study.sessionWrong} ${state.runtime.sessionWrongCount}`}
+            {`${STRINGS.study.sessionWrong} ${state.runtime.kanaSessionWrongCount}`}
           </span>
         </div>
         <div className="KanaStudy-navBtn" onClick={onSkip}>

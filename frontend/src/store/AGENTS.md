@@ -23,7 +23,11 @@
 - `settings`：发音参数 + `unlockRuleEnabled`（+ K 域门控 `kanaGateEnabled`）。
 - `runtime`（**不落盘**）：`currentModuleId` / `currentIndex` / `sessionWrongCount` /
   `detailSheet` / `lastDecisions`（+ K 域 `currentKanaGroupId` / `kanaIndex` / `kanaScript` /
-  `kanaMemoryMode` / `kanaPeekVisible`）。
+  `kanaMemoryMode` / `kanaPeekVisible` / `kanaSessionWrongCount`）。
+  **错音计数分域**：W 域 → `sessionWrongCount`（J2 依据，进模块清零）；
+  K 域 → `kanaSessionWrongCount`（仅 K1「本关错音」展示，假名不参与 J2，进关清零）。
+  两者不可合并 —— 合并后进关清零会连带清掉 W 域会话错音，导致「词条→假名→词条」
+  中途串门时 J2 失准（回归用例：`store/__tests__/kana-isolation.test.ts`）。
 
 ## 红线
 

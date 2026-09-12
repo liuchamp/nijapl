@@ -289,7 +289,9 @@ export function createActions(set: StoreSet, get: StoreGet): Actions {
       // 首页「今日新词 n/目标」是 N3 词汇的口径；把 104 个假名算进去会凭空把配额刷满，
       // 用户会以为今天学了很多词。这条判断必须在写入口加——它是**计数**，不是遍历边界，
       // 无法像完成度 / 错词本那样靠「假名不在 words 里」免费隔离。
-      const countsTowardQuota = !isKanaProgressKey(targetId)
+      const isKana = isKanaProgressKey(targetId)
+      const countsTowardQuota = !isKana
+      const isWrong = isWrongSelfEval(selfEval)
       set({
         progress: { ...state.progress, [targetId]: next },
         session: {
@@ -301,9 +303,18 @@ export function createActions(set: StoreSet, get: StoreGet): Actions {
         },
         runtime: {
           ...state.runtime,
-          sessionWrongCount: isWrongSelfEval(selfEval)
-            ? state.runtime.sessionWrongCount + 1
-            : state.runtime.sessionWrongCount,
+          // 错音计数按域**分流**（RK5「隔离要连计数器一起管」的同一手法）：
+          // W 域进 `sessionWrongCount`（J2 依据），K 域进独立的 `kanaSessionWrongCount`。
+          // 两者互补、任一时刻只有一边 +1 —— 于是 K 域不再需要"进关清零 W 域计数器"
+          // 那种会误伤中途串门用户的粗暴隔离。
+          sessionWrongCount:
+            isWrong && !isKana
+              ? state.runtime.sessionWrongCount + 1
+              : state.runtime.sessionWrongCount,
+          kanaSessionWrongCount:
+            isWrong && isKana
+              ? state.runtime.kanaSessionWrongCount + 1
+              : state.runtime.kanaSessionWrongCount,
           lastDecisions: decisions,
         },
       })
@@ -459,7 +470,12 @@ export function createActions(set: StoreSet, get: StoreGet): Actions {
       set({
         progress: {},
         session: createInitialSession(),
-        runtime: { ...state.runtime, sessionWrongCount: 0, lastDecisions: [] },
+        runtime: {
+          ...state.runtime,
+          sessionWrongCount: 0,
+          kanaSessionWrongCount: 0,
+          lastDecisions: [],
+        },
       })
     },
 
@@ -483,9 +499,11 @@ export function createActions(set: StoreSet, get: StoreGet): Actions {
           kanaIndex: index,
           kanaMemoryMode: false,
           kanaPeekVisible: false,
-          // 复用 `submitSelfEval` 会累加 `sessionWrongCount`（J2 依据）；
-          // 进入 K 域时清零，避免假名错音影响词条的 J2 判定。
-          sessionWrongCount: 0,
+          // 进关清零 **K 域自己**的错音计数（K1「本关错音」从头数）。
+          // **不要**动 W 域的 `sessionWrongCount`：假名自评已按域分流写入
+          // `kanaSessionWrongCount`（见 `submitSelfEval`），不再污染词条 J2；
+          // 反过来清零它则会让「词条 → 假名 → 词条」的中途串门丢掉已累计的会话错音。
+          kanaSessionWrongCount: 0,
         },
       })
     },
@@ -562,6 +580,7 @@ export function createActions(set: StoreSet, get: StoreGet): Actions {
           kanaIndex: 0,
           kanaMemoryMode: false,
           kanaPeekVisible: false,
+          kanaSessionWrongCount: 0,
         },
       })
     },

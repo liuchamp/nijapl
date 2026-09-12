@@ -120,7 +120,13 @@ export function isKanaGroupUnlocked(
 /**
  * 关内首个未掌握音的序号（续学定位）。
  *
- * 全部已掌握时返回 `0`（回到关首，便于复习轮次从头开始）；空关返回 `0`。
+ * **全掌握时返回 `group.kanaIds.length`** —— 一个**越界哨兵**，明确表达
+ * 「本关没有未掌握的音」，而不是回落 `0`：`0` 与「第 0 个音未掌握」同值，
+ * 调用方一旦漏判 `isFull` 就会把「已学完」误读成「从头上」，表现为续学按钮点了原地空转。
+ * 空关同样返回 `0`（`length === 0`）。
+ *
+ * 调用方**必须**先判「本关已满」（`kanaGroupMasteredRatio(...) >= 1`）；
+ * 现有三处调用（`selectKanaContinueTarget` ×2、`selectKanaNextGroup`）均满足该前置。
  */
 export function firstUnmasteredIndex(
   group: KanaGroup,
@@ -131,7 +137,7 @@ export function firstUnmasteredIndex(
       return index
     }
   }
-  return 0
+  return group.kanaIds.length
 }
 
 /** 是否 12 关假名**全部**已掌握（结业判据，用于首页徽章与 N5 引导）。 */
@@ -373,6 +379,8 @@ function isKanaChar(char: string): boolean {
  * 规则（纯字符判定，零词典、零随机）：
  * - **小写假名与前一个假名合并成一拍**（`きゃ` = 1 拍）；前一个不是假名时不合并，
  *   避免把标点粘进音里；
+ * - **不链式合并**：合并后的这一拍不再吞下一个后续小写假名 ——
+ *   `きゃゃ` → `['きゃ','ゃ']`（2 拍）。判定看上一拍的**末字符**，见下方实现注释；
  * - 其余字符各成**独立一拍**：`っ`（促音）、`ー`（长音）、`ん`（拨音）都算一拍；
  * - 非假名字符（`・`、拉丁字母等）各自成拍，交由调用方决定是否可点。
  *
@@ -382,12 +390,18 @@ export function splitKanaMora(text: string): string[] {
   const mora: string[] = []
   for (const char of text) {
     const previous = mora[mora.length - 1]
+    // 判定必须落在上一拍的**末字符**上：`previous` 合并一次后是 2 个字符（`きゃ`），
+    // 而 `KANA_SMALL_KANA` 与 `isKanaChar` 都是**单字符**口径 ——
+    // 直接传 `previous` 会让 `includes('きゃ')` 恒为 false、`codePointAt(0)` 恒取到 `き`：
+    // 守卫「永远为真」与「永远为假」各一处，结果是 `きゃゃ` 被并成一拍，
+    // 与「不链式合并」的规则相悖（靠错得一致才没炸，属于偶然而非正确）。
+    const tail = previous === undefined ? '' : previous.slice(-1)
     if (
-      previous !== undefined &&
+      tail !== '' &&
       KANA_SMALL_KANA.includes(char) &&
-      isKanaChar(previous) &&
-      // 前一个本身是小写假名时不再链式合并（`きゃゃ` 这种非法输入不该并成一拍）。
-      !KANA_SMALL_KANA.includes(previous)
+      isKanaChar(tail) &&
+      // 上一拍末尾本身是小写假名时不再链式合并（`きゃゃ` 这种非法输入不该并成一拍）。
+      !KANA_SMALL_KANA.includes(tail)
     ) {
       mora[mora.length - 1] = `${previous}${char}`
       continue
