@@ -70,6 +70,10 @@ export function StudyPage() {
 
   const isReview = location.search.includes('mode=review')
   const detailSheet = state.runtime.detailSheet
+  // 学完后的下一个未完成模块；`null` = 全部模块已学完。此时完成面板**不再渲染**
+  // 「继续下一模块」——它此刻的文案与行为都会退化成「返回阶段地图」，
+  // 与第三个按钮完全重复（两个同文案同行为的按钮并排）。
+  const nextModuleId = selectNextIncompleteModule(state, moduleId)
 
   // 进入模块：读会话断点定位起始词序（每次 moduleId 变化重置）。
   useEffect(() => {
@@ -165,13 +169,17 @@ export function StudyPage() {
       return
     }
     const outcome = studySession.applySelfEvaluation(word.id, selfEval)
-    setEffect(outcome.effect)
     const sheetMode = detailSheetModeFor(outcome.effect)
     if (sheetMode !== null) {
       // J1 / J2：停在当前词，等待用户在 C2 内处置。
+      // 同一次自评可能同时命中 J4（模块学完）：浮层会盖住图谱提示条，且浮层关闭时
+      // `onSheetDismiss` 会补一次完成判定，故此处先清掉 `promptGraph`，
+      // 避免「提示条压在浮层下」以及「提示条与完成面板重复引导图谱」。
+      setEffect({ ...outcome.effect, promptGraph: false })
       appActions.openDetailSheet(word.id, sheetMode)
       return
     }
+    setEffect(outcome.effect)
     if (outcome.effect.promptGraph) {
       setModuleDone(true)
       return
@@ -205,7 +213,6 @@ export function StudyPage() {
   }
 
   function goNextModule(): void {
-    const nextModuleId = selectNextIncompleteModule(state, moduleId)
     if (nextModuleId === null) {
       nav.goStages()
       return
@@ -370,13 +377,13 @@ export function StudyPage() {
                   {STRINGS.study.viewGraph}
                 </span>
               </div>
-              <div className="Study-doneBtn" onClick={goNextModule}>
-                <span className="Study-doneBtnLabel">
-                  {selectNextIncompleteModule(state, moduleId) === null
-                    ? STRINGS.study.backToStages
-                    : STRINGS.study.nextModule}
-                </span>
-              </div>
+              {nextModuleId !== null ? (
+                <div className="Study-doneBtn" onClick={goNextModule}>
+                  <span className="Study-doneBtnLabel">
+                    {STRINGS.study.nextModule}
+                  </span>
+                </div>
+              ) : null}
               <div className="Study-doneBtn" onClick={nav.goStages}>
                 <span className="Study-doneBtnLabel">
                   {STRINGS.study.backToStages}

@@ -416,23 +416,19 @@ export function KanaStudyPage() {
                   {STRINGS.kana.startQuiz}
                 </span>
               </div>
-              <div
-                className="KanaStudy-doneBtn"
-                onClick={() => {
-                  if (next === null) {
-                    nav.goKana()
-                    return
-                  }
-                  enterKanaGroup(next.groupId, next.index)
-                  nav.goKanaStudy(next.groupId)
-                }}
-              >
-                <span className="KanaStudy-doneBtnLabel">
-                  {next === null
-                    ? STRINGS.kana.backToKana
-                    : STRINGS.kana.nextGroup}
-                </span>
-              </div>
+              {next !== null ? (
+                <div
+                  className="KanaStudy-doneBtn"
+                  onClick={() => {
+                    enterKanaGroup(next.groupId, next.index)
+                    nav.goKanaStudy(next.groupId)
+                  }}
+                >
+                  <span className="KanaStudy-doneBtnLabel">
+                    {STRINGS.kana.nextGroup}
+                  </span>
+                </div>
+              ) : null}
               <div className="KanaStudy-doneBtn" onClick={nav.goKana}>
                 <span className="KanaStudy-doneBtnLabel">
                   {STRINGS.kana.backToKana}
