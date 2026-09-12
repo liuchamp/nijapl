@@ -197,7 +197,7 @@ sequenceDiagram
   end
 ```
 
-## 7. 实测（`192.168.0.137:8000`，2026-09-12）
+## 7. 实测（`192.168.0.85:8000`，2026-09-12）
 
 - `GET /v1/tts/languages` → 200，含 `ja-JP-NanamiNeural`。
 - `POST /v1/tts/synthesize {"text":"ねこ","lang":"ja-JP","format":"mp3"}` → 200，返回 base64 `audio`。
@@ -209,7 +209,7 @@ sequenceDiagram
 
 ```bash
 # 合成并存成可播放 mp3
-curl -s -m 15 -X POST http://192.168.0.137:8000/v1/tts/synthesize \
+curl -s -m 15 -X POST http://192.168.0.85:8000/v1/tts/synthesize \
   -H 'Content-Type: application/json' \
   -d '{"text":"ねこ","lang":"ja-JP","voice":"ja-JP-NanamiNeural","rate":"+0%","pitch":"+0Hz","format":"mp3"}' \
   | python3 -c "import sys,json; d=json.load(sys.stdin); open('/tmp/neko.mp3','wb').write(__import__('base64').b64decode(d['audio'])); print('voice=',d.get('voice'),'cached=',d.get('cached'),'content_type=',d.get('content_type'))"
@@ -217,7 +217,7 @@ ls -l /tmp/neko.mp3 && file /tmp/neko.mp3
 
 # 裸流备选（同等价，200 audio/mpeg）
 curl -s -m 15 -D - -o /tmp/neko2.mp3 \
-  "http://192.168.0.137:8000/v1/tts/speech?text=%E3%81%AD%E3%81%93&lang=ja-JP&format=mp3" \
+  "http://192.168.0.85:8000/v1/tts/speech?text=%E3%81%AD%E3%81%93&lang=ja-JP&format=mp3" \
   | grep -iE '^HTTP|content-type|x-tts'
 ls -l /tmp/neko2.mp3 && file /tmp/neko2.mp3
 ```
