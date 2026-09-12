@@ -1,0 +1,64 @@
+# Task runner cache
+.task/
+# Compiled binaries / packaging output
+bin/
+# Local tooling (symlink to ~/.omo, per-machine)
+.codegraph
+
+# Frontend generated
+frontend/dist/
+frontend/node_modules/
+frontend/bindings/
+frontend/public/puppertino/
+# Vite / TS caches
+frontend/.vite/
+*.tsbuildinfo
+
+# Wails generated icons (from build/appicon.png via `wails3 generate icons`)
+build/darwin/icons.icns
+build/windows/icon.ico
+
+build/linux/appimage/build
+build/windows/nsis/MicrosoftEdgeWebview2Setup.exe
+# Mobile generated (per-machine; overlays hold absolute paths)
+build/ios/xcode/overlay.json
+build/ios/xcode/gen/
+build/android/overlay.json
+build/android/gen/
+# Android Gradle outputs (616+ files under app/build, .gradle cache, build/ apk/reports)
+build/android/.gradle/
+build/android/app/build/
+build/android/build/
+build/android/app/.cxx/
+build/android/local.properties
+*.keystore
+*.jks
+google-services.json
+
+# Go build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Node logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Env (per-machine secrets)
+.env
+.env.local
+.env.*.local
+.omo
