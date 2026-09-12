@@ -183,8 +183,9 @@ export class ResolvingTtsPort implements TtsPort {
     return { ok: false, reason: this.finalReason(realtimeFailure) }
   }
 
-  /** ★ M3：三通道全停（缺一即可能留残声）。 */
+  /** ★ M3：三通道全停（缺一即可能留残声）；同时递增 gen 丢弃在途迟到响应。 */
   stop(): void {
+    this.gen += 1
     this.source.cancel()
     this.player?.stop()
     this.realtime.stop()

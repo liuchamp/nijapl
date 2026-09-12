@@ -21,7 +21,11 @@ import { cacheKey } from './request.js'
  * - 失败走判别联合，**永不 throw**。
  */
 class TtsWailsClient implements TtsSourcePort {
-  /** 调用代数：每次 `cancel()` / 新 `synthesize()` 递增，用于丢弃迟到响应。 */
+  /**
+   * 调用代数：与 `TtsHttpClient.currentGen` 同语义——每次 `cancel()` 递增，
+   * 每次 `synthesize()` 按外来 `gen` 同步（`Math.max`），用于丢弃迟到响应。
+   * 不做同步会导致首击必判 `stale-gen`（外来 gen 从 1 开始、自增只在 cancel）。
+   */
   private gen = 0
 
   async synthesize(
@@ -31,6 +35,7 @@ class TtsWailsClient implements TtsSourcePort {
     if (params.text.trim() === '') {
       return { ok: false, reason: 'empty-text' }
     }
+    this.gen = Math.max(this.gen, gen)
     const key = cacheKey(params)
 
     let raw: Awaited<ReturnType<typeof TTS.Synthesize>>
