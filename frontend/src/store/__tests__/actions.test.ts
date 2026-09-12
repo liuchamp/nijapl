@@ -154,6 +154,39 @@ describe('actions · todayGrammarCount 语法配额回归锁', () => {
   })
 })
 
+describe('actions · J4 模块学完触发', () => {
+  it('VERDICT · 最后一词自评后触发 J4', () => {
+    const moduleId = repository.getAllModules()[0].id
+    const words = repository.getModuleWords(moduleId)
+    if (words.length === 0) {
+      throw new Error('模块无词条')
+    }
+    // 把除最后一词外的所有词设为已掌握
+    const progress: Record<string, import('../../types/progress.js').Progress> =
+      {}
+    for (let i = 0; i < words.length - 1; i += 1) {
+      const word = words[i]
+      progress[word.id] = {
+        targetId: word.id,
+        state: '已掌握',
+        wrongCount: 0,
+        nextReview: 0,
+        intervalLevel: 0,
+        seen: true,
+        history: [{ at: NOW, result: 'correct', from: '学习中', to: '已掌握' }],
+      }
+    }
+    appStore.setState((prev) => ({
+      ...prev,
+      progress: { ...prev.progress, ...progress },
+    }))
+
+    const lastWordId = words[words.length - 1].id
+    const decisions = appActions.submitSelfEval(lastWordId, '认识', NOW)
+    expect(decisions.some((d) => d.rule === 'J4')).toBe(true)
+  })
+})
+
 describe('actions · 脏数据防御', () => {
   it('VERDICT · history 字段缺失的进度：submitSelfEval 不应抛错，state 正常推进', () => {
     // 直接 setState 注入一条 progress（无 history 字段），

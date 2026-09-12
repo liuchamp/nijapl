@@ -145,18 +145,19 @@ export function buildJumpContext(
   word: Word,
   wordProgress: Progress,
   selfEval?: SelfEval,
+  progressForMastery: Record<string, Progress> = state.progress,
 ): JumpContext {
   const moduleWords = repository.getModuleWords(word.moduleId)
   let moduleLearned = 0
   for (const moduleWord of moduleWords) {
-    if (state.progress[moduleWord.id]?.state === '已掌握') {
+    if (progressForMastery[moduleWord.id]?.state === '已掌握') {
       moduleLearned += 1
     }
   }
 
   const grammarLearned: Record<string, boolean> = {}
   for (const grammar of repository.getAllGrammars()) {
-    if (state.progress[grammar.id]?.state === '已掌握') {
+    if (progressForMastery[grammar.id]?.state === '已掌握') {
       grammarLearned[grammar.id] = true
     }
   }
@@ -231,16 +232,26 @@ export function createActions(set: StoreSet, get: StoreGet): Actions {
         ? existing
         : { ...existing, history: [] }
 
-      // J1 需要「本次自评前」的 seen，故用旧进度评估决策。
+      const next = applySelfEval(sanitized, selfEval, at)
+      // J1 需要「本次自评前」的进度（wordProgress=sanitized）；
+      // J4「模块学完」必须用「本次自评后」的进度，否则补上最后一词的那次自评永远差一个词、J4 不触发。
+      const progressForMastery: Record<string, Progress> = {
+        ...state.progress,
+        [targetId]: next,
+      }
       let decisions: JumpDecision[] = [{ rule: 'none' }]
       if (word !== undefined) {
         decisions = evaluate(
-          buildJumpContext(state, word, sanitized, selfEval),
+          buildJumpContext(
+            state,
+            word,
+            sanitized,
+            selfEval,
+            progressForMastery,
+          ),
           'selfEval',
         )
       }
-
-      const next = applySelfEval(sanitized, selfEval, at)
       const session = rollSessionDay(state.session, at)
       // 判据（修复 P0-1）：用「首次评估」替代 `seen`——`seen` 在 markPresented 后即 true，导致计数恒不递增。
       // 用「sanitized.history.length === 0」判定（首评后非空），
