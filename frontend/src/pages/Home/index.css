@@ -56,6 +56,86 @@
   margin-top: var(--space-xs);
 }
 
+/* 假名基础卡（设计 §5.6）：门控未解除时它是首页第一优先级动作，故排在主按钮之上。 */
+.Home-kana {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+}
+
+.Home-kanaSide {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-left: var(--space-lg);
+}
+
+.Home-kanaHead {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.Home-kanaTitle {
+  font-size: var(--font-md);
+  font-weight: 700;
+}
+
+.Home-kanaBadge {
+  padding-left: var(--space-xs);
+  padding-right: var(--space-xs);
+  padding-top: calc(2 * var(--rpx));
+  padding-bottom: calc(2 * var(--rpx));
+  background-color: rgba(57, 196, 122, 0.16);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-xs);
+  color: var(--color-success);
+}
+
+.Home-kanaMeta {
+  margin-top: var(--space-xs);
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.Home-kanaActions {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-sm);
+  width: 100%;
+  margin-top: var(--space-sm);
+}
+
+.Home-kanaBtn {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+
+.Home-kanaBtn--ghost {
+  background-color: var(--color-surface-alt);
+}
+
+.Home-kanaBtnLabel {
+  font-size: var(--font-xs);
+  color: var(--color-text);
+}
+
 .Home-stats {
   display: flex;
   flex-direction: row;

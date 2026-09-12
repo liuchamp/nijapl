@@ -4,6 +4,9 @@ import { GrammarDetailPage } from '../pages/GrammarDetail/index.js'
 import { GrammarListPage } from '../pages/GrammarList/index.js'
 import { GraphPage } from '../pages/Graph/index.js'
 import { HomePage } from '../pages/Home/index.js'
+import { KanaPage } from '../pages/Kana/index.js'
+import { KanaQuizPage } from '../pages/KanaQuiz/index.js'
+import { KanaStudyPage } from '../pages/KanaStudy/index.js'
 import { MePage } from '../pages/Me/index.js'
 import { QuizPage } from '../pages/Quiz/index.js'
 import { ReviewPage } from '../pages/Review/index.js'
@@ -16,6 +19,8 @@ import { VocabDetailPage } from '../pages/VocabDetail/index.js'
  *
  * - T04 交付页面：P0 首页 / P1 阶段地图 / P2 词汇学习 / P3 词汇详解 / P7 复习；
  * - T05 交付页面：P4 语法列表 / P5 语法详解 / P6 知识图谱 / P8 自测 / P9 我的（已落地）；
+ * - K 域页面：K0 五十音总览 / K1 假名学习 / K2 假名测验（**不重排 P0–P9 编号**，
+ *   也不占 Tab 位——入口在首页卡片、阶段地图树顶、我的设置三处，与 P6 图谱同策略）；
  * - 不使用 `<Link>`（Lynx 无此组件），导航统一 `useNavigate()`（见 `navigation.ts`）。
  */
 
@@ -50,6 +55,9 @@ export function AppRoutes() {
       <Route path={ROUTES.grammarDetail} element={<GrammarDetailPage />} />
       <Route path={ROUTES.graph} element={<GraphPage />} />
       <Route path={ROUTES.quiz} element={<QuizPage />} />
+      <Route path={ROUTES.kana} element={<KanaPage />} />
+      <Route path={ROUTES.kanaStudy} element={<KanaStudyPage />} />
+      <Route path={ROUTES.kanaQuiz} element={<KanaQuizPage />} />
       <Route
         path="*"
         element={

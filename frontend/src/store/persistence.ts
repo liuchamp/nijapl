@@ -48,15 +48,19 @@ export function createInitialSettings(): StudySettings {
     pitch: 1,
     autoSpeakOnCard: true,
     unlockRuleEnabled: true,
+    // 设计 §13 Q1 拍板：默认**开**（零基础用户不被 N5 词汇拦住），P9 可关。
+    kanaGateEnabled: true,
   }
 }
 
-/** 默认会话快照（模块 / 阶段在 `startStudy` 时写入）。 */
+/** 默认会话快照（模块 / 阶段在 `startStudy` 时写入，K 域在 `startKanaGroup` 时写入）。 */
 export function createInitialSession(): Session {
   return {
     stageId: '',
     moduleId: '',
     lastWordIndex: 0,
+    kanaGroupId: '',
+    lastKanaIndex: 0,
     lastStudyDate: '',
     todayNewCount: 0,
     todayReviewCount: 0,
@@ -109,6 +113,8 @@ function readSession(value: unknown): Session {
     stageId: readString(value.stageId, base.stageId),
     moduleId: readString(value.moduleId, base.moduleId),
     lastWordIndex: readNumber(value.lastWordIndex, base.lastWordIndex),
+    kanaGroupId: readString(value.kanaGroupId, base.kanaGroupId),
+    lastKanaIndex: readNumber(value.lastKanaIndex, base.lastKanaIndex),
     lastStudyDate: readString(value.lastStudyDate, base.lastStudyDate),
     todayNewCount: readNumber(value.todayNewCount, base.todayNewCount),
     todayReviewCount: readNumber(value.todayReviewCount, base.todayReviewCount),
@@ -133,6 +139,8 @@ function readSettings(value: unknown): StudySettings {
       value.unlockRuleEnabled,
       base.unlockRuleEnabled,
     ),
+    // 老版本存储无此字段 → 回落默认 `true`（与 Q1 拍板一致，不漏掉已有用户的入门引导）。
+    kanaGateEnabled: readBoolean(value.kanaGateEnabled, base.kanaGateEnabled),
   }
 }
 

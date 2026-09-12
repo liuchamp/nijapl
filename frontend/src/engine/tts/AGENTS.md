@@ -1,0 +1,6 @@
+# AGENTS.md — frontend/src/engine/tts
+
+TTS port directory (frontend/src/engine/tts/). Source routing: index.ts (isAndroid->handler, hasWailsRuntime->wails-client, else http-client). M4 VOID (Native AudioPlayer deleted); M1-M3+M5 only. stop() idempotent, never guard isPlaying; channels never call each other's stop.
+WHERE TO LOOK: index.ts (orchestration), request.ts (buildSpeechUrl/cacheKey), audio-cache.ts (LRU), inflight.ts (singleflight), tts-client.wails.ts (binding adapter), tts-handler.ts (APK /wails/tts), tts-client.ts (browser fallback), player.ts/player.web.ts (DOM audio + prime()), tts.web.ts (speechSynthesis, ja-prefix, voiceschanged 800ms), __tests__/, docs/design/TTS-集成方案.md v3.0.
+CONVENTIONS: lang='ja-JP'; volume='+0%'; cacheKey 6-seg \u0000; H13 URLSearchParams + repairPlusSign; prime() sync in user-gesture (no await/network); ports never throw; prefetch only when player available; gen/stale-gen drops late responses.
+ANTI-PATTERNS: don't check isPlaying before stop(); don't await prime(); don't invent M4/player.native; don't call cross-channel stop; don't hardcode TTS IP (use constants/tts.ts); don't skip ja-prefix filter; H13: URLSearchParams (+ hand-rolled fallback), Go repairPlusSign. Detail: docs/design/TTS-集成方案.md v3.0.

@@ -1,6 +1,7 @@
 import './index.css'
 import { NodeStateBadge } from '../../components/NodeStateBadge/index.js'
 import { ProgressRing } from '../../components/ProgressRing/index.js'
+import { KANA_TOTAL } from '../../constants/kana.js'
 import {
   DAILY_GRAMMAR_GOAL,
   DAILY_NEW_GOAL,
@@ -9,9 +10,15 @@ import {
 import { STRINGS } from '../../constants/strings.js'
 import { repository } from '../../data/index.js'
 import { useNavigation } from '../../router/navigation.js'
+import { enterKanaGroup } from '../../services/kanaWriteSession.js'
 import { useAppStore } from '../../store/hooks.js'
 import {
   selectContinueTarget,
+  selectIsKanaMastered,
+  selectKanaContinueTarget,
+  selectKanaGateActive,
+  selectKanaMasteredCount,
+  selectKanaOverallCompletion,
   selectStageCompletion,
   selectStageNodeState,
   selectTodayStats,
@@ -19,11 +26,13 @@ import {
 } from '../../store/selectors.js'
 
 /**
- * P0 首页仪表盘（架构 §7 T04 判据 1）。
+ * P0 首页仪表盘（架构 §7 T04 判据 1 + 设计 §5.6 衔接点）。
  *
  * - **≤3 次点击到 P2**：主按钮「继续学习 / 开始学习」直达 `studyPath(moduleId)`（1 击）；
  * - **断点续学**：目标来自 `selectContinueTarget`（读 `session.moduleId` / `lastWordIndex`）；
- * - 今日目标进度环、今日统计、薄弱预警、阶段进度一览、知识图谱入口（P6）。
+ * - **假名门控**（Q1 裁决：默认开，P9 可关）：清音 5 关未达标时，主按钮**改指向 K 域**——
+ *   零基础用户不会一进门就撞上读不出的词条。达标后自动放行，不需要用户手动关开关。
+ * - 今日目标进度环、今日统计、薄弱预警、假名基础卡、阶段进度一览、知识图谱入口（P6）。
  */
 
 /** P0 首页。 */
@@ -37,8 +46,37 @@ export function HomePage() {
   const weakTop = selectWeakTop(state, 3)
   const stages = repository.getStages()
 
+  const kanaGate = selectKanaGateActive(state)
+  const kanaTarget = selectKanaContinueTarget(state)
+  const kanaMastered = selectKanaMasteredCount(state)
+  const kanaRatio = selectKanaOverallCompletion(state)
+  const kanaGraduated = selectIsKanaMastered(state)
+
   const hasSession = state.session.moduleId !== ''
   const newRatio = stats.newCount / DAILY_NEW_GOAL
+
+  /** 进 K 域：有续学目标就直达那一关那一音，否则回到 K0 总览。 */
+  function goKana(): void {
+    if (kanaTarget === null) {
+      nav.goKana()
+      return
+    }
+    enterKanaGroup(kanaTarget.groupId, kanaTarget.index)
+    nav.goKanaStudy(kanaTarget.groupId)
+  }
+
+  /** 主按钮：门控生效时进 K 域，否则进词汇学习。 */
+  function onPrimary(): void {
+    if (kanaGate) {
+      goKana()
+      return
+    }
+    if (target !== null) {
+      nav.goStudy(target.moduleId)
+    } else {
+      nav.goStages()
+    }
+  }
 
   return (
     <div className="Home">
@@ -66,6 +104,48 @@ export function HomePage() {
         </div>
       </div>
 
+      {/* 假名基础卡（设计 §5.6）：门控未解除时它是首页的第一优先级动作 */}
+      <div className="Home-kana">
+        <ProgressRing
+          value={kanaRatio}
+          label={`${kanaMastered}/${KANA_TOTAL}`}
+          size={120}
+          stroke={12}
+        />
+        <div className="Home-kanaSide">
+          <div className="Home-kanaHead">
+            <span className="Home-kanaTitle">{STRINGS.kana.title}</span>
+            {kanaGraduated ? (
+              <span className="Home-kanaBadge">{STRINGS.kana.gateBadge}</span>
+            ) : null}
+          </div>
+          <span className="Home-kanaMeta">
+            {kanaGraduated
+              ? STRINGS.kana.graduationBody
+              : kanaGate
+                ? STRINGS.kana.gateHint
+                : `${STRINGS.kana.overallLabel} ${kanaMastered}/${KANA_TOTAL}`}
+          </span>
+          <div className="Home-kanaActions">
+            <div className="Home-kanaBtn" onClick={goKana}>
+              <span className="Home-kanaBtnLabel">
+                {kanaMastered === 0
+                  ? STRINGS.kana.startEntry
+                  : STRINGS.kana.continueEntry}
+              </span>
+            </div>
+            <div
+              className="Home-kanaBtn Home-kanaBtn--ghost"
+              onClick={nav.goKana}
+            >
+              <span className="Home-kanaBtnLabel">
+                {STRINGS.kana.openTable}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="Home-stats">
         <div className="Home-stat">
           <span className="Home-statValue">{stats.newCount}</span>
@@ -87,23 +167,20 @@ export function HomePage() {
         </div>
       </div>
 
-      <div
-        className="Home-primary"
-        onClick={() => {
-          if (target !== null) {
-            nav.goStudy(target.moduleId)
-          } else {
-            nav.goStages()
-          }
-        }}
-      >
+      <div className="Home-primary" onClick={onPrimary}>
         <span className="Home-primaryLabel">
-          {hasSession
-            ? STRINGS.home.continueLearning
-            : STRINGS.home.startLearning}
+          {kanaGate
+            ? kanaMastered === 0
+              ? STRINGS.kana.startEntry
+              : STRINGS.kana.continueEntry
+            : hasSession
+              ? STRINGS.home.continueLearning
+              : STRINGS.home.startLearning}
         </span>
       </div>
-      {hasSession ? null : (
+      {kanaGate ? (
+        <span className="Home-hint">{STRINGS.kana.gateHint}</span>
+      ) : hasSession ? null : (
         <span className="Home-hint">{STRINGS.home.noSessionHint}</span>
       )}
 

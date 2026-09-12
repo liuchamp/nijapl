@@ -1,5 +1,6 @@
 import { persist } from 'zustand/middleware'
 import { createStore } from 'zustand/vanilla'
+import type { KanaScript } from '../types/kana.js'
 import type {
   JumpDecision,
   Progress,
@@ -63,6 +64,18 @@ export interface RuntimeState {
   detailSheet: DetailSheetState
   /** 最近一次自评命中的跳转决策（便于页面读取）。 */
   lastDecisions: JumpDecision[]
+
+  // —— K 域（五十音）运行时状态（设计 §8.3）——
+  /** 当前关 id（null 表示未进入关）。 */
+  currentKanaGroupId: string | null
+  /** 当前音在关内的序号。 */
+  kanaIndex: number
+  /** K1 卡片当前显示的书写体系（平 / 片）。 */
+  kanaScript: KanaScript
+  /** 是否处于「默写」态（遮盖字形，凭记忆书写）。 */
+  kanaMemoryMode: boolean
+  /** 是否处于「偷看一眼」揭示窗口内（`KANA_PEEK_MS` 后由 service 复位）。 */
+  kanaPeekVisible: boolean
 }
 
 /** 易失分片容器。 */
@@ -86,6 +99,11 @@ export function createInitialRuntime(): RuntimeState {
     sessionWrongCount: 0,
     detailSheet: { visible: false, wordId: null, mode: null },
     lastDecisions: [],
+    currentKanaGroupId: null,
+    kanaIndex: 0,
+    kanaScript: 'hiragana',
+    kanaMemoryMode: false,
+    kanaPeekVisible: false,
   }
 }
 

@@ -1,0 +1,125 @@
+/* KanaTable：K0 五十音音表 */
+
+.KanaTable {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--space-sm);
+  border-radius: var(--radius-lg);
+}
+
+/* 学习模式：仅加高亮描边（对齐参考产品 `.voiceless-study` 的 box-shadow 语义），
+   不隐藏任何内容——罗马音、已掌握音一律照常显示。 */
+.KanaTable--study {
+  background-color: var(--color-primary-soft);
+  box-shadow: 0 0 0 2rpx var(--color-primary);
+}
+
+.KanaTable-empty {
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+/* 表头与数据行共用同一套列轨道：首列 = 行首，其后 6 列 = あ/い/う/え/お/ん 段。 */
+.KanaTable-head,
+.KanaTable-row {
+  display: grid;
+  grid-template-columns: calc(92 * var(--rpx)) repeat(6, minmax(0, 1fr));
+  gap: calc(8 * var(--rpx));
+  width: 100%;
+}
+
+.KanaTable-head {
+  margin-bottom: var(--space-xs);
+}
+
+.KanaTable-headCell {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.KanaTable-rowHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+}
+
+.KanaTable-rowLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.KanaTable-rowMeta {
+  margin-top: calc(2 * var(--rpx));
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.KanaTable-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(96 * var(--rpx));
+  margin-top: calc(4 * var(--rpx));
+  padding-top: calc(6 * var(--rpx));
+  padding-bottom: calc(6 * var(--rpx));
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+}
+
+.KanaTable-cell--clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.KanaTable-cell--clickable:hover {
+  background-color: var(--color-surface);
+}
+
+/* 关未解锁：仍然展示（音表是浏览面），但不可点、视觉上降权。 */
+.KanaTable-cell--locked {
+  opacity: 0.45;
+}
+
+.KanaTable-cellChars {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.KanaTable-hiragana {
+  font-size: var(--font-lg);
+  color: var(--color-text);
+}
+
+.KanaTable-katakana {
+  margin-top: calc(2 * var(--rpx));
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+.KanaTable-romaji {
+  margin-top: calc(2 * var(--rpx));
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+/* 五态小圆点：颜色由 `STATE_STYLE[state].color` 内联给出（与 NodeStateBadge 同一份配色）。 */
+.KanaTable-dot {
+  position: absolute;
+  top: calc(8 * var(--rpx));
+  right: calc(8 * var(--rpx));
+  width: calc(12 * var(--rpx));
+  height: calc(12 * var(--rpx));
+  border-radius: var(--radius-pill);
+}

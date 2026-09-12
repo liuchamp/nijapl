@@ -75,7 +75,9 @@ body {
    * 参考树 App.css 的 `text { color }` 只定义了颜色、未定义字号，故所有未显式设字号的
    * 文本（`.TtsButton-noticeText` / `.NodeStateBadge-label` / `.ProgressRing-label` 等）
    * 在 Lynx 中是 14px。此处显式对齐，避免整体漂大 ~14%。
-   * 项目内无 input/textarea/select/button（不继承 body 字号），修正无副作用。
+   * 例外：K2 假名测验的「输入罗马音」（`.KanaQuiz-input`）是本项目唯一的表单元素，
+   * 表单控件**不继承** body 字号 / 配色（浏览器 UA 样式表另有一套），
+   * 故该处已显式声明 font-size / color / background / border，新增表单元素时同理。
    */
   font-size: 14px;
   -webkit-font-smoothing: antialiased;

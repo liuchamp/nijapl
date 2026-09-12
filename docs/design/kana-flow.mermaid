@@ -1,0 +1,83 @@
+%% JLPT N3 词汇学习 App — K 域（五十音图）完整学习流程
+%% 源文档：docs/design/五十音图学习流程设计.md
+%% 覆盖：入口 → 音表总览 → 关卡解锁 → 四段卡片 → 三档自评 → 关内测验 → 结业 → 复习/错音
+%% 与 learning-flow.mermaid（P0–P9 主链路）并列：K 域进度不经 stage/module 聚合，独立成图
+%% mermaid 仅允许一个图；本图用 subgraph 分层
+flowchart TD
+  subgraph Entry["入口（3 处，K 域不占 Tab 位）"]
+    E1["P0 首页 假名基础卡<br/>进度环 n/104"]
+    E2["P1 阶段地图 树顶节点<br/>K · 五十音入门"]
+    E3["P9 我的 假名基础设置<br/>解锁开关 · 重置"]
+  end
+
+  E1 --> K0
+  E2 --> K0
+  E3 --> K0
+
+  subgraph Overview["K0 五十音总览"]
+    K0["音表 · 主Tab 清音/浊音/半浊音/拗音<br/>子Tab 平/片/罗（多选）"]
+    K0 --> CELL["每格：假名 + 罗马音 + 五态圆点<br/>行首：行完成度 3/5"]
+    CELL --> LOCK{"关解锁?<br/>前置关已掌握率 大于等于 0.8"}
+    LOCK -->|锁定| K0
+    LOCK -->|解锁| K1START["开始入门<br/>定位关内首个未掌握音"]
+  end
+
+  K1START --> K1
+
+  subgraph Card["K1 假名学习卡（关内 swiper，循环翻页）"]
+    K1["① 认形<br/>超大字 · 平片切换 · 罗马音"]
+    K1 --> C2["② 字源联想<br/>平 草书来源 / 片 楷书偏旁"]
+    C2 --> C3["③ 应用实例<br/>あい ①愛 → 可发音"]
+    C3 --> C4["④ 书写<br/>描红画布"]
+    C4 --> MEM{"默写开关"}
+    MEM -->|开| COVER["遮盖字形 + 不会写，偷看一眼"]
+    COVER -->|点偷看| PEEK["显示 2000ms 后自动恢复遮盖"]
+    MEM -->|关| EVAL
+  end
+
+  C3 -.->|K5 实例命中词表| P3["P3 词汇详解"]
+
+  EVAL{"三档自评<br/>不认识 / 模糊 / 认识"}
+  PEEK --> EVAL
+  EVAL -->|跳过| SKIPK["applySkip → 未学 · 不计分"]
+  EVAL -->|自评| WRITEK["submitSelfEval<br/>targetId = kana:xxx"]
+  SKIPK --> K1
+
+  WRITEK --> SRSK["engine/srs 五态机（复用）<br/>state · intervalLevel · nextReview · history"]
+  SRSK --> PROGK[("store.progress<br/>key 前缀 kana:")]
+  PROGK --> AGGK["engine/kana 完成度<br/>音 → 关 → 总"]
+
+  subgraph Gate["解锁与推进"]
+    AGGK --> KC{"本关已掌握率 = 100%?"}
+    KC -->|否| K1
+    KC -->|是| K2
+  end
+
+  subgraph Quiz["K2 关内测验（5 题型 · 确定性出题）"]
+    K2["① 听音选假名 ② 假名选罗马音<br/>③ 罗马音选假名 ④ 平片互译<br/>⑤ 输入罗马音"]
+    K2 --> DIST["干扰项优先级<br/>confusable 易混集 → 同段 → 同关按 order 补齐"]
+    DIST --> JUDGE{"判分"}
+    JUDGE -->|对| RESULT["submitReviewResult<br/>todayReviewCount + 1"]
+    JUDGE -->|错| WEAKQ["错音本 · 按易混对聚合"]
+    RESULT --> NEXTG["下一关解锁 → K1"]
+  end
+
+  subgraph Grad["结业"]
+    NEXTG --> ALL{"12 关全部达标?"}
+    ALL -->|否| K0
+    ALL -->|是| FINAL["结业测验 104 音抽样 20 题<br/>取样 i 乘 5 取模 104"]
+    FINAL --> BADGE["假名基础已达标徽章<br/>首页引导进入 N5 词汇"]
+  end
+
+  subgraph Review["K3 复习（并入 P7 复习页第三分区）"]
+    PROGK --> DUE["今日到期 · 假名"]
+    WEAKQ --> WEAKLIST["错音本 · 需强化 与 模糊"]
+    WEAKLIST --> CONF["易混对比练习<br/>シ 与 ツ 左右并排 · 双侧可发音"]
+    DUE --> K1R["K1 复习模式<br/>隐藏字源 · 直接考"]
+  end
+
+  subgraph Isolate["进度隔离（K 域红线）"]
+    PROGK -.->|不参与| ISO1["stageCompletion<br/>只遍历 words"]
+    PROGK -.->|不参与| ISO2["selectWeakWords<br/>只遍历 getAllWords"]
+    PROGK -.->|不参与| ISO3["阶段解锁率<br/>与 P0 进度环"]
+  end

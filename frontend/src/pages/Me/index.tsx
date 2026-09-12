@@ -5,6 +5,7 @@ import {
   StatTimeline,
 } from '../../components/StatTimeline/index.js'
 import { TtsButton } from '../../components/TtsButton/index.js'
+import { KANA_TOTAL } from '../../constants/kana.js'
 import {
   DAILY_GRAMMAR_GOAL,
   DAILY_NEW_GOAL,
@@ -15,16 +16,22 @@ import { repository } from '../../data/index.js'
 import { useNavigation } from '../../router/navigation.js'
 import { copyText } from '../../services/clipboard.js'
 import { appActions, useAppStore, useSettings } from '../../store/hooks.js'
-import { selectTodayStats, selectWeakWords } from '../../store/selectors.js'
+import {
+  selectKanaMasteredCount,
+  selectTodayStats,
+  selectWeakWords,
+} from '../../store/selectors.js'
 
 /**
- * P9 我的 / 设置（架构 §2.9 / T05 判据 5、6）。
+ * P9 我的 / 设置（架构 §2.9 / T05 判据 5、6 + 设计 §5.6 衔接点）。
  *
  * - **发音设置**（语速 / 音调 / 卡片出现即读）：改即生效（`updateSettings`），
  *   随 `settings` 分片持久化；含**试听**（C1）；
  *   **不提供任何发音方案选择项**（朗读文本恒取假名，见 PRD §5.3 P9）；
  * - **数据导出**：生成学习数据 JSON 文本并复制（无剪贴板能力时展示文本，零静默失败）；
  * - **解锁规则开关**：`toggleUnlockRule`；
+ * - **假名基础**：入门门控开关（`toggleKanaGate`）+ 清空假名进度（`resetKanaProgress`，
+ *   **只摘 `kana:` 前缀条目**，不动词条 / 语法 / 打卡数据）；
  * - **学习统计**：今日配额 + 累计掌握（`StatTimeline`）。
  */
 
@@ -46,8 +53,12 @@ export function MePage() {
   const settings = useSettings()
   const state = useAppStore((snapshot) => snapshot)
   const [resetArmed, setResetArmed] = useState(false)
+  const [kanaResetArmed, setKanaResetArmed] = useState(false)
+  const [kanaNotice, setKanaNotice] = useState<string | null>(null)
   const [exportNotice, setExportNotice] = useState<string | null>(null)
   const [exportText, setExportText] = useState<string | null>(null)
+
+  const kanaMastered = selectKanaMasteredCount(state)
 
   const statRows = useMemo(() => {
     const stats = selectTodayStats(state, Date.now())
@@ -157,6 +168,18 @@ export function MePage() {
     setExportText(null)
   }
 
+  /** 清空假名进度：两段式确认（与「清空学习进度」同交互，避免误触清掉 104 音的进度）。 */
+  function onKanaReset(): void {
+    if (!kanaResetArmed) {
+      setKanaResetArmed(true)
+      setKanaNotice(null)
+      return
+    }
+    appActions.resetKanaProgress()
+    setKanaResetArmed(false)
+    setKanaNotice(STRINGS.kana.settingsResetDone)
+  }
+
   return (
     <div className="Me">
       <div className="Me-head">
@@ -239,6 +262,34 @@ export function MePage() {
             {settings.unlockRuleEnabled ? STRINGS.me.on : STRINGS.me.off}
           </span>
         </div>
+      </div>
+
+      {/* 假名基础（设计 §5.6）：门控开关（Q1 裁决默认开、此处可关）+ 只清 K 域进度 */}
+      <div className="Me-block">
+        <span className="Me-blockTitle">{STRINGS.kana.settingsSection}</span>
+        <div className="Me-setting" onClick={appActions.toggleKanaGate}>
+          <span className="Me-settingLabel">{STRINGS.kana.settingsGate}</span>
+          <span className="Me-settingValue">
+            {settings.kanaGateEnabled ? STRINGS.me.on : STRINGS.me.off}
+          </span>
+        </div>
+        <span className="Me-hint">{STRINGS.kana.settingsGateHint}</span>
+        <span className="Me-hint">
+          {`${STRINGS.kana.overallLabel} ${kanaMastered}/${KANA_TOTAL}`}
+        </span>
+        <div
+          className={kanaResetArmed ? 'Me-reset Me-reset--armed' : 'Me-reset'}
+          onClick={onKanaReset}
+        >
+          <span className="Me-resetLabel">
+            {kanaResetArmed
+              ? STRINGS.kana.settingsResetConfirm
+              : STRINGS.kana.settingsReset}
+          </span>
+        </div>
+        {kanaNotice !== null ? (
+          <span className="Me-notice">{kanaNotice}</span>
+        ) : null}
       </div>
 
       <div className="Me-block">

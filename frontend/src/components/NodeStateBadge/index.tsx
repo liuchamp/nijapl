@@ -9,12 +9,19 @@ import { COLORS, RADIUS, SPACING } from '../../constants/theme.js'
  * 文案统一取自 `STRINGS.nodeState`（唯一文案入口）。
  */
 
-interface NodeStateStyle {
+export interface NodeStateStyle {
   color: string
   background: string
 }
 
-const STATE_STYLE: Record<NodeState, NodeStateStyle> = {
+/**
+ * 五态配色表（唯一来源）。
+ *
+ * 导出理由：K 域音表的「每格右上角五态小圆点」（设计 §5.1）只需要**颜色语义**，
+ * 不需要徽章文本。导出本表让圆点与其后徽章共用同一份配色，
+ * 避免在 `KanaTable` 里再抄一份颜色映射（两处漂移后「黄=学习中」的口径会不一致）。
+ */
+export const STATE_STYLE: Record<NodeState, NodeStateStyle> = {
   locked: { color: COLORS.textMuted, background: 'rgba(154, 164, 196, 0.14)' },
   未学: { color: COLORS.textMuted, background: 'rgba(154, 164, 196, 0.14)' },
   学习中: { color: COLORS.warning, background: 'rgba(240, 180, 74, 0.16)' },

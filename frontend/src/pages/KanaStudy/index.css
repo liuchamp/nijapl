@@ -1,0 +1,403 @@
+/* KanaStudy：K1 假名学习卡 */
+
+.KanaStudy {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: var(--space-md);
+}
+
+.KanaStudy-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.KanaStudy-back {
+  cursor: pointer;
+  user-select: none;
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.KanaStudy-backLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.KanaStudy-title {
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.KanaStudy-progress {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.KanaStudy-groupName {
+  margin-top: var(--space-xs);
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.KanaStudy-empty {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.KanaStudy-emptyLabel {
+  font-size: var(--font-md);
+  color: var(--color-text-muted);
+}
+
+.KanaStudy-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  margin-top: var(--space-md);
+}
+
+.KanaStudy-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: var(--space-md);
+  padding: var(--space-md);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+}
+
+.KanaStudy-sectionTitle {
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+/* —— ① 认形 —— */
+.KanaStudy-glyphRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+.KanaStudy-glyph {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: calc(240 * var(--rpx));
+  height: calc(240 * var(--rpx));
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-lg);
+}
+
+.KanaStudy-glyphText {
+  font-size: calc(140 * var(--rpx));
+  line-height: 1;
+}
+
+.KanaStudy-glyphMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.KanaStudy-romaji {
+  margin-bottom: var(--space-xs);
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.KanaStudy-scripts {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+.KanaStudy-script {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+  opacity: 0.55;
+}
+
+.KanaStudy-script--on {
+  background-color: var(--color-primary-soft);
+  opacity: 1;
+}
+
+.KanaStudy-scriptLabel {
+  font-size: var(--font-xs);
+  color: var(--color-text);
+}
+
+/* —— ② 字源 —— */
+.KanaStudy-origin {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  margin-bottom: var(--space-xs);
+}
+
+.KanaStudy-originChar {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: calc(72 * var(--rpx));
+  height: calc(72 * var(--rpx));
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+  font-size: var(--font-lg);
+  color: var(--color-primary);
+}
+
+.KanaStudy-originNote {
+  flex: 1;
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+/* —— ③ 应用实例 —— */
+.KanaStudy-example {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: var(--space-xs);
+  padding: var(--space-sm);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+}
+
+.KanaStudy-exampleMain {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  flex: 1;
+}
+
+.KanaStudy-exampleText {
+  font-size: var(--font-md);
+  color: var(--color-text);
+}
+
+.KanaStudy-exampleAccent {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.KanaStudy-exampleKanji {
+  font-size: var(--font-md);
+  color: var(--color-text);
+}
+
+.KanaStudy-exampleMeaning {
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+.KanaStudy-chip {
+  cursor: pointer;
+  user-select: none;
+  margin-left: var(--space-sm);
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+  padding-top: calc(2 * var(--rpx));
+  padding-bottom: calc(2 * var(--rpx));
+  background-color: var(--color-primary-soft);
+  border-radius: var(--radius-pill);
+}
+
+.KanaStudy-chipLabel {
+  font-size: var(--font-xs);
+  color: var(--color-primary);
+}
+
+/* —— 底部三档自评（与 P2 同配色） —— */
+.KanaStudy-eval {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  width: 100%;
+  margin-top: var(--space-xs);
+}
+
+.KanaStudy-evalBtn {
+  cursor: pointer;
+  user-select: none;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1rpx solid var(--color-border);
+}
+
+.KanaStudy-evalBtn--unknown {
+  background-color: rgba(255, 95, 109, 0.16);
+}
+
+.KanaStudy-evalBtn--vague {
+  background-color: rgba(240, 180, 74, 0.16);
+}
+
+.KanaStudy-evalBtn--known {
+  background-color: rgba(57, 196, 122, 0.16);
+}
+
+.KanaStudy-evalLabel {
+  font-size: var(--font-md);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.KanaStudy-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  width: 100%;
+  margin-top: var(--space-md);
+}
+
+.KanaStudy-navBtn {
+  cursor: pointer;
+  user-select: none;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.KanaStudy-navLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.KanaStudy-wrong {
+  cursor: pointer;
+  user-select: none;
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+}
+
+.KanaStudy-wrongLabel {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+/* —— 本关学完浮层 —— */
+.KanaStudy-done {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.KanaStudy-doneCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  padding: var(--space-lg);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+}
+
+.KanaStudy-doneTitle {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.KanaStudy-doneBody {
+  margin-top: var(--space-sm);
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.KanaStudy-doneActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+  margin-top: var(--space-lg);
+}
+
+.KanaStudy-doneBtn {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.KanaStudy-doneBtn--primary {
+  background-color: var(--color-primary);
+}
+
+.KanaStudy-doneBtnLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}

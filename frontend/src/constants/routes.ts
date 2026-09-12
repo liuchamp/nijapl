@@ -27,6 +27,12 @@ export const ROUTES = {
   graph: '/graph',
   /** P8 自测（二级） */
   quiz: '/quiz',
+  /** K0 五十音总览（二级；K 域新增，不占 Tab 位） */
+  kana: '/kana',
+  /** K1 假名学习（二级） */
+  kanaStudy: '/kana/study/:groupId',
+  /** K2 假名测验（二级） */
+  kanaQuiz: '/kana/quiz',
 } as const
 
 export type RouteKey = keyof typeof ROUTES
@@ -91,4 +97,34 @@ export function graphPath(options?: {
   return params.length === 0
     ? ROUTES.graph
     : `${ROUTES.graph}?${params.join('&')}`
+}
+
+/** K1 假名学习路径；`mode=review` 表示复习模式（隐藏字源，直接考）。 */
+export function kanaStudyPath(
+  groupId: string,
+  mode?: 'learn' | 'review',
+): string {
+  const base = ROUTES.kanaStudy.replace(':groupId', encodeURIComponent(groupId))
+  return mode === 'review' ? `${base}?mode=review` : base
+}
+
+/** K2 假名测验路径；`groupId` 缺省时按「结业测验」处理（全表抽样）。 */
+export function kanaQuizPath(groupId?: string): string {
+  return groupId === undefined
+    ? ROUTES.kanaQuiz
+    : `${ROUTES.kanaQuiz}?group=${encodeURIComponent(groupId)}`
+}
+
+/** 从 K2 路径的 `?group=` 参数还原关 id（缺省返回 `null` 表示结业测验）。 */
+export function readKanaQuizGroup(search: string): string | null {
+  const params = new URLSearchParams(search)
+  const groupId = params.get('group')
+  return groupId === null || groupId === '' ? null : groupId
+}
+
+/** K1 路径的 `?mode=review` 判定。 */
+export function readKanaStudyMode(search: string): 'learn' | 'review' {
+  return new URLSearchParams(search).get('mode') === 'review'
+    ? 'review'
+    : 'learn'
 }

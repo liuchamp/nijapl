@@ -1,5 +1,5 @@
 import './index.css'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router'
 import { GrammarHighlightText } from '../../components/GrammarHighlightText/index.js'
 import { NodeStateBadge } from '../../components/NodeStateBadge/index.js'
@@ -7,20 +7,24 @@ import { TtsButton } from '../../components/TtsButton/index.js'
 import { STRINGS } from '../../constants/strings.js'
 import { repository } from '../../data/index.js'
 import { buildConjugationTable } from '../../engine/conjugation.js'
+import { buildKanaGlyphIndex, splitKanaMora } from '../../engine/kana.js'
 import { useNavigation } from '../../router/navigation.js'
 import { buildSentenceHighlight } from '../../services/highlight.js'
 import { emptyStudyEffect } from '../../services/jumpService.js'
+import { enterKanaGroup } from '../../services/kanaWriteSession.js'
 import * as studySession from '../../services/studySession.js'
 import { ttsPrefetch } from '../../services/ttsPrefetch.js'
 import { useAppStore, useSettings } from '../../store/hooks.js'
 
 /**
- * P3 词汇详解（架构 §7 T04 判据 5、6）。
+ * P3 词汇详解（架构 §7 T04 判据 5、6 + 设计 §5.6 衔接点）。
  *
  * - **J5 动词变形**：`pos` 命中动词枚举时展示变形表（`buildConjugationTable`，纯引擎）；
  * - **J6 关联词**：`word.related` 渲染为 chips，可跳转对应词条；
  * - **J3 例句高亮**：按 `SentenceWord/SentenceGrammar.start/end` 切分高亮（`services/highlight`），
- *   仅高亮「未掌握语法」；缺偏移的语法点退化为下方文字列表（不猜位置、不越界）。
+ *   仅高亮「未掌握语法」；缺偏移的语法点退化为下方文字列表（不猜位置、不越界）；
+ * - **拆音**（默认收起）：把词条假名按音拍切开，逐格可跳 K1 复习该音——
+ *   这是 K 域与 W 域之间**唯一的双向桥**：从「读不出这个词」直接落到「去学这个音」。
  */
 
 /** P3 词汇详解。 */
@@ -30,6 +34,8 @@ export function VocabDetailPage() {
   const nav = useNavigation()
   const state = useAppStore((snapshot) => snapshot)
   const settings = useSettings()
+  /** 拆音默认收起：词条卡的主任务是「认这个词」，拆音是按需的下钻动作。 */
+  const [splitOpen, setSplitOpen] = useState(false)
 
   const word = useMemo(() => repository.getWordById(wordId), [wordId])
   const effect = useMemo(
@@ -75,6 +81,14 @@ export function VocabDetailPage() {
     }
   }, [wordId])
 
+  /** 「字形 → Kana」索引（104 条，进程内数据不变，只建一次）。 */
+  const glyphIndex = useMemo(
+    () => buildKanaGlyphIndex(repository.getAllKana()),
+    [],
+  )
+  /** 拆音的 mora 序列。 */
+  const moraList = useMemo(() => splitKanaMora(word?.kana ?? ''), [word])
+
   if (word === undefined) {
     return (
       <div className="Vocab">
@@ -112,7 +126,52 @@ export function VocabDetailPage() {
             settings={settings}
             label={STRINGS.tts.replay}
           />
+          <div
+            className={
+              splitOpen ? 'Vocab-split Vocab-split--on' : 'Vocab-split'
+            }
+            onClick={() => setSplitOpen((prev) => !prev)}
+          >
+            <span className="Vocab-splitLabel">{STRINGS.kana.splitKana}</span>
+          </div>
         </div>
+
+        {splitOpen ? (
+          <div className="Vocab-mora">
+            <div className="Vocab-moraRow">
+              {moraList.map((mora, moraIndex) => {
+                const item = glyphIndex.get(mora)
+                return (
+                  <div
+                    // biome-ignore lint/suspicious/noArrayIndexKey: mora 在同一词内会重复（`コーヒー` 有两个 `ー`），下标是唯一性的必要组成部分
+                    key={`${mora}-${moraIndex}`}
+                    className={
+                      item === undefined
+                        ? 'Vocab-moraCell Vocab-moraCell--plain'
+                        : 'Vocab-moraCell'
+                    }
+                    onClick={() => {
+                      if (item === undefined) {
+                        return
+                      }
+                      const index = repository
+                        .getKanaByGroup(item.groupId)
+                        .findIndex((member) => member.id === item.id)
+                      enterKanaGroup(item.groupId, index < 0 ? 0 : index)
+                      nav.goKanaStudy(item.groupId)
+                    }}
+                  >
+                    <span className="Vocab-moraText">{mora}</span>
+                    <span className="Vocab-moraRomaji">
+                      {item === undefined ? '' : item.romaji}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+            <span className="Vocab-moraHint">{STRINGS.kana.splitHint}</span>
+          </div>
+        ) : null}
       </div>
 
       <div className="Vocab-block">

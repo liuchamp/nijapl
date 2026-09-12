@@ -1,0 +1,270 @@
+/* Kana：K0 五十音总览 */
+
+.Kana {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: var(--space-md);
+}
+
+.Kana-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.Kana-back {
+  cursor: pointer;
+  user-select: none;
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.Kana-backLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.Kana-title {
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.Kana-subtitle {
+  margin-top: var(--space-xs);
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.Kana-empty {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.Kana-emptyLabel {
+  font-size: var(--font-md);
+  color: var(--color-text-muted);
+}
+
+/* —— 总进度 + 主 CTA —— */
+.Kana-overall {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+}
+
+.Kana-overallRight {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.Kana-overallLabel {
+  font-size: var(--font-md);
+  font-weight: 700;
+}
+
+.Kana-overallBody {
+  margin-top: var(--space-xs);
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.Kana-badge {
+  margin-top: var(--space-xs);
+  font-size: var(--font-xs);
+  color: var(--color-success);
+}
+
+.Kana-primary {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+
+.Kana-primaryLabel {
+  font-size: var(--font-sm);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* —— 主 Tab：音类 —— */
+.Kana-tabs {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-xs);
+  width: 100%;
+  margin-top: var(--space-md);
+}
+
+.Kana-tab {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+  border: 1rpx solid var(--color-border);
+}
+
+.Kana-tab--on {
+  background-color: var(--color-primary-soft);
+  border: 1rpx solid var(--color-primary);
+}
+
+.Kana-tabLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.Kana-tabCount {
+  margin-top: calc(2 * var(--rpx));
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+/* —— 子 Tab：书写体系（多选）+ 罗马音 + 学习模式 —— */
+.Kana-subTabs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-xs);
+  width: 100%;
+  margin-top: var(--space-sm);
+}
+
+.Kana-subTab {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+  opacity: 0.55;
+}
+
+.Kana-subTab--on {
+  background-color: var(--color-primary-soft);
+  opacity: 1;
+}
+
+.Kana-subTabLabel {
+  font-size: var(--font-xs);
+  color: var(--color-text);
+}
+
+.Kana-mode {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.Kana-mode--on {
+  background-color: var(--color-primary);
+}
+
+.Kana-modeLabel {
+  font-size: var(--font-xs);
+  color: var(--color-text);
+}
+
+.Kana-modeHint {
+  margin-top: var(--space-xs);
+  margin-bottom: var(--space-xs);
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+/* —— 12 关列表 —— */
+.Kana-sectionTitle {
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-xs);
+  font-size: var(--font-sm);
+  font-weight: 700;
+}
+
+.Kana-groups {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.Kana-group {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: var(--space-xs);
+  padding: var(--space-sm);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+}
+
+.Kana-group--locked {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.Kana-groupLeft {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.Kana-groupName {
+  font-size: var(--font-sm);
+}
+
+.Kana-groupMeta {
+  margin-top: var(--space-xs);
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
