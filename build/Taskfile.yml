@@ -98,6 +98,9 @@ tasks:
           SCRIPT: '{{if eq .DEV "true"}}build:dev{{else}}build{{end}}'
     env:
       PRODUCTION: '{{if eq .DEV "true"}}false{{else}}true{{end}}'
+      # 浏览器直连回退路径的 TTS host：显式 VITE_TTS_BASE_URL 优先，
+      # 否则复用统一入口 TTS_BASE_URL（APK 真机走 Go 绑定，此项仅覆盖浏览器调试）。
+      VITE_TTS_BASE_URL: '{{.VITE_TTS_BASE_URL | default .TTS_BASE_URL}}'
 
   frontend:run:
     summary: Run a frontend script with selected runner

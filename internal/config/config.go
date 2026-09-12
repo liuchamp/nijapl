@@ -15,6 +15,11 @@ const DefaultTTSBaseURL = "http://127.0.0.1:8000"
 // EnvTTSBaseURL 可覆盖 TTS 服务地址的环境变量名。
 const EnvTTSBaseURL = "NIJAPL_TTS_BASE_URL"
 
+// buildTTSBaseURL 是构建期注入的 TTS 服务地址（`go build -ldflags
+// "-X nijapl/internal/config.buildTTSBaseURL=..."`，见 build/android/Taskfile.yml）。
+// Android APK 跑在独立进程里读不到运行期环境变量，只能靠它把 host 烘进包。
+var buildTTSBaseURL string
+
 // DataDir 返回应用数据目录（不存在时创建）。
 //
 // 落盘位置：`os.UserConfigDir()/nijapl`，即
@@ -32,9 +37,13 @@ func DataDir() string {
 }
 
 // TTSBaseURL 返回 TTS 服务地址（去除尾部斜杠）。
+// 优先级：运行期环境变量 > 构建期注入 > 默认值。
 func TTSBaseURL() string {
 	if v := os.Getenv(EnvTTSBaseURL); v != "" {
 		return v
+	}
+	if buildTTSBaseURL != "" {
+		return buildTTSBaseURL
 	}
 	return DefaultTTSBaseURL
 }

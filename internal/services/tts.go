@@ -108,8 +108,10 @@ type ttsInflight struct {
 
 // NewTTS 构造 TTS 服务（地址来自 `config.TTSBaseURL()`）。
 func NewTTS() *TTS {
+	baseURL := strings.TrimRight(config.TTSBaseURL(), "/")
+	log.Printf("[tts] baseURL=%s", baseURL)
 	return &TTS{
-		baseURL:  strings.TrimRight(config.TTSBaseURL(), "/"),
+		baseURL:  baseURL,
 		client:   &http.Client{Timeout: ttsPrefetchTimeout + 5*time.Second},
 		cache:    make(map[string]*ttsCacheEntry),
 		inflight: make(map[string]*ttsInflight),

@@ -62,6 +62,13 @@ go test ./internal/... .    # Go 侧测试（含真实 TTS 集成用例，服务
 NIJAPL_TTS_BASE_URL=http://127.0.0.1:9000 wails3 dev
 ```
 
+打 Android APK 时运行期环境变量进不了包，用统一入口 `TTS_BASE_URL`
+在构建期烘入（Go 绑定与前端回退路径同时生效，不传则回落默认值）：
+
+```bash
+TTS_BASE_URL=http://192.168.1.10:8000 task android:package
+```
+
 与服务端契约：
 
 - `POST {base}/v1/tts/synthesize`，JSON body：`text` / `lang` / `rate` / `volume` / `pitch` / `format` / `voice`
