@@ -1,0 +1,71 @@
+%% JLPT N3 词汇学习 App — 完整学习交互图（P0–P9）
+%% 分支：workbuddy/master-ttsv1（仅修复本分支）
+%% 覆盖：外壳/选课 → 阶段解锁 → 学习会话 → J1–J6 跳转 → 模块/阶段完成流 → 复习/自测 → 进度写读路径
+%% 本次「完善流程」修复两处（图中标 ✅）：
+%%   ① J4「模块学完」改用「自评后」进度评估（原先用自评前进度，补最后一词时永远差一票，J4 不触发）
+%%   ② 新增模块/阶段完成面板 + selectContinueTarget 跳过已完成模块（原先学完最后一词卡在最后一张，无结束出口）
+%% mermaid 仅允许一个图；本图用 subgraph 分层
+flowchart TD
+  subgraph Shell["应用外壳 App.tsx · MemoryRouter · TabBar"]
+    HOME["P0 首页<br/>今日目标环 · 继续学习 · 阶段进度"]
+    STAGES["P1 阶段地图<br/>4 阶段树 · 五态 · 解锁开关"]
+    GRAMMAR["P4/P5 语法"]
+    REVIEW["P7 复习<br/>到期队列 + 错词本"]
+    ME["P9 我的<br/>设置 · 解锁开关 · 重置"]
+  end
+
+  subgraph Select["选课与解锁"]
+    TARGET{"selectContinueTarget<br/>跳过已完成模块"}
+    UNLOCK{"selectStageUnlocked<br/>上一含词阶段 ≥ 80%?"}
+    LOCKED["模块不可进入"]
+  end
+
+  HOME -->|"继续学习"| TARGET
+  HOME -->|"开始学习 / 阶段"| STAGES
+  TARGET -->|"有未完成模块"| STUDY
+  TARGET -->|"全部完成"| STAGES
+  STAGES -->|点模块| UNLOCK
+  UNLOCK -->|解锁| STUDY["P2 词汇学习 Study<br/>卡片流 · 展示即转态"]
+  UNLOCK -->|锁定| LOCKED
+
+  subgraph Session["学习会话（P2）"]
+    PRESENT["presentCurrentCard<br/>markPresented → 学习中"] --> EVAL{"用户操作"}
+    EVAL -->|"自评 认识/模糊/不认识"| WRITE["submitSelfEval"]
+    EVAL -->|跳过| SKIP["skipWord → 未学 · 不计分"]
+    EVAL -->|翻页| ADV["stepIndex → setCurrentIndex"]
+    ADV --> CLAMP{"越界?"}
+    CLAMP -->|"中间"| STUDY
+  end
+
+  subgraph Jump["跳转决策 J1–J6"]
+    WRITE --> J4EVAL["evaluate<br/>✅ 用『自评后』进度算 moduleLearned"]
+    J4EVAL -->|"J1 首次+不认识"| SHEET["C2 DetailSheet"]
+    J4EVAL -->|"J2 连错≥2"| SHEET
+    J4EVAL -->|"J5/J6"| P3["P3 词汇详解"]
+    SHEET --> P3
+  end
+
+  subgraph Done["✅ 完成流（本次新增）"]
+    J4EVAL -->|"J4 模块 100%"| DONE{"模块已学完?"}
+    DONE -->|是| PANEL["完成面板<br/>标题：本模块已学完 / 本阶段已完成"]
+    PANEL -->|查看知识图谱| GRAPH["P6 知识图谱"]
+    PANEL -->|"继续下一模块"| NEXTMOD["selectNextIncompleteModule<br/>→ goStudy(next)"]
+    PANEL -->|返回阶段地图| STAGES
+    NEXTMOD --> STUDY
+  end
+
+  SHEET -.->|"浮层关闭时补判<br/>J2 与 J4 同命中"| DONE
+
+  subgraph Persist["进度写路径 → 完成度 → 解锁读路径"]
+    WRITE --> SRS["engine/srs.applySelfEval<br/>state · intervalLevel · nextReview · history"]
+    SRS --> PROG[("store.progress")]
+    PROG --> AGG["engine/progress<br/>word → module → stage 完成度"]
+    AGG --> UNLOCK
+    AGG --> DONE
+    AGG --> CT["selectContinueTarget<br/>自动跳过已完成模块"]
+  end
+
+  subgraph Other["复习 / 自测"]
+    REVIEW --> RQ["selectTodayReviewQueue"] --> RW["submitReviewResult"] --> PROG
+    QUIZ["P8 自测（无入口）"] --> WRITE
+  end
