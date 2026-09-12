@@ -18,3 +18,23 @@ export function hasWailsRuntime(): boolean {
   const wails = scope._wails
   return wails !== undefined && wails.environment !== undefined
 }
+
+/**
+ * 当前是否为 Android WebView（APK 同源 handler 选路用）。
+ *
+ * 守卫式探测：无 `navigator` / 无 `userAgent` / 异常一律返回 `false`，永不 throw。
+ */
+export function isAndroid(): boolean {
+  try {
+    const scope = globalThis as unknown as {
+      navigator?: { userAgent?: unknown }
+    }
+    const ua = scope.navigator?.userAgent
+    if (typeof ua !== 'string' || ua === '') {
+      return false
+    }
+    return ua.toLowerCase().includes('android')
+  } catch {
+    return false
+  }
+}

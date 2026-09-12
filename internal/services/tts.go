@@ -187,6 +187,58 @@ func (t *TTS) Cancel() {
 	t.cancelMu.Unlock()
 }
 
+// ServeHTTP 将 TTS 挂到 Wails 内部 asset server（Route "/wails/tts"）供 APK 同源调用。
+//
+// Wails tutorial "Alternative Approach: HTTP Handler" 形态：APK WebView 只把
+// `/wails/*` 转发给 Go（query 保留、body 丢弃），且 Java 侧把任何非 200 映射成
+// 500 "{}"；桌面 asset server 对 service Route 做前缀匹配、无保留前缀，
+// 因此 Route "/wails/tts" 在双端都安全。
+//
+// 约定：只支持 GET（query 传参，无 body）；忽略子路径（asset server 已剥掉
+// Route 前缀，query 保留）；**永远写 HTTP 200** + `application/json` /
+// `Access-Control-Allow-Origin: *`，把 SynthesizeResult 原样编码（Go 的
+// 缓存/重试/去重全部复用，客户端不做缓存与重试）。
+func (t *TTS) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	var result SynthesizeResult
+	if r.Method != http.MethodGet {
+		result = SynthesizeResult{Reason: reasonError, ServiceReason: "method-not-allowed"}
+	} else {
+		q := r.URL.Query()
+		result = t.Synthesize(SynthesizeParams{
+			Text:   q.Get("text"),
+			Lang:   q.Get("lang"),
+			Voice:  q.Get("voice"),
+			Rate:   repairPlusSign(q.Get("rate")),
+			Volume: repairPlusSign(q.Get("volume")),
+			Pitch:  repairPlusSign(q.Get("pitch")),
+			Format: q.Get("format"),
+			Key:    q.Get("key"),
+		})
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(result)
+}
+
+// repairPlusSign 修回被 Android 转发层吃掉的前导 '+'。
+//
+// 调用链：前端 URLSearchParams 正确发出 `rate=%2B0%25` →
+// MainActivity.shouldInterceptRequest 用 `getUrl().getQuery()`（百分号解码一次）
+// 取 query 再拼回 path → Go 侧 raw query 里变成字面 `+0%` →
+// Go form 解析把 '+' 视为空格 → 上游收到 `" 0%"` → 400（即 H13 的跨层复现）。
+//
+// rate/volume/pitch 恒为 `+n%` / `-n%` / `+nHz` 形态，合法值永不以前导空格开头，
+// 因此单个前导空格必为 corruption，可安全修回 '+'。text 等其它参数不走这里
+// （空格即空格，form 语义正确）。桌面直达路径（无 Java 解码层）中该函数恒为
+// no-op，双向兼容。
+func repairPlusSign(v string) string {
+	if strings.HasPrefix(v, " ") {
+		return "+" + v[1:]
+	}
+	return v
+}
+
 func (t *TTS) fetchWithRetry(params SynthesizeParams, timeout time.Duration) SynthesizeResult {
 	current := params
 	for attempt := 0; ; attempt++ {
@@ -200,6 +252,9 @@ func (t *TTS) fetchWithRetry(params SynthesizeParams, timeout time.Duration) Syn
 			return result
 		}
 		if !isRetriable(result.Reason) || attempt >= ttsMaxRetries {
+			if !result.OK {
+				log.Printf("[tts] fetch failed: baseURL=%s reason=%s status=%d serviceReason=%s", t.baseURL, result.Reason, result.Status, result.ServiceReason)
+			}
 			return result
 		}
 		if result.Reason == reasonUnavailable && current.Voice != "" {

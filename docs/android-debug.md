@@ -110,6 +110,9 @@ adb logcat -v time | grep -F "[tts]"
    电脑 Chrome 打开 `chrome://inspect`，能看到 App 的 WebView，
    进 DevTools 看 Console（`ttsController` 的 notice 会进界面提示，
    无提示 + 无声 = HTTP 与兜底都“成功”了，按第 3 条查）。
+5. APK 发音走同源 handler：`speak()` 发 `GET /wails/tts/v1/tts/speech?...`（同源、仅 query）
+   → Go `TTS.ServeHTTP`（`Route "/wails/tts"`，永远 200 + JSON 信封）→ 复用 `Synthesize`
+   管道打 ttsedservice；Go→ttsedservice 一跳仍用烘进包的 `TTS_BASE_URL`（§2），值不对照样无声。
 
 > 历史坑（已修，`8cb240d`）：Wails 侧 `gen` 计数器两域未同步，
 > 首击必判 `stale-gen` 导致 HTTP 永走不通、静默掉进兜底。

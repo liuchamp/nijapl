@@ -13,12 +13,13 @@ import type {
   TtsSourcePort,
   TtsSynthesisParams,
 } from '../../types/tts.js'
-import { hasWailsRuntime } from '../wails.js'
+import { hasWailsRuntime, isAndroid } from '../wails.js'
 import { createAudioPlayer } from './player.js'
 import { buildSynthesisParams } from './request.js'
 import { createWebTts } from './tts.web.js'
 import { createTtsHttpClient } from './tts-client.js'
 import { createTtsWailsClient } from './tts-client.wails.js'
+import { createTtsHandlerClient } from './tts-handler.js'
 
 /**
  * TTS 端口 facade（架构 §2.5 / 设计 §4.3）：运行时能力检测 + **编排** + 单例。
@@ -234,10 +235,14 @@ export class ResolvingTtsPort implements TtsPort {
 }
 
 /**
- * 合成源装配：Wails 宿主内走 Go 绑定（规避 CORS，超时 / 重试 / 缓存 / 去重全在 Go），
+ * 合成源装配：APK（Android UA）走同源 Go HTTP handler（query only，
+ * 规避 WebView 绑定不可靠）；桌面 Wails 宿主走 Go 绑定；
  * 否则回退到前端 `fetch` 实现（浏览器直连自建服务）。
  */
 function createTtsSource(): TtsSourcePort {
+  if (isAndroid()) {
+    return createTtsHandlerClient()
+  }
   if (hasWailsRuntime()) {
     return createTtsWailsClient()
   }

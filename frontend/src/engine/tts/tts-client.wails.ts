@@ -103,7 +103,7 @@ export function createTtsWailsClient(): TtsSourcePort {
 }
 
 /** Go 侧 reason 字符串 → 前端判别联合的字面量（未知一律归 `error`）。 */
-function toSourceFailure(reason: string | undefined): TtsSourceFailure {
+export function toSourceFailure(reason: string | undefined): TtsSourceFailure {
   switch (reason) {
     case 'empty-text':
     case 'bad-request':
@@ -118,7 +118,7 @@ function toSourceFailure(reason: string | undefined): TtsSourceFailure {
 }
 
 /** Go 侧 AudioClip → 前端 `TtsAudioClip`（补 `bytes` 供 Blob 播放，保留 `base64`）。 */
-function toAudioClip(
+export function toAudioClip(
   clip: {
     key: string
     mime: string
@@ -143,7 +143,7 @@ function toAudioClip(
 }
 
 /** 浏览器 base64 → 字节（解码失败返回 undefined，不 throw）。 */
-function decodeBase64(input: string): Uint8Array | undefined {
+export function decodeBase64(input: string): Uint8Array | undefined {
   if (input === '') {
     return undefined
   }

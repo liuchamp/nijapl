@@ -26,7 +26,7 @@ func main() {
 		Description: "JLPT N3 词汇学习应用",
 		Services: []application.Service{
 			application.NewService(services.NewKVStore()),
-			application.NewService(services.NewTTS()),
+			application.NewServiceWithOptions(services.NewTTS(), application.ServiceOptions{Route: "/wails/tts"}),
 			application.NewService(services.NewSystem()),
 		},
 		Assets: application.AssetOptions{
