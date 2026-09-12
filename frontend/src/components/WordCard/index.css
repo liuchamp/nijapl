@@ -1,0 +1,112 @@
+/* WordCard：P2 学习卡片 */
+
+.WordCard {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-lg);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1rpx solid var(--color-border);
+}
+
+.WordCard-top {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.WordCard-topSpacer {
+  cursor: pointer;
+  user-select: none;
+  width: 1rpx;
+  height: 1rpx;
+}
+
+.WordCard-pos {
+  cursor: pointer;
+  user-select: none;
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.WordCard-kana {
+  cursor: pointer;
+  user-select: none;
+  margin-top: var(--space-lg);
+  font-size: var(--font-xl);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.WordCard-kanji {
+  cursor: pointer;
+  user-select: none;
+  margin-top: var(--space-sm);
+  font-size: var(--font-lg);
+  color: var(--color-text-muted);
+}
+
+.WordCard-actions {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.WordCard-reveal {
+  cursor: pointer;
+  user-select: none;
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  padding-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.WordCard-revealLabel {
+  cursor: pointer;
+  user-select: none;
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.WordCard-meaningBox {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+  width: 100%;
+}
+
+.WordCard-meaning {
+  cursor: pointer;
+  user-select: none;
+  font-size: var(--font-lg);
+  color: var(--color-text);
+  text-align: center;
+}
+
+.WordCard-hint {
+  cursor: pointer;
+  user-select: none;
+  margin-top: var(--space-lg);
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}

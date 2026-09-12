@@ -1,0 +1,224 @@
+/* Quiz：P8 自测 */
+
+.Quiz {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: var(--space-md);
+}
+
+.Quiz-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--space-sm);
+}
+
+.Quiz-back {
+  cursor: pointer;
+  user-select: none;
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.Quiz-backLabel {
+  cursor: pointer;
+  user-select: none;
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.Quiz-title {
+  flex: 1;
+  text-align: center;
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.Quiz-modes {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--space-md);
+}
+
+.Quiz-mode {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  margin-right: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.Quiz-mode--on {
+  background-color: var(--color-primary);
+}
+
+.Quiz-modeLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.Quiz-body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.Quiz-progress {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.Quiz-promptLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--space-sm);
+}
+
+.Quiz-prompt {
+  font-size: var(--font-xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-top: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.Quiz-listen {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-top: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.Quiz-options {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.Quiz-option {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1rpx solid var(--color-border);
+}
+
+.Quiz-option--correct {
+  background-color: rgba(57, 196, 122, 0.2);
+  border: 1rpx solid var(--color-success);
+}
+
+.Quiz-option--wrong {
+  background-color: rgba(255, 95, 109, 0.2);
+  border: 1rpx solid var(--color-danger);
+}
+
+.Quiz-optionLabel {
+  font-size: var(--font-md);
+  color: var(--color-text);
+}
+
+.Quiz-feedback {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: var(--space-sm);
+}
+
+.Quiz-feedbackText {
+  font-size: var(--font-sm);
+}
+
+.Quiz-feedbackText--ok {
+  color: var(--color-success);
+}
+
+.Quiz-feedbackText--bad {
+  color: var(--color-danger);
+}
+
+.Quiz-next {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
+  margin-top: var(--space-sm);
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+
+.Quiz-nextLabel {
+  cursor: pointer;
+  user-select: none;
+  font-size: var(--font-md);
+  font-weight: 700;
+  color: var(--color-bg);
+}
+
+.Quiz-empty {
+  font-size: var(--font-md);
+  color: var(--color-text-muted);
+  margin-top: var(--space-lg);
+}
+
+.Quiz-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-xl);
+}
+
+.Quiz-resultTitle {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+
+.Quiz-resultScore {
+  font-size: var(--font-xl);
+  color: var(--color-primary);
+  margin-bottom: var(--space-lg);
+}
+
+.Quiz-restart {
+  cursor: pointer;
+  user-select: none;
+  padding-left: var(--space-lg);
+  padding-right: var(--space-lg);
+  padding-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.Quiz-restartLabel {
+  cursor: pointer;
+  user-select: none;
+  font-size: var(--font-md);
+  color: var(--color-text);
+}

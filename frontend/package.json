@@ -1,24 +1,41 @@
 {
-  "name": "react-ts-latest",
+  "name": "nijapl",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build:dev": "tsc && vite build --minify false --mode development",
-    "build": "tsc && vite build --mode production",
-    "preview": "vite preview"
+    "build": "tsc -b && vite build --mode production",
+    "build:dev": "tsc -b && vite build --minify false --mode development",
+    "preview": "vite preview",
+    "check": "biome check --write",
+    "format": "biome format --write",
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:audit": "vitest run --config vitest.audit.config.ts",
+    "gen:data": "tsx scripts/gen-data/index.ts"
   },
   "dependencies": {
     "@wailsio/runtime": "latest",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router": "^6.28.0",
+    "zod": "^3.23.8",
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.3",
+    "@types/node": "^22.10.0",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@vitejs/plugin-react": "^6.0.0",
-    "typescript": "^5.2.2",
-    "vite": "^8.0.5"
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.0",
+    "vite": "^8.0.5",
+    "vitest": "^3.2.0"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
   }
 }

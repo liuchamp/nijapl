@@ -1,4 +1,4 @@
-module changeme
+module nijapl
 
 go 1.25.0
 

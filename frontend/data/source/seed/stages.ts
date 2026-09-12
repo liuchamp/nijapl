@@ -1,0 +1,41 @@
+import type { Stage } from '../../../src/types/domain.js'
+
+/**
+ * seed 种子数据：4 个阶段。
+ * 阶段自身同样标注 `source: 'seed'`（PRD §7.2：每条数据标记来源）。
+ * 冲刺期 `hasContent=false`：完成度短路为「不参与」。
+ */
+export const stages: Stage[] = [
+  {
+    id: 's1',
+    name: 'N5 基础期',
+    order: 1,
+    weekRange: { start: 1, end: 6 },
+    hasContent: true,
+    source: 'seed',
+  },
+  {
+    id: 's2',
+    name: 'N4 强化期',
+    order: 2,
+    weekRange: { start: 7, end: 13 },
+    hasContent: true,
+    source: 'seed',
+  },
+  {
+    id: 's3',
+    name: 'N3 强化期',
+    order: 3,
+    weekRange: { start: 14, end: 22 },
+    hasContent: true,
+    source: 'seed',
+  },
+  {
+    id: 's4',
+    name: '冲刺期',
+    order: 4,
+    weekRange: { start: 23, end: 26 },
+    hasContent: false,
+    source: 'seed',
+  },
+]
