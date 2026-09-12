@@ -151,7 +151,11 @@ class TtsHandlerClient implements TtsSourcePort {
       status?: unknown
       serviceReason?: unknown
     }
-    if (record.ok !== true || record.clip === null || record.clip === undefined) {
+    if (
+      record.ok !== true ||
+      record.clip === null ||
+      record.clip === undefined
+    ) {
       const reason =
         typeof record.reason === 'string' ? record.reason : undefined
       const status = typeof record.status === 'number' ? record.status : 0
@@ -184,8 +188,7 @@ class TtsHandlerClient implements TtsSourcePort {
           base64: clip.base64,
           voice: typeof clip.voice === 'string' ? clip.voice : '',
           cached: clip.cached === true,
-          byteLength:
-            typeof clip.byteLength === 'number' ? clip.byteLength : 0,
+          byteLength: typeof clip.byteLength === 'number' ? clip.byteLength : 0,
         },
         key,
       ),
