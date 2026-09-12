@@ -1,0 +1,532 @@
+[
+  {
+    "id": "S001",
+    "ja": "みずをのみます。",
+    "zh": "喝水。",
+    "level": "N5",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S001",
+        "wordId": "w-04",
+        "surface": "みず",
+        "start": 0,
+        "end": 2
+      },
+      {
+        "sentenceId": "S001",
+        "wordId": "w-07",
+        "surface": "のみます",
+        "start": 3,
+        "end": 7
+      }
+    ],
+    "grammars": []
+  },
+  {
+    "id": "S002",
+    "ja": "わたしはほんをよんでいます。",
+    "zh": "我正在看书。",
+    "level": "N5",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S002",
+        "wordId": "w-01",
+        "surface": "わたし",
+        "start": 0,
+        "end": 3
+      },
+      {
+        "sentenceId": "S002",
+        "wordId": "w-05",
+        "surface": "ほん",
+        "start": 4,
+        "end": 6
+      },
+      {
+        "sentenceId": "S002",
+        "wordId": "w-23",
+        "surface": "よんでいます",
+        "start": 7,
+        "end": 13
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S002",
+        "grammarId": "G001"
+      }
+    ]
+  },
+  {
+    "id": "S003",
+    "ja": "わたしはみずがのみたいです。",
+    "zh": "我想喝水。",
+    "level": "N5",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S003",
+        "wordId": "w-01",
+        "surface": "わたし",
+        "start": 0,
+        "end": 3
+      },
+      {
+        "sentenceId": "S003",
+        "wordId": "w-04",
+        "surface": "みず",
+        "start": 4,
+        "end": 6
+      },
+      {
+        "sentenceId": "S003",
+        "wordId": "w-07",
+        "surface": "のみたい",
+        "start": 7,
+        "end": 11
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S003",
+        "grammarId": "G002"
+      }
+    ]
+  },
+  {
+    "id": "S004",
+    "ja": "ここでまってください。",
+    "zh": "请在这里等一下。",
+    "level": "N5",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S004",
+        "wordId": "w-38",
+        "surface": "まって",
+        "start": 3,
+        "end": 6
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S004",
+        "grammarId": "G003"
+      }
+    ]
+  },
+  {
+    "id": "S005",
+    "ja": "いっしょにいきませんか。",
+    "zh": "要不要一起去？",
+    "level": "N5",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S005",
+        "wordId": "w-08",
+        "surface": "いきませんか",
+        "start": 5,
+        "end": 11
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S005",
+        "grammarId": "G004"
+      }
+    ]
+  },
+  {
+    "id": "S006",
+    "ja": "えきのちかくにほんがあります。",
+    "zh": "车站附近有书。",
+    "level": "N5",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S006",
+        "wordId": "w-16",
+        "surface": "えき",
+        "start": 0,
+        "end": 2
+      },
+      {
+        "sentenceId": "S006",
+        "wordId": "w-05",
+        "surface": "ほん",
+        "start": 7,
+        "end": 9
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S006",
+        "grammarId": "G005"
+      }
+    ]
+  },
+  {
+    "id": "S007",
+    "ja": "このでんしゃはあのでんしゃよりあたらしいです。",
+    "zh": "这辆电车比那辆新。",
+    "level": "N4",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S007",
+        "wordId": "w-18",
+        "surface": "でんしゃ",
+        "start": 2,
+        "end": 6
+      },
+      {
+        "sentenceId": "S007",
+        "wordId": "w-13",
+        "surface": "あたらしい",
+        "start": 15,
+        "end": 20
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S007",
+        "grammarId": "G006"
+      }
+    ]
+  },
+  {
+    "id": "S008",
+    "ja": "おんがくをききながらべんきょうします。",
+    "zh": "一边听音乐一边学习。",
+    "level": "N4",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S008",
+        "wordId": "w-22",
+        "surface": "きき",
+        "start": 5,
+        "end": 7
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S008",
+        "grammarId": "G007"
+      }
+    ]
+  },
+  {
+    "id": "S009",
+    "ja": "にほんへいったことがあります。",
+    "zh": "我去过日本。",
+    "level": "N4",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S009",
+        "wordId": "w-08",
+        "surface": "いった",
+        "start": 4,
+        "end": 7
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S009",
+        "grammarId": "G008"
+      }
+    ]
+  },
+  {
+    "id": "S010",
+    "ja": "あしたえきへいくつもりです。",
+    "zh": "打算明天去车站。",
+    "level": "N4",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S010",
+        "wordId": "w-27",
+        "surface": "あした",
+        "start": 0,
+        "end": 3
+      },
+      {
+        "sentenceId": "S010",
+        "wordId": "w-16",
+        "surface": "えき",
+        "start": 3,
+        "end": 5
+      },
+      {
+        "sentenceId": "S010",
+        "wordId": "w-08",
+        "surface": "いく",
+        "start": 6,
+        "end": 8
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S010",
+        "grammarId": "G009"
+      }
+    ]
+  },
+  {
+    "id": "S011",
+    "ja": "あのひとはしずかそうです。",
+    "zh": "那个人看起来很安静。",
+    "level": "N4",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S011",
+        "wordId": "w-02",
+        "surface": "ひと",
+        "start": 2,
+        "end": 4
+      },
+      {
+        "sentenceId": "S011",
+        "wordId": "w-15",
+        "surface": "しずか",
+        "start": 5,
+        "end": 8
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S011",
+        "grammarId": "G010"
+      }
+    ]
+  },
+  {
+    "id": "S012",
+    "ja": "まいにちほんをよむようにしています。",
+    "zh": "我每天都尽量读书。",
+    "level": "N4",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S012",
+        "wordId": "w-05",
+        "surface": "ほん",
+        "start": 4,
+        "end": 6
+      },
+      {
+        "sentenceId": "S012",
+        "wordId": "w-23",
+        "surface": "よむ",
+        "start": 7,
+        "end": 9
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S012",
+        "grammarId": "G011"
+      }
+    ]
+  },
+  {
+    "id": "S013",
+    "ja": "じかんがあればいきます。",
+    "zh": "有时间的话就去。",
+    "level": "N4",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S013",
+        "wordId": "w-31",
+        "surface": "じかん",
+        "start": 0,
+        "end": 3
+      },
+      {
+        "sentenceId": "S013",
+        "wordId": "w-08",
+        "surface": "いきます",
+        "start": 7,
+        "end": 11
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S013",
+        "grammarId": "G012"
+      }
+    ]
+  },
+  {
+    "id": "S014",
+    "ja": "あめがふってもでかけます。",
+    "zh": "即使下雨也外出。",
+    "level": "N4",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S014",
+        "wordId": "w-36",
+        "surface": "でかけます",
+        "start": 7,
+        "end": 12
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S014",
+        "grammarId": "G013"
+      }
+    ]
+  },
+  {
+    "id": "S015",
+    "ja": "あのひとはせんせいらしいです。",
+    "zh": "那个人好像是老师。",
+    "level": "N3",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S015",
+        "wordId": "w-02",
+        "surface": "ひと",
+        "start": 2,
+        "end": 4
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S015",
+        "grammarId": "G014"
+      }
+    ]
+  },
+  {
+    "id": "S016",
+    "ja": "でんしゃによってじかんがちがいます。",
+    "zh": "时间因电车（班次）而异。",
+    "level": "N3",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S016",
+        "wordId": "w-18",
+        "surface": "でんしゃ",
+        "start": 0,
+        "end": 4
+      },
+      {
+        "sentenceId": "S016",
+        "wordId": "w-31",
+        "surface": "じかん",
+        "start": 8,
+        "end": 11
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S016",
+        "grammarId": "G015"
+      }
+    ]
+  },
+  {
+    "id": "S017",
+    "ja": "らいげつくうこうへいくことになりました。",
+    "zh": "决定下个月去机场。",
+    "level": "N3",
+    "source": "seed",
+    "reviewStatus": "approved",
+    "words": [
+      {
+        "sentenceId": "S017",
+        "wordId": "w-20",
+        "surface": "くうこう",
+        "start": 4,
+        "end": 8
+      },
+      {
+        "sentenceId": "S017",
+        "wordId": "w-08",
+        "surface": "いく",
+        "start": 9,
+        "end": 11
+      }
+    ],
+    "grammars": [
+      {
+        "sentenceId": "S017",
+        "grammarId": "G016"
+      }
+    ]
+  },
+  {
+    "id": "S018",
+    "ja": "ほんをよみます。",
+    "zh": "读书。",
+    "level": "N5",
+    "source": "seed",
+    "reviewStatus": "pending",
+    "words": [
+      {
+        "sentenceId": "S018",
+        "wordId": "w-05",
+        "surface": "ほん"
+      },
+      {
+        "sentenceId": "S018",
+        "wordId": "w-23",
+        "surface": "よみます"
+      }
+    ],
+    "grammars": []
+  },
+  {
+    "id": "S019",
+    "ja": "このいえはおおきいです。",
+    "zh": "这栋房子很大。",
+    "level": "N5",
+    "source": "seed",
+    "reviewStatus": "pending",
+    "words": [
+      {
+        "sentenceId": "S019",
+        "wordId": "w-03",
+        "surface": "いえ",
+        "start": 2,
+        "end": 4
+      },
+      {
+        "sentenceId": "S019",
+        "wordId": "w-11",
+        "surface": "おおきい",
+        "start": 5,
+        "end": 9
+      }
+    ],
+    "grammars": []
+  }
+]

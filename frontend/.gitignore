@@ -1,0 +1,23 @@
+# 本目录级 .gitignore
+#
+# 说明：`biome.json` 开启了 `vcs.useIgnoreFile`，Biome 会在**配置文件所在目录**
+# 查找 ignore 文件；本文件即为其扫描边界（同时供 git 使用）。
+# 与仓库根 `.gitignore` 保持一致的忽略口径。
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Caches
+.vite/
+*.tsbuildinfo
+
+# Wails 生成的类型绑定（由 `wails3 generate bindings -ts` 产出，不入库）
+bindings/
+
+# Local env
+.env
+.env.local
+.env.*.local

@@ -1,0 +1,22 @@
+/* GrammarHighlightText：例句高亮（词条底色 / 语法下划线） */
+
+.Ght {
+  font-size: var(--font-md);
+  line-height: 1.6;
+}
+
+.Ght-seg {
+  font-size: var(--font-md);
+}
+
+/* 词条命中：柔和底色 */
+.Ght-seg--word {
+  background-color: var(--color-primary-soft);
+  border-radius: var(--radius-sm);
+}
+
+/* 语法命中：主题色 + 下划线（可点击） */
+.Ght-seg--grammar {
+  color: var(--color-primary);
+  text-decoration: underline;
+}

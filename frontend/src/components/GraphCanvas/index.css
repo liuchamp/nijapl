@@ -1,0 +1,89 @@
+/* GraphCanvas：P6 图谱画布（背景 SVG + 绝对定位节点） */
+
+.GraphCanvas {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.GraphCanvas-toolbar {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--space-sm);
+}
+
+.GraphCanvas-tool {
+  cursor: pointer;
+  user-select: none;
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  margin-right: var(--space-sm);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.GraphCanvas-toolLabel {
+  cursor: pointer;
+  user-select: none;
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.GraphCanvas-viewport {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 760rpx;
+  overflow: hidden;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+}
+
+.GraphCanvas-outer {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+.GraphCanvas-content {
+  position: relative;
+  /* Web：禁掉浏览器默认触摸手势（页面滚动 / 双指缩放页面），
+     双指缩放与拖拽完全由组件处理（原 Lynx 主线程手势的等价物）。 */
+  touch-action: none;
+}
+
+.GraphCanvas-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* 注入的 SVG 需要显式块级显示，避免行内基线间隙破坏 1:1 几何。 */
+.GraphCanvas-svg svg {
+  display: block;
+}
+
+.GraphCanvas-node {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.GraphCanvas-nodeLabel {
+  cursor: pointer;
+  user-select: none;
+  color: var(--color-bg);
+  font-weight: 700;
+}

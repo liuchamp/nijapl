@@ -1,0 +1,201 @@
+/* Study：P2 词汇学习 */
+
+.Study {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: var(--space-md);
+}
+
+.Study-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.Study-back {
+  cursor: pointer;
+  user-select: none;
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.Study-backLabel {
+  cursor: pointer;
+  user-select: none;
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.Study-title {
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.Study-progress {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.Study-fallback {
+  margin-top: var(--space-sm);
+  font-size: var(--font-xs);
+  color: var(--color-warning);
+}
+
+.Study-stage {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  width: 100%;
+  margin-top: var(--space-md);
+}
+
+/* Web 迁移：原 Lynx 的 `<viewpager>` / 横向 `<scroll-view>` 改为原生横向滚动 +
+   scroll-snap（决策 H：`platform.ts` / `pagerSeek.ts` 三级降级逻辑整体删除，
+   Web 下 `element.scrollTo()` 同步可靠，不存在宿主未注册 Behavior 的崩溃路径）。 */
+.Study-pager {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.Study-pager::-webkit-scrollbar {
+  display: none;
+}
+
+/* 每张卡片占满容器宽度（`flex: 0 0 100%` 不可压缩），并作为吸附点。 */
+.Study-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 100%;
+  width: 100%;
+  padding: var(--space-md);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.Study-eval {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  width: 100%;
+  margin-top: var(--space-md);
+}
+
+.Study-evalBtn {
+  cursor: pointer;
+  user-select: none;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1rpx solid var(--color-border);
+}
+
+.Study-evalBtn--unknown {
+  cursor: pointer;
+  user-select: none;
+  background-color: rgba(255, 95, 109, 0.16);
+}
+
+.Study-evalBtn--vague {
+  cursor: pointer;
+  user-select: none;
+  background-color: rgba(240, 180, 74, 0.16);
+}
+
+.Study-evalBtn--known {
+  cursor: pointer;
+  user-select: none;
+  background-color: rgba(57, 196, 122, 0.16);
+}
+
+.Study-evalLabel {
+  font-size: var(--font-md);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.Study-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  width: 100%;
+  margin-top: var(--space-md);
+}
+
+.Study-navBtn {
+  cursor: pointer;
+  user-select: none;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.Study-navLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text);
+}
+
+.Study-wrong {
+  cursor: pointer;
+  user-select: none;
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+}
+
+.Study-wrongLabel {
+  cursor: pointer;
+  user-select: none;
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.Study-empty {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.Study-emptyLabel {
+  font-size: var(--font-md);
+  color: var(--color-text-muted);
+}
+
+.Study-graphHint {
+  margin-top: var(--space-sm);
+  font-size: var(--font-xs);
+  color: var(--color-primary);
+}

@@ -1,0 +1,100 @@
+/* GrammarList：P4 语法列表 */
+
+.GrammarList {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: var(--space-md);
+}
+
+.GrammarList-title {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+}
+
+.GrammarList-filter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--space-sm);
+}
+
+.GrammarList-filterLabel {
+  width: 120rpx;
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+.GrammarList-chips {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.GrammarList-chip {
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  margin-right: var(--space-xs);
+  margin-bottom: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.GrammarList-chip--on {
+  background-color: var(--color-primary);
+}
+
+.GrammarList-chipLabel {
+  font-size: var(--font-xs);
+  color: var(--color-text);
+}
+
+.GrammarList-count {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.GrammarList-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+}
+
+.GrammarList-item {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+}
+
+.GrammarList-pattern {
+  font-size: var(--font-md);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.GrammarList-meta {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
+}
+
+.GrammarList-empty {
+  font-size: var(--font-md);
+  color: var(--color-text-muted);
+  margin-top: var(--space-lg);
+}
