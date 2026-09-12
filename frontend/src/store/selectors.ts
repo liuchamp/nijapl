@@ -7,7 +7,7 @@ import {
   stageCompletion,
 } from '../engine/progress.js'
 import { dueTargetIds } from '../engine/srs.js'
-import type { Stage, Word } from '../types/domain.js'
+import type { Module, Stage, Word } from '../types/domain.js'
 import type { GraphSourceData } from '../types/graph.js'
 import type { Progress, SrsState } from '../types/progress.js'
 import type { AppState } from './index.js'
@@ -121,6 +121,65 @@ export function selectModuleProgress(
   }
   const total = words.length
   return { learned, total, ratio: total === 0 ? 0 : learned / total }
+}
+
+/** 模块是否已学完：存在词条且全部「已掌握」。 */
+export function selectModuleComplete(
+  state: AppState,
+  moduleId: string,
+): boolean {
+  const summary = selectModuleProgress(state, moduleId)
+  return summary.total > 0 && summary.learned >= summary.total
+}
+
+/** 阶段是否已完成：完成度 ≥ STAGE_UNLOCK_RATIO（与解锁口径一致；冲刺期不参与）。 */
+export function selectStageComplete(state: AppState, stageId: string): boolean {
+  const stage = repository.getStageById(stageId)
+  if (stage === undefined || !stage.hasContent) {
+    return false
+  }
+  const score = selectStageCompletion(state, stageId)
+  return score !== NO_CONTENT && score >= STAGE_UNLOCK_RATIO
+}
+
+/** 按「阶段 order 升序 → 阶段内模块顺序」展开的含词阶段模块序列。 */
+function orderedContentModules(): Module[] {
+  const result: Module[] = []
+  for (const stage of repository.getStages()) {
+    if (!stage.hasContent) {
+      continue
+    }
+    result.push(...repository.getModules(stage.id))
+  }
+  return result
+}
+
+/**
+ * 下一个未完成模块：从 `afterModuleId` 之后按序查找，其后无未完成模块则从序列开头回绕。
+ * 全部完成 / 数据为空时返回 `null`。空词条模块跳过。
+ */
+export function selectNextIncompleteModule(
+  state: AppState,
+  afterModuleId?: string,
+): string | null {
+  const modules = orderedContentModules()
+  const scan = (from: number): string | null => {
+    for (let i = from; i < modules.length; i += 1) {
+      const candidate = modules[i]
+      if (repository.getModuleWords(candidate.id).length === 0) {
+        continue
+      }
+      if (!selectModuleComplete(state, candidate.id)) {
+        return candidate.id
+      }
+    }
+    return null
+  }
+  const startIndex =
+    afterModuleId === undefined
+      ? 0
+      : modules.findIndex((m) => m.id === afterModuleId) + 1
+  return scan(Math.max(startIndex, 0)) ?? scan(0)
 }
 
 /** 当前学习模块词序（进入 P2 的渲染序列）。 */
@@ -291,21 +350,24 @@ export interface ContinueTarget {
 }
 
 /**
- * 续学目标：优先恢复会话断点；无会话则取首个含词阶段的首个模块。
+ * 续学目标：优先恢复会话断点（跳过已完成模块）；无会话则取首个未完成模块。
  * 无法定位（数据为空）时返回 `null`。
  */
 export function selectContinueTarget(state: AppState): ContinueTarget | null {
   const moduleId = state.session.moduleId
-  if (moduleId !== '' && repository.getModuleWords(moduleId).length > 0) {
+  if (
+    moduleId !== '' &&
+    repository.getModuleWords(moduleId).length > 0 &&
+    !selectModuleComplete(state, moduleId)
+  ) {
     return { moduleId, index: state.session.lastWordIndex }
   }
-  const firstStage = repository.getStages().find((stage) => stage.hasContent)
-  if (firstStage === undefined) {
+  const nextModuleId = selectNextIncompleteModule(
+    state,
+    moduleId === '' ? undefined : moduleId,
+  )
+  if (nextModuleId === null) {
     return null
   }
-  const firstModule = repository.getModules(firstStage.id)[0]
-  if (firstModule === undefined) {
-    return null
-  }
-  return { moduleId: firstModule.id, index: 0 }
+  return { moduleId: nextModuleId, index: 0 }
 }

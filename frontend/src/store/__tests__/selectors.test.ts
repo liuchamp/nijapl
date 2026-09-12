@@ -7,6 +7,9 @@ import type { AppState } from '../index.js'
 import {
   aggregateNodeState,
   selectContinueTarget,
+  selectModuleComplete,
+  selectNextIncompleteModule,
+  selectStageComplete,
   selectStageUnlocked,
 } from '../selectors.js'
 
@@ -99,6 +102,72 @@ describe('selectors · selectStageUnlocked 解锁规则', () => {
   })
 })
 
+describe('selectors · selectModuleComplete 模块完成', () => {
+  it('空进度 → false', () => {
+    const state = makeState({})
+    expect(selectModuleComplete(state, 'm01')).toBe(false)
+  })
+
+  it('全部词条已掌握 → true', () => {
+    const words = repository.getModuleWords('m01')
+    const progress: Record<string, Progress> = {}
+    for (const word of words) {
+      progress[word.id] = {
+        ...initialProgress(word.id),
+        state: '已掌握',
+        seen: true,
+        history: [{ at: 0, result: 'correct', from: '学习中', to: '已掌握' }],
+      }
+    }
+    const state = makeState({ progress })
+    expect(selectModuleComplete(state, 'm01')).toBe(true)
+  })
+})
+
+describe('selectors · selectStageComplete 阶段完成', () => {
+  it('空进度的内容阶段 → false', () => {
+    const state = makeState({})
+    expect(selectStageComplete(state, 's1')).toBe(false)
+  })
+
+  it('内容阶段全部词条已掌握 → true', () => {
+    const words = repository.getWordsByStage('s1')
+    const progress: Record<string, Progress> = {}
+    for (const word of words) {
+      progress[word.id] = {
+        ...initialProgress(word.id),
+        state: '已掌握',
+        seen: true,
+        history: [{ at: 0, result: 'correct', from: '学习中', to: '已掌握' }],
+      }
+    }
+    const state = makeState({ progress })
+    expect(selectStageComplete(state, 's1')).toBe(true)
+  })
+})
+
+describe('selectors · selectNextIncompleteModule 下一个未完成模块', () => {
+  it('空进度无 afterModuleId → 首个内容模块', () => {
+    const state = makeState({})
+    expect(selectNextIncompleteModule(state)).toBe('m01')
+  })
+
+  it('首模块已完成且 afterModuleId=首模块 → 下一个模块', () => {
+    const words = repository.getModuleWords('m01')
+    const progress: Record<string, Progress> = {}
+    for (const word of words) {
+      progress[word.id] = {
+        ...initialProgress(word.id),
+        state: '已掌握',
+        seen: true,
+        history: [{ at: 0, result: 'correct', from: '学习中', to: '已掌握' }],
+      }
+    }
+    const state = makeState({ progress })
+    expect(selectNextIncompleteModule(state, 'm01')).toBe('m02')
+  })
+})
+
 describe('selectors · selectContinueTarget 断点续学', () => {
   it('无会话 → 首个含词阶段的首个模块、下标 0', () => {
     const state = makeState({ sessionModuleId: '' })
@@ -108,5 +177,26 @@ describe('selectors · selectContinueTarget 断点续学', () => {
   it('有会话 → 读会话断点', () => {
     const state = makeState({ sessionModuleId: 'm05', lastWordIndex: 3 })
     expect(selectContinueTarget(state)).toEqual({ moduleId: 'm05', index: 3 })
+  })
+
+  it('会话模块已完全掌握 → 不返回该模块，跳到下一个未完成模块', () => {
+    const words = repository.getModuleWords('m01')
+    const progress: Record<string, Progress> = {}
+    for (const word of words) {
+      progress[word.id] = {
+        ...initialProgress(word.id),
+        state: '已掌握',
+        seen: true,
+        history: [{ at: 0, result: 'correct', from: '学习中', to: '已掌握' }],
+      }
+    }
+    const state = makeState({
+      sessionModuleId: 'm01',
+      lastWordIndex: 2,
+      progress,
+    })
+    const target = selectContinueTarget(state)
+    expect(target).not.toBeNull()
+    expect(target!.moduleId).not.toBe('m01')
   })
 })
