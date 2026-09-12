@@ -1,0 +1,101 @@
+%% TTS 集成方案 v2.0 · 时序图（对应 docs/design/TTS-集成方案.md §9）
+%% 三条链路：A 点击发音 → HTTP 拉流 → Web 播放；B 服务不可用/超时 → 降级链；C 原生端两模块均未注册 → 提示 + 复制假名
+%% 统一修订：原生播放为【独立 NativeModules.AudioPlayer 模块】（§1.5），与 TTSEngine 并列、注册状态分别判定。
+%% 互斥编排 M1–M3（§4.5.2 / §12.7）：播放前停合成、合成前停播放、stop() 双通道全停 + source.cancel()。
+
+sequenceDiagram
+    autonumber
+    actor U as 用户
+    participant Btn as TtsButton / 整卡
+    participant Ctl as ttsController
+    participant Fac as engine/tts/index (ResolvingTtsPort)
+    participant Src as tts-client (source)
+    participant Cch as audio-cache / inflight
+    participant Ply as player.web / player.native
+    participant RT as tts.native / tts.web (realtime)
+    participant Svc as ttsedservice :8000
+
+    rect rgb(232, 244, 255)
+    Note over U,Svc: 链路 A —— 点击发音 → HTTP 拉流 → Web 播放（主链路）
+    U->>Btn: tap 热区
+    Btn->>Ctl: speak(word.kana, settings)
+    Ctl->>Ctl: ① 同步置 speakingText（≤100ms 视觉反馈）
+    Ctl->>Ply: ① prime() —— 手势内同步解锁自动播放
+    Ctl->>Fac: ② getCapability()
+    Fac-->>Ctl: player 可用 → 'supported'
+    Ctl->>Fac: ③ speak(kana, {rate, pitch})
+    Fac->>Fac: buildSynthesisParams → lang 恒 ja-JP, format=mp3
+    Fac->>RT: ★ M1 互斥：realtime.stop()（TTSEngine.stop / speechSynthesis.cancel）
+    Fac->>Src: synthesize(params, gen)
+    Src->>Cch: cache.get(key)
+    alt 缓存命中
+        Cch-->>Src: clip(bytes + objectUrl)
+    else 未命中
+        Src->>Cch: inflight.run(key)
+        Src->>Svc: POST /v1/tts/synthesize {text, lang, voice, rate, pitch, format}
+        Svc-->>Src: {audio(base64), content_type, voice, cached}
+        Src->>Cch: cache.put(key, clip)
+    end
+    Src-->>Fac: { ok:true, clip }
+    Fac->>Fac: gen 校验（未被 stop / 切卡丢弃）
+    Fac->>Ply: play(clip)
+    Ply->>Ply: Blob URL → el.play() ｜ 原生 AudioPlayer.playBytes(base64, mime)
+    Ply-->>Fac: { ok:true, channel:'web' }
+    Fac-->>Ctl: { ok:true, engine:'http' }
+    Ctl->>Ctl: 播放结束 → speakingText=null
+    end
+
+    rect rgb(255, 246, 232)
+    Note over U,Svc: 链路 B —— 服务不可用 / 超时 → 降级链（含 M1/M2 互斥）
+    U->>Btn: tap 热区
+    Btn->>Ctl: speak(kana, settings)
+    Ctl->>Ctl: ① 同步置 speakingText + prime()
+    Ctl->>Fac: ③ speak(kana, {rate, pitch})
+    Fac->>RT: ★ M1 互斥：realtime.stop()（先停实时合成通道）
+    Fac->>Src: synthesize(params, gen)
+    Src->>Svc: POST /v1/tts/synthesize
+    Svc--X Src: 网络失败 / 503 / 504 / 客户端 8s 超时
+    Src->>Svc: 重试 ×1（503 时去掉 voice，退避 300ms）
+    Svc--X Src: 仍失败
+    Src-->>Fac: { ok:false, reason:'unavailable'|'timeout'|'network' }
+    Fac->>Fac: 记录 lastHttpFailure
+    Fac->>Ply: ★ M2 互斥：player.stop()（AudioPlayer.stopPlayback / el.pause）
+    Fac->>RT: realtime.getCapability() !== 'unsupported' ?
+    alt 原生 TTS 可用（NativeModules.TTSEngine 已注册）
+        RT-->>Fac: { ok:true, engine:'native' }
+        Fac-->>Ctl: 透传（降级成功，不打扰用户）
+    else Web speechSynthesis 可用
+        RT-->>Fac: { ok:true, engine:'web' }
+        Fac-->>Ctl: 透传
+    else 全部不可用
+        Fac-->>Ctl: { ok:false, reason:'service-unavailable' }
+        Ctl->>Btn: notice = STRINGS.tts.serviceDown + fallbackText=kana
+        Btn-->>U: 明确文案 + 「复制假名」按钮
+    end
+    end
+
+    rect rgb(240, 240, 240)
+    Note over U,RT: 链路 C —— AudioPlayer 与 TTSEngine 均未注册 → 提示 + 复制假名（D3）
+    U->>Btn: tap 热区
+    Btn->>Ctl: speak(kana, settings)
+    Ctl->>Ctl: ① 同步置 speakingText + prime()（原生实现为空操作）
+    Ctl->>Fac: ② getCapability()
+    Fac->>Ply: player.getCapability()
+    Ply-->>Fac: NativeModules.AudioPlayer 未注册 且 无 DOM Audio → 'unsupported'
+    Fac->>RT: realtime.getCapability()
+    RT-->>Fac: NativeModules.TTSEngine 未注册 且 无 speechSynthesis → 'unsupported'
+    Fac-->>Ctl: 'unsupported'
+    Ctl->>Fac: 跳过 HTTP 路径（player 不可用 → 不浪费一次网络往返）
+    Ctl->>Btn: notice = STRINGS.tts.noPlayer + fallbackText=kana
+    Btn-->>U: 明确文案 + 「复制假名」按钮（零静默失败）
+    Note over Fac,RT: 两模块注册状态【独立判定】：只注册 AudioPlayer → HTTP 主链路可用；<br/>只注册 TTSEngine → 跳过 HTTP 直接实时合成（§12.8，无误判）
+    end
+
+    rect rgb(255, 238, 238)
+    Note over Ctl,RT: 链路 D —— stop() ★ M3 互斥：三通道全停（用户切卡 / 页面卸载 / 主动停止）
+    Ctl->>Fac: stop()
+    Fac->>Src: source.cancel()（abort + gen++，丢弃迟到响应）
+    Fac->>Ply: player.stop()（AudioPlayer.stopPlayback / el.pause）
+    Fac->>RT: realtime.stop()（TTSEngine.stop / speechSynthesis.cancel）
+    Note over Fac,RT: 三条缺一不可 —— 独立模块后这是双通道互斥的唯一保证（§4.5.2 / §12.7）
+    end

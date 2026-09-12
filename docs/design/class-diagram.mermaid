@@ -1,0 +1,348 @@
+%% JLPT N3 词汇学习 App — 核心类图（Lynx 跨平台）
+%% 字段与 PRD §7.4 一致；引擎函数为纯 TS、QA 单测契约
+classDiagram
+direction LR
+
+%% ---------------- 领域实体 ----------------
+class Stage {
+  +string id
+  +string name
+  +int order
+  +int weekRange
+  +bool hasContent  %% 冲刺期=false，完成度短路
+}
+
+class Module {
+  +string id
+  +string stageId
+  +string name
+  +int wordCount
+}
+
+class Word {
+  +string id
+  +string kana   %% TTS 朗读恒以此为准
+  +string kanji
+  +string pos    %% 显式枚举
+  +string meaning
+  +string stageId
+  +string moduleId
+  +Source source
+  +WordRelation[] related
+}
+
+class Grammar {
+  +string id
+  +string pattern
+  +string connection
+  +string scene
+  +int week
+  +string level
+  +string stageId
+  +Source source
+}
+
+class Sentence {
+  +string id
+  +string ja
+  +string zh
+  +string level
+  +Source source
+  +ReviewStatus reviewStatus
+  +SentenceWord[] words
+  +SentenceGrammar[] grammars
+}
+
+class SentenceWord {
+  +string sentenceId
+  +string wordId
+  +string surface
+  +int start
+  +int end
+}
+
+class SentenceGrammar {
+  +string sentenceId
+  +string grammarId
+}
+
+class WordRelation {
+  +string fromId
+  +string toId
+  +WordRelationType type
+}
+
+class GrammarRelation {
+  +string fromId
+  +string toId
+  +GrammarRelationType type
+}
+
+class Source {
+  <<enum>>
+  seed
+  ai
+  human
+}
+
+class ReviewStatus {
+  <<enum>>
+  pending
+  approved
+}
+
+class WordRelationType {
+  <<enum>>
+  synonym
+  antonym
+  derived
+  sameModule
+}
+
+class GrammarRelationType {
+  <<enum>>
+  hypernym
+  hyponym
+  synonym
+  antonym
+}
+
+%% ---------------- 进度与会话 ----------------
+class SrsState {
+  <<enum>>
+  未学
+  学习中
+  模糊
+  已掌握
+  需强化
+}
+
+class SelfEval {
+  <<enum>>
+  不认识
+  模糊
+  认识
+}
+
+class ReviewRecord {
+  +int at
+  +string result  %% correct | wrong | skip
+  +SrsState from
+  +SrsState to
+}
+
+class Progress {
+  +string targetId
+  +SrsState state
+  +int wrongCount  %% 跨会话累计
+  +int nextReview
+  +int intervalLevel
+  +bool seen
+  +ReviewRecord[] history
+}
+
+class Session {
+  +string stageId
+  +string moduleId
+  +int lastWordIndex  %% 断点续学
+  +string lastStudyDate
+  +int todayNewCount
+  +int todayReviewCount
+  +int streakDays
+}
+
+class StudySettings {
+  +number rate
+  +number pitch
+  +bool autoSpeakOnCard
+  +bool unlockRuleEnabled
+}
+
+%% ---------------- 引擎（纯函数） ----------------
+class SrsEngine {
+  <<module>>
+  +initialProgress(targetId) Progress
+  +applySelfEval(p, eval, now) Progress
+  +applyReviewResult(p, correct, now) Progress
+  +applySkip(p, now) Progress
+  +isDue(p, now) bool
+  +dueTargetIds(progressMap, now) string[]
+}
+
+class JumpRulesEngine {
+  <<module>>
+  +evaluate(ctx, triggeredBy) JumpDecision[]
+}
+
+class JumpContext {
+  +Word word
+  +Progress wordProgress
+  +bool grammarLearned
+  +int sessionWrongCount
+  +int moduleLearned
+  +int moduleTotal
+}
+
+class JumpDecision {
+  +string rule  %% J1..J6 | none
+  +string kind
+  +string target  %% P3|P5|P6
+  +string[] grammarIds
+}
+
+class ProgressEngine {
+  <<module>>
+  +wordCompletion(p) number
+  +moduleCompletion(words, pm) number
+  +stageCompletion(stage, modules, words, pm) number
+  +overallCompletion(...) number
+}
+
+class ConjugationEngine {
+  <<module>>
+  +buildConjugationTable(word) ConjugationRow[]
+}
+
+class GraphLayoutEngine {
+  <<module>>
+  +layout(view, ctx) LayoutResult
+}
+
+class GraphViewEngine {
+  <<module>>
+  +buildOverview(data) GraphView
+  +buildWordView(word, data) GraphView
+  +buildGrammarView(grammar, data) GraphView
+}
+
+class GraphSvgEngine {
+  <<module>>
+  +toSvg(view, layout, focusId) string
+}
+
+%% ---------------- 图谱数据 ----------------
+class GraphNode {
+  +string id
+  +string kind  %% stage|module|word|grammar
+  +string label
+  +int x
+  +int y
+  +int r
+}
+
+class GraphEdge {
+  +string fromId
+  +string toId
+  +string type
+}
+
+class GraphView {
+  +string mode  %% overview|word|grammar
+  +GraphNode[] nodes
+  +GraphEdge[] edges
+}
+
+class LayoutResult {
+  +GraphNode[] nodes
+  +GraphEdge[] edges
+  +int width
+  +int height
+}
+
+%% ---------------- 端口（原生/Web 双实现） ----------------
+class TtsPort {
+  <<interface>>
+  +getCapability() TtsCapability
+  +speak(text, opts) Promise~TtsResult~
+  +stop() void
+  +getVoices() Promise~Voice[]~
+}
+
+class StoragePort {
+  <<interface>>
+  +get(key) Promise~string~
+  +set(key, value) Promise~void~
+  +remove(key) Promise~void~
+}
+
+class TtsResult {
+  +bool ok
+  +string engine  %% native|web
+  +string reason  %% no-tts|no-ja-voice|blocked|error
+}
+
+class NativeTtsPort {
+  +getCapability() TtsCapability
+  +speak(text, opts) Promise~TtsResult~
+  +stop() void
+  +getVoices() Promise~Voice[]~
+}
+
+class WebTtsPort {
+  +getCapability() TtsCapability
+  +speak(text, opts) Promise~TtsResult~
+  +stop() void
+  +getVoices() Promise~Voice[]~
+}
+
+class NativeStoragePort {
+  +get(key) Promise~string~
+  +set(k, v) Promise~void~
+  +remove(key) Promise~void~
+}
+
+class WebStoragePort {
+  +get(key) Promise~string~
+  +set(k, v) Promise~void~
+  +remove(key) Promise~void~
+}
+
+%% ---------------- 数据访问 ----------------
+class DataRepository {
+  <<module>>
+  +getStages() Stage[]
+  +getModules(stageId) Module[]
+  +getModuleWords(moduleId) Word[]
+  +getWordById(id) Word
+  +getGrammarById(id) Grammar
+  +getSentencesByWord(wordId) Sentence[]
+  +getSentencesByGrammar(grammarId) Sentence[]
+}
+
+%% ---------------- 关系 ----------------
+Stage "1" --> "0..*" Module : contains
+Module "1" --> "0..*" Word : contains
+Word "1" --> "0..*" WordRelation : has
+Word "1" --> "0..*" SentenceWord : appears_in
+Sentence "1" --> "0..*" SentenceWord : links
+Sentence "1" --> "0..*" SentenceGrammar : links
+Grammar "1" --> "0..*" SentenceGrammar : appears_in
+Grammar "1" --> "0..*" GrammarRelation : has
+
+Progress "1" -- "1" Word : tracks
+Progress "1" -- "0..1" Grammar : tracks
+Session ..> Module : resumes_at
+
+SrsEngine ..> Progress : produces
+JumpRulesEngine ..> JumpContext : consumes
+JumpRulesEngine ..> JumpDecision : produces
+ProgressEngine ..> Progress : reads
+ConjugationEngine ..> Word : reads
+
+GraphViewEngine ..> GraphView : produces
+GraphLayoutEngine ..> LayoutResult : produces
+GraphSvgEngine ..> GraphView : consumes
+GraphView "1" o-- "0..*" GraphNode
+GraphView "1" o-- "0..*" GraphEdge
+
+TtsPort <|.. NativeTtsPort
+TtsPort <|.. WebTtsPort
+StoragePort <|.. NativeStoragePort
+StoragePort <|.. WebStoragePort
+TtsPort ..> TtsResult : returns
+
+DataRepository ..> Stage : reads
+DataRepository ..> Word : reads
+DataRepository ..> Grammar : reads
+DataRepository ..> Sentence : reads
+GraphViewEngine ..> DataRepository : uses

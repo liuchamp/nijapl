@@ -62,3 +62,6 @@ Thumbs.db
 .env.local
 .env.*.local
 .omo
+.workbuddy/
+dist/
+node_modules/
