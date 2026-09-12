@@ -16,7 +16,7 @@
 | 目的 | 命令 |
 |---|---|
 | 启动桌面应用（热重载） | `wails3 dev` |
-| 构建 | `wails3 build`（跨平台打包 `task package`） |
+| 构建 | `wails3 build`（跨平台打包 `task package`，由根 `Taskfile.yml` + `build/*/Taskfile.yml` 编排） |
 | 前端单独起服务 | `cd frontend && npm run dev`（端口 9245） |
 | 类型检查 | `cd frontend && npm run typecheck` |
 | Lint + 格式化 | `cd frontend && npm run check` |
@@ -27,7 +27,8 @@
 | Go 测试 | `go test ./internal/... .` |
 
 完整脚本见 `frontend/package.json`（另有 `build:dev` / `preview` / `format` / `test:watch`）。
-**无 CI**（无 `.github/workflows`、无 Makefile）：所有门禁靠本地手动执行。
+**无 CI**（无 `.github/workflows`、无 Makefile）：构建编排用 `Taskfile.yml`（`task dev/build/package`），
+所有门禁靠本地手动执行。
 
 ## 提交前门禁
 
@@ -46,13 +47,14 @@ frontend/src/store/         zustand vanilla：actions(唯一写入口)/selectors
 frontend/src/services/      编排层：studySession / kanaWriteSession / ttsController / jumpService / quiz / clipboard…
 frontend/src/pages/         P0–P9 页面 + K 域（Kana / KanaStudy / KanaQuiz）（每页一目录：index.tsx + index.css）
 frontend/src/components/    C1/C2 + 通用组件 + K 域（KanaTable / KanaCanvas / KanaConfusableCard）（同目录结构）
-frontend/src/constants/     routes / strings / theme / srs / pos / tts / jumpRules / kana
+frontend/src/constants/     routes / strings / theme / srs / pos / tts / jumpRules / kana（唯一真相源，无路径别名）
+frontend/src/router/        routes.tsx + navigation.ts（MemoryRouter；页面一律 `useNavigation()`，禁用 `<Link>`）
 frontend/src/types/         domain / progress / graph / kana（K 域实体）
 frontend/src/data/          repository（索引 frontend/data/build/*.json，含独立的 kana.json）
 frontend/data/source/seed/  种子 TS；frontend/data/source/kana/ 为 K 域种子
                             frontend/scripts/gen-data/ 为 seed→JSON 管线（含 schema/validate/build-kana/validate-kana）
 frontend/tests/{audit,qa}/  P0 行为审计 / QA 集成与对抗用例
-frontend/bindings/          wails3 生成的类型安全绑定（不入库）
+frontend/bindings/          wails3 生成的类型安全绑定（生成后落盘但 gitignored，不入库，勿手改）
 docs/                       设计 / 迁移 / PRD / QA / 评审
 ```
 
@@ -140,5 +142,5 @@ docs/                       设计 / 迁移 / PRD / QA / 评审
 [`docs/migration/PORTING-NOTES.md`](docs/migration/PORTING-NOTES.md)；
 排查脚本在 `docs/migration/tools/`。子模块细则见 `frontend/src/engine/AGENTS.md`（TTS 细则下沉
 `frontend/src/engine/tts/AGENTS.md`）、`frontend/src/store/AGENTS.md`、`frontend/src/services/AGENTS.md`、
-`frontend/src/pages/AGENTS.md`、`frontend/src/components/AGENTS.md`、`internal/services/AGENTS.md`、
-`frontend/scripts/gen-data/AGENTS.md`。
+`frontend/src/pages/AGENTS.md`、`frontend/src/components/AGENTS.md`、`frontend/src/constants/AGENTS.md`、
+`frontend/tests/AGENTS.md`、`internal/services/AGENTS.md`、`frontend/scripts/gen-data/AGENTS.md`。

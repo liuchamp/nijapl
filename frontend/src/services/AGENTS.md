@@ -7,6 +7,9 @@ WHERE TO LOOK:
 - jumpService.ts: JumpDecision -> StudyEffect
 - ttsController.ts: visual feedback <=100ms, sync prime?, describeTtsFailure (7 branches), copyKana
 - quiz.ts: deterministic build, no shuffle
+- grammarView.ts: GrammarFilter / filterGrammars (P4 list filtering)
+- graphNav.ts: graphNodeTarget / parseGraphQuery (P6 node->page mapping)
+- highlight.ts: buildSegments / buildSentenceHighlight (P3 offset rendering)
 - kanaWriteSession.ts: revealKanaPeek / cancelKanaPeek / enterKanaGroup; KANA_PEEK_MS=2000 timer
 - ttsPrefetch.ts: queue, concurrency 2 (per-tick slot release), silent failures only
 - clipboard.ts: navigator.clipboard -> System.SetClipboard; returns bool; P9 export fallback
