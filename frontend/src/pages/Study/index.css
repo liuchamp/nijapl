@@ -195,7 +195,82 @@
 }
 
 .Study-graphHint {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
   margin-top: var(--space-sm);
+}
+
+.Study-graphHintLabel {
+  cursor: pointer;
+  user-select: none;
   font-size: var(--font-xs);
   color: var(--color-primary);
+}
+
+.Study-done {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.Study-doneCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  padding: var(--space-lg);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+}
+
+.Study-doneTitle {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.Study-doneBody {
+  margin-top: var(--space-sm);
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.Study-doneActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+  margin-top: var(--space-lg);
+}
+
+.Study-doneBtn {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+}
+
+.Study-doneBtn--primary {
+  background-color: var(--color-primary);
+}
+
+.Study-doneBtnLabel {
+  font-size: var(--font-sm);
+  color: var(--color-text);
 }

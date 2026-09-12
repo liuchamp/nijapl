@@ -15,6 +15,11 @@ import * as studySession from '../../services/studySession.js'
 import { ttsController } from '../../services/ttsController.js'
 import { ttsPrefetch } from '../../services/ttsPrefetch.js'
 import { appActions, useAppStore, useSettings } from '../../store/hooks.js'
+import {
+  selectModuleComplete,
+  selectNextIncompleteModule,
+  selectStageComplete,
+} from '../../store/selectors.js'
 import type { SelfEval } from '../../types/progress.js'
 
 /**
@@ -56,6 +61,7 @@ export function StudyPage() {
 
   const [revealed, setRevealed] = useState(false)
   const [effect, setEffect] = useState<StudyEffect>(emptyStudyEffect)
+  const [moduleDone, setModuleDone] = useState(false)
 
   /** 横向滚动容器（替代 Lynx `<viewpager>` / `<scroll-view>`）。 */
   const pagerRef = useRef<HTMLDivElement | null>(null)
@@ -72,6 +78,7 @@ export function StudyPage() {
     }
     studySession.beginStudy(moduleId)
     setRevealed(false)
+    setModuleDone(false)
   }, [moduleId])
 
   // 程序化翻页：把容器滚到当前序号对应的卡片（首次挂载与按钮翻页都走这里）。
@@ -165,6 +172,10 @@ export function StudyPage() {
       appActions.openDetailSheet(word.id, sheetMode)
       return
     }
+    if (outcome.effect.promptGraph) {
+      setModuleDone(true)
+      return
+    }
     advance(1)
   }
 
@@ -183,7 +194,23 @@ export function StudyPage() {
 
   function onSheetDismiss(): void {
     appActions.closeDetailSheet()
+    // J2（连错详解）与 J4（模块学完）可能在同一自评命中：此前在 onSelfEval 里
+    // 优先开了浮层并 return，因而错过了完成面板。浮层关闭时补一次完成判定，
+    // 避免「学完最后一词却仍然卡在最后一张」。
+    if (selectModuleComplete(state, moduleId)) {
+      setModuleDone(true)
+      return
+    }
     advance(1)
+  }
+
+  function goNextModule(): void {
+    const nextModuleId = selectNextIncompleteModule(state, moduleId)
+    if (nextModuleId === null) {
+      nav.goStages()
+      return
+    }
+    nav.goStudy(nextModuleId)
   }
 
   function renderCard(cardWord: (typeof words)[number], isCurrent: boolean) {
@@ -305,7 +332,11 @@ export function StudyPage() {
       </div>
 
       {effect.promptGraph ? (
-        <span className="Study-graphHint">{STRINGS.home.graphEntry}</span>
+        <div className="Study-graphHint" onClick={() => nav.goGraph()}>
+          <span className="Study-graphHintLabel">
+            {STRINGS.home.graphEntry}
+          </span>
+        </div>
       ) : null}
 
       <DetailSheet
@@ -316,6 +347,45 @@ export function StudyPage() {
         onConfirm={onSheetConfirm}
         onDismiss={onSheetDismiss}
       />
+
+      {moduleDone ? (
+        <div className="Study-done">
+          <div className="Study-doneCard">
+            <span className="Study-doneTitle">
+              {selectStageComplete(state, state.session.stageId)
+                ? STRINGS.study.stageDoneTitle
+                : STRINGS.study.moduleDoneTitle}
+            </span>
+            <span className="Study-doneBody">
+              {selectStageComplete(state, state.session.stageId)
+                ? STRINGS.study.stageDoneBody
+                : STRINGS.study.moduleDoneBody}
+            </span>
+            <div className="Study-doneActions">
+              <div
+                className="Study-doneBtn Study-doneBtn--primary"
+                onClick={() => nav.goGraph()}
+              >
+                <span className="Study-doneBtnLabel">
+                  {STRINGS.study.viewGraph}
+                </span>
+              </div>
+              <div className="Study-doneBtn" onClick={goNextModule}>
+                <span className="Study-doneBtnLabel">
+                  {selectNextIncompleteModule(state, moduleId) === null
+                    ? STRINGS.study.backToStages
+                    : STRINGS.study.nextModule}
+                </span>
+              </div>
+              <div className="Study-doneBtn" onClick={nav.goStages}>
+                <span className="Study-doneBtnLabel">
+                  {STRINGS.study.backToStages}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
