@@ -61,6 +61,15 @@ export const TTS_PATH_SPEECH = '/v1/tts/speech'
 /** JSON 端点（`transport='json'`，默认）。 */
 export const TTS_PATH_SYNTHESIZE = '/v1/tts/synthesize'
 
+/**
+ * Go HTTP handler 同源基址（APK 专用）。
+ *
+ * APK WebView 只把 `/wails/*` 转发给 Go（query 保留、body 丢弃），
+ * 因此 Android 路径用相对地址 `GET /wails/tts/v1/tts/speech?...`，
+ * 不含任何 IP/host（业务代码禁 IP 红线）。桌面仍走绑定，浏览器仍直连。
+ */
+export const TTS_HANDLER_BASE = '/wails/tts'
+
 /** 用户触发请求超时（毫秒）：必须**早于**服务端 deadline（20s）掐断。 */
 export const TTS_TIMEOUT_MS = 8000
 /** 预取请求超时（毫秒）：不阻塞 UI，可更宽松。 */

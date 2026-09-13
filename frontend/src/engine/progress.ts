@@ -2,8 +2,14 @@ import { NO_CONTENT } from '../constants/srs.js'
 import type { Module, Stage, Word } from '../types/domain.js'
 import type { Progress, SrsState } from '../types/progress.js'
 
-/** 单条词条完成度映射：未学=0、已掌握=1，其余按掌握程度取中间值。 */
-const STATE_SCORE: Record<SrsState, number> = {
+/**
+ * 单条词条完成度映射：未学=0、已掌握=1，其余按掌握程度取中间值。
+ *
+ * **导出供 K 域复用**（`engine/kana.ts`）：假名与词条共用同一套「五态 → 分值」口径，
+ * 保证「模块完成度」与「关完成度」在语义上可比较。导出为**增量改动**，
+ * 既有函数签名与行为零变化。
+ */
+export const STATE_SCORE: Record<SrsState, number> = {
   未学: 0,
   学习中: 0.25,
   模糊: 0.5,
@@ -11,8 +17,8 @@ const STATE_SCORE: Record<SrsState, number> = {
   已掌握: 1,
 }
 
-/** 均值；空数组返回 0（避免 0/0 = NaN）。 */
-function mean(values: number[]): number {
+/** 均值；空数组返回 0（避免 0/0 = NaN）。导出理由同 {@link STATE_SCORE}。 */
+export function mean(values: number[]): number {
   if (values.length === 0) {
     return 0
   }

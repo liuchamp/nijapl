@@ -1,0 +1,3432 @@
+{
+  "groups": [
+    {
+      "id": "g01",
+      "name": "あ・か行",
+      "voiceType": "清音",
+      "order": 1,
+      "prerequisiteGroupIds": [],
+      "kanaIds": [
+        "a",
+        "i",
+        "u",
+        "e",
+        "o",
+        "ka",
+        "ki",
+        "ku",
+        "ke",
+        "ko"
+      ],
+      "source": "human"
+    },
+    {
+      "id": "g02",
+      "name": "さ・た行",
+      "voiceType": "清音",
+      "order": 2,
+      "prerequisiteGroupIds": [
+        "g01"
+      ],
+      "kanaIds": [
+        "sa",
+        "shi",
+        "su",
+        "se",
+        "so",
+        "ta",
+        "chi",
+        "tsu",
+        "te",
+        "to"
+      ],
+      "source": "human"
+    },
+    {
+      "id": "g03",
+      "name": "な・は行",
+      "voiceType": "清音",
+      "order": 3,
+      "prerequisiteGroupIds": [
+        "g02"
+      ],
+      "kanaIds": [
+        "na",
+        "ni",
+        "nu",
+        "ne",
+        "no",
+        "ha",
+        "hi",
+        "fu",
+        "he",
+        "ho"
+      ],
+      "source": "human"
+    },
+    {
+      "id": "g04",
+      "name": "ま・や行",
+      "voiceType": "清音",
+      "order": 4,
+      "prerequisiteGroupIds": [
+        "g03"
+      ],
+      "kanaIds": [
+        "ma",
+        "mi",
+        "mu",
+        "me",
+        "mo",
+        "ya",
+        "yu",
+        "yo"
+      ],
+      "source": "human"
+    },
+    {
+      "id": "g05",
+      "name": "ら・わ行・ん",
+      "voiceType": "清音",
+      "order": 5,
+      "prerequisiteGroupIds": [
+        "g04"
+      ],
+      "kanaIds": [
+        "ra",
+        "ri",
+        "ru",
+        "re",
+        "ro",
+        "wa",
+        "wo",
+        "n"
+      ],
+      "source": "human"
+    },
+    {
+      "id": "g06",
+      "name": "が・ざ行",
+      "voiceType": "浊音",
+      "order": 6,
+      "prerequisiteGroupIds": [
+        "g01"
+      ],
+      "kanaIds": [
+        "ga",
+        "gi",
+        "gu",
+        "ge",
+        "go",
+        "za",
+        "ji",
+        "zu",
+        "ze",
+        "zo"
+      ],
+      "source": "human"
+    },
+    {
+      "id": "g07",
+      "name": "だ・ば行",
+      "voiceType": "浊音",
+      "order": 7,
+      "prerequisiteGroupIds": [
+        "g02",
+        "g03"
+      ],
+      "kanaIds": [
+        "da",
+        "di",
+        "du",
+        "de",
+        "do",
+        "ba",
+        "bi",
+        "bu",
+        "be",
+        "bo"
+      ],
+      "source": "human"
+    },
+    {
+      "id": "g08",
+      "name": "ぱ行（半浊音）",
+      "voiceType": "半浊音",
+      "order": 8,
+      "prerequisiteGroupIds": [
+        "g03"
+      ],
+      "kanaIds": [
+        "pa",
+        "pi",
+        "pu",
+        "pe",
+        "po"
+      ],
+      "source": "human"
+    },
+    {
+      "id": "g09",
+      "name": "きゃ・しゃ・ちゃ",
+      "voiceType": "拗音",
+      "order": 9,
+      "prerequisiteGroupIds": [
+        "g01",
+        "g02"
+      ],
+      "kanaIds": [
+        "kya",
+        "kyu",
+        "kyo",
+        "sha",
+        "shu",
+        "sho",
+        "cha",
+        "chu",
+        "cho"
+      ],
+      "source": "human"
+    },
+    {
+      "id": "g10",
+      "name": "にゃ・ひゃ・みゃ",
+      "voiceType": "拗音",
+      "order": 10,
+      "prerequisiteGroupIds": [
+        "g03",
+        "g04"
+      ],
+      "kanaIds": [
+        "nya",
+        "nyu",
+        "nyo",
+        "hya",
+        "hyu",
+        "hyo",
+        "mya",
+        "myu",
+        "myo"
+      ],
+      "source": "human"
+    },
+    {
+      "id": "g11",
+      "name": "りゃ・ぎゃ・じゃ",
+      "voiceType": "拗音",
+      "order": 11,
+      "prerequisiteGroupIds": [
+        "g05",
+        "g06"
+      ],
+      "kanaIds": [
+        "rya",
+        "ryu",
+        "ryo",
+        "gya",
+        "gyu",
+        "gyo",
+        "ja",
+        "ju",
+        "jo"
+      ],
+      "source": "human"
+    },
+    {
+      "id": "g12",
+      "name": "びゃ・ぴゃ",
+      "voiceType": "拗音",
+      "order": 12,
+      "prerequisiteGroupIds": [
+        "g07",
+        "g08"
+      ],
+      "kanaIds": [
+        "bya",
+        "byu",
+        "byo",
+        "pya",
+        "pyu",
+        "pyo"
+      ],
+      "source": "human"
+    }
+  ],
+  "kana": [
+    {
+      "id": "a",
+      "groupId": "g01",
+      "voiceType": "清音",
+      "row": "a",
+      "vowel": "a",
+      "romaji": "a",
+      "romajiAliases": [
+        "a"
+      ],
+      "hiragana": "あ",
+      "katakana": "ア",
+      "origin": {
+        "hiragana": {
+          "char": "安",
+          "note": "「安」的草书演变"
+        },
+        "katakana": {
+          "char": "阿",
+          "note": "取「阿」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "o"
+      ],
+      "examples": [
+        {
+          "text": "あい",
+          "accent": "①",
+          "kanji": "愛",
+          "meaning": "爱恋、爱情"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "i",
+      "groupId": "g01",
+      "voiceType": "清音",
+      "row": "a",
+      "vowel": "i",
+      "romaji": "i",
+      "romajiAliases": [
+        "i"
+      ],
+      "hiragana": "い",
+      "katakana": "イ",
+      "origin": {
+        "hiragana": {
+          "char": "以",
+          "note": "「以」的草书演变"
+        },
+        "katakana": {
+          "char": "伊",
+          "note": "取「伊」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "ri"
+      ],
+      "examples": [
+        {
+          "text": "いえ",
+          "accent": "②",
+          "kanji": "家",
+          "meaning": "家，房子",
+          "wordId": "w-03"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "u",
+      "groupId": "g01",
+      "voiceType": "清音",
+      "row": "a",
+      "vowel": "u",
+      "romaji": "u",
+      "romajiAliases": [
+        "u"
+      ],
+      "hiragana": "う",
+      "katakana": "ウ",
+      "origin": {
+        "hiragana": {
+          "char": "宇",
+          "note": "「宇」的草书演变"
+        },
+        "katakana": {
+          "char": "宇",
+          "note": "取「宇」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "うつくしい",
+          "accent": "④",
+          "kanji": "美しい",
+          "meaning": "美丽的",
+          "wordId": "w-41"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "e",
+      "groupId": "g01",
+      "voiceType": "清音",
+      "row": "a",
+      "vowel": "e",
+      "romaji": "e",
+      "romajiAliases": [
+        "e"
+      ],
+      "hiragana": "え",
+      "katakana": "エ",
+      "origin": {
+        "hiragana": {
+          "char": "衣",
+          "note": "「衣」的草书演变"
+        },
+        "katakana": {
+          "char": "江",
+          "note": "取「江」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "えき",
+          "accent": "①",
+          "kanji": "駅",
+          "meaning": "车站",
+          "wordId": "w-16"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "o",
+      "groupId": "g01",
+      "voiceType": "清音",
+      "row": "a",
+      "vowel": "o",
+      "romaji": "o",
+      "romajiAliases": [
+        "o"
+      ],
+      "hiragana": "お",
+      "katakana": "オ",
+      "origin": {
+        "hiragana": {
+          "char": "於",
+          "note": "「於」的草书演变"
+        },
+        "katakana": {
+          "char": "於",
+          "note": "取「於」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "a"
+      ],
+      "examples": [
+        {
+          "text": "おとこ",
+          "accent": "③",
+          "kanji": "男",
+          "meaning": "男人"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ka",
+      "groupId": "g01",
+      "voiceType": "清音",
+      "row": "ka",
+      "vowel": "a",
+      "romaji": "ka",
+      "romajiAliases": [
+        "ka"
+      ],
+      "hiragana": "か",
+      "katakana": "カ",
+      "origin": {
+        "hiragana": {
+          "char": "加",
+          "note": "「加」的草书演变"
+        },
+        "katakana": {
+          "char": "加",
+          "note": "取「加」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "かく",
+          "accent": "①",
+          "kanji": "書く",
+          "meaning": "写",
+          "wordId": "w-24"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ki",
+      "groupId": "g01",
+      "voiceType": "清音",
+      "row": "ka",
+      "vowel": "i",
+      "romaji": "ki",
+      "romajiAliases": [
+        "ki"
+      ],
+      "hiragana": "き",
+      "katakana": "キ",
+      "origin": {
+        "hiragana": {
+          "char": "幾",
+          "note": "「幾」的草书演变"
+        },
+        "katakana": {
+          "char": "幾",
+          "note": "取「幾」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "sa"
+      ],
+      "examples": [
+        {
+          "text": "きょう",
+          "accent": "①",
+          "kanji": "今日",
+          "meaning": "今天",
+          "wordId": "w-26"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ku",
+      "groupId": "g01",
+      "voiceType": "清音",
+      "row": "ka",
+      "vowel": "u",
+      "romaji": "ku",
+      "romajiAliases": [
+        "ku"
+      ],
+      "hiragana": "く",
+      "katakana": "ク",
+      "origin": {
+        "hiragana": {
+          "char": "久",
+          "note": "「久」的草书演变"
+        },
+        "katakana": {
+          "char": "久",
+          "note": "取「久」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "he"
+      ],
+      "examples": [
+        {
+          "text": "くうこう",
+          "accent": "⓪",
+          "kanji": "空港",
+          "meaning": "机场",
+          "wordId": "w-20"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ke",
+      "groupId": "g01",
+      "voiceType": "清音",
+      "row": "ka",
+      "vowel": "e",
+      "romaji": "ke",
+      "romajiAliases": [
+        "ke"
+      ],
+      "hiragana": "け",
+      "katakana": "ケ",
+      "origin": {
+        "hiragana": {
+          "char": "計",
+          "note": "「計」的草书演变"
+        },
+        "katakana": {
+          "char": "介",
+          "note": "取「介」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "けさ",
+          "accent": "①",
+          "kanji": "今朝",
+          "meaning": "今天早上"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ko",
+      "groupId": "g01",
+      "voiceType": "清音",
+      "row": "ka",
+      "vowel": "o",
+      "romaji": "ko",
+      "romajiAliases": [
+        "ko"
+      ],
+      "hiragana": "こ",
+      "katakana": "コ",
+      "origin": {
+        "hiragana": {
+          "char": "己",
+          "note": "「己」的草书演变"
+        },
+        "katakana": {
+          "char": "己",
+          "note": "取「己」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ことば",
+          "accent": "③",
+          "kanji": "言葉",
+          "meaning": "语言，词语",
+          "wordId": "w-33"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "sa",
+      "groupId": "g02",
+      "voiceType": "清音",
+      "row": "sa",
+      "vowel": "a",
+      "romaji": "sa",
+      "romajiAliases": [
+        "sa"
+      ],
+      "hiragana": "さ",
+      "katakana": "サ",
+      "origin": {
+        "hiragana": {
+          "char": "左",
+          "note": "「左」的草书演变"
+        },
+        "katakana": {
+          "char": "散",
+          "note": "取「散」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "ki"
+      ],
+      "examples": [
+        {
+          "text": "さくら",
+          "accent": "⓪",
+          "kanji": "桜",
+          "meaning": "樱花"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "shi",
+      "groupId": "g02",
+      "voiceType": "清音",
+      "row": "sa",
+      "vowel": "i",
+      "romaji": "shi",
+      "romajiAliases": [
+        "shi",
+        "si"
+      ],
+      "hiragana": "し",
+      "katakana": "シ",
+      "origin": {
+        "hiragana": {
+          "char": "之",
+          "note": "「之」的草书演变"
+        },
+        "katakana": {
+          "char": "之",
+          "note": "取「之」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "tsu"
+      ],
+      "examples": [
+        {
+          "text": "しずか",
+          "accent": "①",
+          "kanji": "静か",
+          "meaning": "安静的",
+          "wordId": "w-15"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "su",
+      "groupId": "g02",
+      "voiceType": "清音",
+      "row": "sa",
+      "vowel": "u",
+      "romaji": "su",
+      "romajiAliases": [
+        "su"
+      ],
+      "hiragana": "す",
+      "katakana": "ス",
+      "origin": {
+        "hiragana": {
+          "char": "寸",
+          "note": "「寸」的草书演变"
+        },
+        "katakana": {
+          "char": "須",
+          "note": "取「須」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "すばらしい",
+          "accent": "④",
+          "kanji": "素晴らしい",
+          "meaning": "极好的",
+          "wordId": "w-42"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "se",
+      "groupId": "g02",
+      "voiceType": "清音",
+      "row": "sa",
+      "vowel": "e",
+      "romaji": "se",
+      "romajiAliases": [
+        "se"
+      ],
+      "hiragana": "せ",
+      "katakana": "セ",
+      "origin": {
+        "hiragana": {
+          "char": "世",
+          "note": "「世」的草书演变"
+        },
+        "katakana": {
+          "char": "世",
+          "note": "取「世」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "せかい",
+          "accent": "①",
+          "kanji": "世界",
+          "meaning": "世界"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "so",
+      "groupId": "g02",
+      "voiceType": "清音",
+      "row": "sa",
+      "vowel": "o",
+      "romaji": "so",
+      "romajiAliases": [
+        "so"
+      ],
+      "hiragana": "そ",
+      "katakana": "ソ",
+      "origin": {
+        "hiragana": {
+          "char": "曽",
+          "note": "「曽」的草书演变"
+        },
+        "katakana": {
+          "char": "曽",
+          "note": "取「曽」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "n"
+      ],
+      "examples": [
+        {
+          "text": "そら",
+          "accent": "①",
+          "kanji": "空",
+          "meaning": "天空"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ta",
+      "groupId": "g02",
+      "voiceType": "清音",
+      "row": "ta",
+      "vowel": "a",
+      "romaji": "ta",
+      "romajiAliases": [
+        "ta"
+      ],
+      "hiragana": "た",
+      "katakana": "タ",
+      "origin": {
+        "hiragana": {
+          "char": "太",
+          "note": "「太」的草书演变"
+        },
+        "katakana": {
+          "char": "多",
+          "note": "取「多」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "たべる",
+          "accent": "②",
+          "kanji": "食べる",
+          "meaning": "吃",
+          "wordId": "w-06"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "chi",
+      "groupId": "g02",
+      "voiceType": "清音",
+      "row": "ta",
+      "vowel": "i",
+      "romaji": "chi",
+      "romajiAliases": [
+        "chi",
+        "ti"
+      ],
+      "hiragana": "ち",
+      "katakana": "チ",
+      "origin": {
+        "hiragana": {
+          "char": "知",
+          "note": "「知」的草书演变"
+        },
+        "katakana": {
+          "char": "千",
+          "note": "取「千」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "te"
+      ],
+      "examples": [
+        {
+          "text": "ちいさい",
+          "accent": "③",
+          "kanji": "小さい",
+          "meaning": "小的",
+          "wordId": "w-12"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "tsu",
+      "groupId": "g02",
+      "voiceType": "清音",
+      "row": "ta",
+      "vowel": "u",
+      "romaji": "tsu",
+      "romajiAliases": [
+        "tsu",
+        "tu"
+      ],
+      "hiragana": "つ",
+      "katakana": "ツ",
+      "origin": {
+        "hiragana": {
+          "char": "川",
+          "note": "「川」的草书演变"
+        },
+        "katakana": {
+          "char": "川",
+          "note": "取「川」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "shi"
+      ],
+      "examples": [
+        {
+          "text": "つかう",
+          "accent": "⓪",
+          "kanji": "使う",
+          "meaning": "使用",
+          "wordId": "w-37"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "te",
+      "groupId": "g02",
+      "voiceType": "清音",
+      "row": "ta",
+      "vowel": "e",
+      "romaji": "te",
+      "romajiAliases": [
+        "te"
+      ],
+      "hiragana": "て",
+      "katakana": "テ",
+      "origin": {
+        "hiragana": {
+          "char": "天",
+          "note": "「天」的草书演变"
+        },
+        "katakana": {
+          "char": "天",
+          "note": "取「天」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "chi"
+      ],
+      "examples": [
+        {
+          "text": "てがみ",
+          "accent": "⓪",
+          "kanji": "手紙",
+          "meaning": "信"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "to",
+      "groupId": "g02",
+      "voiceType": "清音",
+      "row": "ta",
+      "vowel": "o",
+      "romaji": "to",
+      "romajiAliases": [
+        "to"
+      ],
+      "hiragana": "と",
+      "katakana": "ト",
+      "origin": {
+        "hiragana": {
+          "char": "止",
+          "note": "「止」的草书演变"
+        },
+        "katakana": {
+          "char": "止",
+          "note": "取「止」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ところ",
+          "accent": "⓪",
+          "kanji": "所",
+          "meaning": "地方",
+          "wordId": "w-32"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "na",
+      "groupId": "g03",
+      "voiceType": "清音",
+      "row": "na",
+      "vowel": "a",
+      "romaji": "na",
+      "romajiAliases": [
+        "na"
+      ],
+      "hiragana": "な",
+      "katakana": "ナ",
+      "origin": {
+        "hiragana": {
+          "char": "奈",
+          "note": "「奈」的草书演变"
+        },
+        "katakana": {
+          "char": "奈",
+          "note": "取「奈」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "なつ",
+          "accent": "②",
+          "kanji": "夏",
+          "meaning": "夏天"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ni",
+      "groupId": "g03",
+      "voiceType": "清音",
+      "row": "na",
+      "vowel": "i",
+      "romaji": "ni",
+      "romajiAliases": [
+        "ni"
+      ],
+      "hiragana": "に",
+      "katakana": "ニ",
+      "origin": {
+        "hiragana": {
+          "char": "仁",
+          "note": "「仁」的草书演变"
+        },
+        "katakana": {
+          "char": "二",
+          "note": "取「二」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "にほん",
+          "accent": "②",
+          "kanji": "日本",
+          "meaning": "日本"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "nu",
+      "groupId": "g03",
+      "voiceType": "清音",
+      "row": "na",
+      "vowel": "u",
+      "romaji": "nu",
+      "romajiAliases": [
+        "nu"
+      ],
+      "hiragana": "ぬ",
+      "katakana": "ヌ",
+      "origin": {
+        "hiragana": {
+          "char": "奴",
+          "note": "「奴」的草书演变"
+        },
+        "katakana": {
+          "char": "奴",
+          "note": "取「奴」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "me"
+      ],
+      "examples": [
+        {
+          "text": "ぬの",
+          "accent": "⓪",
+          "kanji": "布",
+          "meaning": "布"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ne",
+      "groupId": "g03",
+      "voiceType": "清音",
+      "row": "na",
+      "vowel": "e",
+      "romaji": "ne",
+      "romajiAliases": [
+        "ne"
+      ],
+      "hiragana": "ね",
+      "katakana": "ネ",
+      "origin": {
+        "hiragana": {
+          "char": "祢",
+          "note": "「祢」的草书演变"
+        },
+        "katakana": {
+          "char": "祢",
+          "note": "取「祢」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "re",
+        "wa"
+      ],
+      "examples": [
+        {
+          "text": "ねこ",
+          "accent": "①",
+          "kanji": "猫",
+          "meaning": "猫"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "no",
+      "groupId": "g03",
+      "voiceType": "清音",
+      "row": "na",
+      "vowel": "o",
+      "romaji": "no",
+      "romajiAliases": [
+        "no"
+      ],
+      "hiragana": "の",
+      "katakana": "ノ",
+      "origin": {
+        "hiragana": {
+          "char": "乃",
+          "note": "「乃」的草书演变"
+        },
+        "katakana": {
+          "char": "乃",
+          "note": "取「乃」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "のむ",
+          "accent": "①",
+          "kanji": "飲む",
+          "meaning": "喝",
+          "wordId": "w-07"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ha",
+      "groupId": "g03",
+      "voiceType": "清音",
+      "row": "ha",
+      "vowel": "a",
+      "romaji": "ha",
+      "romajiAliases": [
+        "ha"
+      ],
+      "hiragana": "は",
+      "katakana": "ハ",
+      "origin": {
+        "hiragana": {
+          "char": "波",
+          "note": "「波」的草书演变"
+        },
+        "katakana": {
+          "char": "八",
+          "note": "取「八」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "ho"
+      ],
+      "examples": [
+        {
+          "text": "はなす",
+          "accent": "②",
+          "kanji": "話す",
+          "meaning": "说，讲",
+          "wordId": "w-25"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "hi",
+      "groupId": "g03",
+      "voiceType": "清音",
+      "row": "ha",
+      "vowel": "i",
+      "romaji": "hi",
+      "romajiAliases": [
+        "hi"
+      ],
+      "hiragana": "ひ",
+      "katakana": "ヒ",
+      "origin": {
+        "hiragana": {
+          "char": "比",
+          "note": "「比」的草书演变"
+        },
+        "katakana": {
+          "char": "比",
+          "note": "取「比」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ひと",
+          "accent": "⓪",
+          "kanji": "人",
+          "meaning": "人",
+          "wordId": "w-02"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "fu",
+      "groupId": "g03",
+      "voiceType": "清音",
+      "row": "ha",
+      "vowel": "u",
+      "romaji": "fu",
+      "romajiAliases": [
+        "fu",
+        "hu"
+      ],
+      "hiragana": "ふ",
+      "katakana": "フ",
+      "origin": {
+        "hiragana": {
+          "char": "不",
+          "note": "「不」的草书演变"
+        },
+        "katakana": {
+          "char": "不",
+          "note": "取「不」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "wa"
+      ],
+      "examples": [
+        {
+          "text": "ふゆ",
+          "accent": "②",
+          "kanji": "冬",
+          "meaning": "冬天"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "he",
+      "groupId": "g03",
+      "voiceType": "清音",
+      "row": "ha",
+      "vowel": "e",
+      "romaji": "he",
+      "romajiAliases": [
+        "he"
+      ],
+      "hiragana": "へ",
+      "katakana": "ヘ",
+      "origin": {
+        "hiragana": {
+          "char": "部",
+          "note": "「部」的草书演变"
+        },
+        "katakana": {
+          "char": "部",
+          "note": "取「部」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "ku"
+      ],
+      "examples": [
+        {
+          "text": "へた",
+          "accent": "②",
+          "kanji": "下手",
+          "meaning": "不擅长"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ho",
+      "groupId": "g03",
+      "voiceType": "清音",
+      "row": "ha",
+      "vowel": "o",
+      "romaji": "ho",
+      "romajiAliases": [
+        "ho"
+      ],
+      "hiragana": "ほ",
+      "katakana": "ホ",
+      "origin": {
+        "hiragana": {
+          "char": "保",
+          "note": "「保」的草书演变"
+        },
+        "katakana": {
+          "char": "保",
+          "note": "取「保」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "ha"
+      ],
+      "examples": [
+        {
+          "text": "ほん",
+          "accent": "①",
+          "kanji": "本",
+          "meaning": "书",
+          "wordId": "w-05"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ma",
+      "groupId": "g04",
+      "voiceType": "清音",
+      "row": "ma",
+      "vowel": "a",
+      "romaji": "ma",
+      "romajiAliases": [
+        "ma"
+      ],
+      "hiragana": "ま",
+      "katakana": "マ",
+      "origin": {
+        "hiragana": {
+          "char": "末",
+          "note": "「末」的草书演变"
+        },
+        "katakana": {
+          "char": "万",
+          "note": "取「万」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "まつ",
+          "accent": "①",
+          "kanji": "待つ",
+          "meaning": "等待",
+          "wordId": "w-38"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "mi",
+      "groupId": "g04",
+      "voiceType": "清音",
+      "row": "ma",
+      "vowel": "i",
+      "romaji": "mi",
+      "romajiAliases": [
+        "mi"
+      ],
+      "hiragana": "み",
+      "katakana": "ミ",
+      "origin": {
+        "hiragana": {
+          "char": "美",
+          "note": "「美」的草书演变"
+        },
+        "katakana": {
+          "char": "三",
+          "note": "取「三」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "みず",
+          "accent": "⓪",
+          "kanji": "水",
+          "meaning": "水",
+          "wordId": "w-04"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "mu",
+      "groupId": "g04",
+      "voiceType": "清音",
+      "row": "ma",
+      "vowel": "u",
+      "romaji": "mu",
+      "romajiAliases": [
+        "mu"
+      ],
+      "hiragana": "む",
+      "katakana": "ム",
+      "origin": {
+        "hiragana": {
+          "char": "武",
+          "note": "「武」的草书演变"
+        },
+        "katakana": {
+          "char": "牟",
+          "note": "取「牟」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "むずかしい",
+          "accent": "④",
+          "kanji": "難しい",
+          "meaning": "难的"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "me",
+      "groupId": "g04",
+      "voiceType": "清音",
+      "row": "ma",
+      "vowel": "e",
+      "romaji": "me",
+      "romajiAliases": [
+        "me"
+      ],
+      "hiragana": "め",
+      "katakana": "メ",
+      "origin": {
+        "hiragana": {
+          "char": "女",
+          "note": "「女」的草书演变"
+        },
+        "katakana": {
+          "char": "女",
+          "note": "取「女」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "nu"
+      ],
+      "examples": [
+        {
+          "text": "めがね",
+          "accent": "①",
+          "kanji": "眼鏡",
+          "meaning": "眼镜"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "mo",
+      "groupId": "g04",
+      "voiceType": "清音",
+      "row": "ma",
+      "vowel": "o",
+      "romaji": "mo",
+      "romajiAliases": [
+        "mo"
+      ],
+      "hiragana": "も",
+      "katakana": "モ",
+      "origin": {
+        "hiragana": {
+          "char": "毛",
+          "note": "「毛」的草书演变"
+        },
+        "katakana": {
+          "char": "毛",
+          "note": "取「毛」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "もう",
+          "accent": "①",
+          "kanji": "もう",
+          "meaning": "已经",
+          "wordId": "w-50"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ya",
+      "groupId": "g04",
+      "voiceType": "清音",
+      "row": "ya",
+      "vowel": "a",
+      "romaji": "ya",
+      "romajiAliases": [
+        "ya"
+      ],
+      "hiragana": "や",
+      "katakana": "ヤ",
+      "origin": {
+        "hiragana": {
+          "char": "也",
+          "note": "「也」的草书演变"
+        },
+        "katakana": {
+          "char": "也",
+          "note": "取「也」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "やま",
+          "accent": "②",
+          "kanji": "山",
+          "meaning": "山"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "yu",
+      "groupId": "g04",
+      "voiceType": "清音",
+      "row": "ya",
+      "vowel": "u",
+      "romaji": "yu",
+      "romajiAliases": [
+        "yu"
+      ],
+      "hiragana": "ゆ",
+      "katakana": "ユ",
+      "origin": {
+        "hiragana": {
+          "char": "由",
+          "note": "「由」的草书演变"
+        },
+        "katakana": {
+          "char": "由",
+          "note": "取「由」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ゆき",
+          "accent": "②",
+          "kanji": "雪",
+          "meaning": "雪"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "yo",
+      "groupId": "g04",
+      "voiceType": "清音",
+      "row": "ya",
+      "vowel": "o",
+      "romaji": "yo",
+      "romajiAliases": [
+        "yo"
+      ],
+      "hiragana": "よ",
+      "katakana": "ヨ",
+      "origin": {
+        "hiragana": {
+          "char": "与",
+          "note": "「与」的草书演变"
+        },
+        "katakana": {
+          "char": "与",
+          "note": "取「与」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "よむ",
+          "accent": "①",
+          "kanji": "読む",
+          "meaning": "读",
+          "wordId": "w-23"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ra",
+      "groupId": "g05",
+      "voiceType": "清音",
+      "row": "ra",
+      "vowel": "a",
+      "romaji": "ra",
+      "romajiAliases": [
+        "ra"
+      ],
+      "hiragana": "ら",
+      "katakana": "ラ",
+      "origin": {
+        "hiragana": {
+          "char": "良",
+          "note": "「良」的草书演变"
+        },
+        "katakana": {
+          "char": "良",
+          "note": "取「良」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "らいねん",
+          "accent": "①",
+          "kanji": "来年",
+          "meaning": "明年"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ri",
+      "groupId": "g05",
+      "voiceType": "清音",
+      "row": "ra",
+      "vowel": "i",
+      "romaji": "ri",
+      "romajiAliases": [
+        "ri"
+      ],
+      "hiragana": "り",
+      "katakana": "リ",
+      "origin": {
+        "hiragana": {
+          "char": "利",
+          "note": "「利」的草书演变"
+        },
+        "katakana": {
+          "char": "利",
+          "note": "取「利」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "i"
+      ],
+      "examples": [
+        {
+          "text": "りゆう",
+          "accent": "⓪",
+          "kanji": "理由",
+          "meaning": "理由",
+          "wordId": "w-35"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ru",
+      "groupId": "g05",
+      "voiceType": "清音",
+      "row": "ra",
+      "vowel": "u",
+      "romaji": "ru",
+      "romajiAliases": [
+        "ru"
+      ],
+      "hiragana": "る",
+      "katakana": "ル",
+      "origin": {
+        "hiragana": {
+          "char": "留",
+          "note": "「留」的草书演变"
+        },
+        "katakana": {
+          "char": "流",
+          "note": "取「流」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "ro"
+      ],
+      "examples": [
+        {
+          "text": "るす",
+          "accent": "①",
+          "kanji": "留守",
+          "meaning": "不在家"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "re",
+      "groupId": "g05",
+      "voiceType": "清音",
+      "row": "ra",
+      "vowel": "e",
+      "romaji": "re",
+      "romajiAliases": [
+        "re"
+      ],
+      "hiragana": "れ",
+      "katakana": "レ",
+      "origin": {
+        "hiragana": {
+          "char": "礼",
+          "note": "「礼」的草书演变"
+        },
+        "katakana": {
+          "char": "礼",
+          "note": "取「礼」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "ne",
+        "wa"
+      ],
+      "examples": [
+        {
+          "text": "れい",
+          "accent": "①",
+          "kanji": "例",
+          "meaning": "例子"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ro",
+      "groupId": "g05",
+      "voiceType": "清音",
+      "row": "ra",
+      "vowel": "o",
+      "romaji": "ro",
+      "romajiAliases": [
+        "ro"
+      ],
+      "hiragana": "ろ",
+      "katakana": "ロ",
+      "origin": {
+        "hiragana": {
+          "char": "呂",
+          "note": "「呂」的草书演变"
+        },
+        "katakana": {
+          "char": "呂",
+          "note": "取「呂」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "ru"
+      ],
+      "examples": [
+        {
+          "text": "ろく",
+          "accent": "②",
+          "kanji": "六",
+          "meaning": "六"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "wa",
+      "groupId": "g05",
+      "voiceType": "清音",
+      "row": "wa",
+      "vowel": "a",
+      "romaji": "wa",
+      "romajiAliases": [
+        "wa"
+      ],
+      "hiragana": "わ",
+      "katakana": "ワ",
+      "origin": {
+        "hiragana": {
+          "char": "和",
+          "note": "「和」的草书演变"
+        },
+        "katakana": {
+          "char": "和",
+          "note": "取「和」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "re",
+        "ne",
+        "fu"
+      ],
+      "examples": [
+        {
+          "text": "わたし",
+          "accent": "⓪",
+          "kanji": "私",
+          "meaning": "我",
+          "wordId": "w-01"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "wo",
+      "groupId": "g05",
+      "voiceType": "清音",
+      "row": "wa",
+      "vowel": "o",
+      "romaji": "wo",
+      "romajiAliases": [
+        "wo"
+      ],
+      "hiragana": "を",
+      "katakana": "ヲ",
+      "origin": {
+        "hiragana": {
+          "char": "遠",
+          "note": "「遠」的草书演变"
+        },
+        "katakana": {
+          "char": "乎",
+          "note": "取「乎」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "みずを",
+          "accent": "⓪",
+          "kanji": "水",
+          "meaning": "水（作助词示例，含「を」）"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "n",
+      "groupId": "g05",
+      "voiceType": "清音",
+      "row": "n",
+      "vowel": "n",
+      "romaji": "n",
+      "romajiAliases": [
+        "n",
+        "nn"
+      ],
+      "hiragana": "ん",
+      "katakana": "ン",
+      "origin": {
+        "hiragana": {
+          "char": "无",
+          "note": "「无」的草书演变"
+        },
+        "katakana": {
+          "char": "尔",
+          "note": "取「尔」的偏旁"
+        }
+      },
+      "strokePaths": [],
+      "confusable": [
+        "so"
+      ],
+      "examples": [
+        {
+          "text": "ほん",
+          "accent": "①",
+          "kanji": "本",
+          "meaning": "书（含拨音「ん」）",
+          "wordId": "w-05"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ga",
+      "groupId": "g06",
+      "voiceType": "浊音",
+      "row": "ga",
+      "vowel": "a",
+      "romaji": "ga",
+      "romajiAliases": [
+        "ga"
+      ],
+      "hiragana": "が",
+      "katakana": "ガ",
+      "baseKanaId": "ka",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "がっこう",
+          "accent": "⓪",
+          "kanji": "学校",
+          "meaning": "学校",
+          "wordId": "w-17"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "gi",
+      "groupId": "g06",
+      "voiceType": "浊音",
+      "row": "ga",
+      "vowel": "i",
+      "romaji": "gi",
+      "romajiAliases": [
+        "gi"
+      ],
+      "hiragana": "ぎ",
+      "katakana": "ギ",
+      "baseKanaId": "ki",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ぎんこう",
+          "accent": "⓪",
+          "kanji": "銀行",
+          "meaning": "银行"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "gu",
+      "groupId": "g06",
+      "voiceType": "浊音",
+      "row": "ga",
+      "vowel": "u",
+      "romaji": "gu",
+      "romajiAliases": [
+        "gu"
+      ],
+      "hiragana": "ぐ",
+      "katakana": "グ",
+      "baseKanaId": "ku",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ぐあい",
+          "accent": "⓪",
+          "kanji": "具合",
+          "meaning": "状况"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ge",
+      "groupId": "g06",
+      "voiceType": "浊音",
+      "row": "ga",
+      "vowel": "e",
+      "romaji": "ge",
+      "romajiAliases": [
+        "ge"
+      ],
+      "hiragana": "げ",
+      "katakana": "ゲ",
+      "baseKanaId": "ke",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "げんき",
+          "accent": "①",
+          "kanji": "元気",
+          "meaning": "精神，健康"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "go",
+      "groupId": "g06",
+      "voiceType": "浊音",
+      "row": "ga",
+      "vowel": "o",
+      "romaji": "go",
+      "romajiAliases": [
+        "go"
+      ],
+      "hiragana": "ご",
+      "katakana": "ゴ",
+      "baseKanaId": "ko",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ごはん",
+          "accent": "①",
+          "kanji": "ご飯",
+          "meaning": "米饭"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "za",
+      "groupId": "g06",
+      "voiceType": "浊音",
+      "row": "za",
+      "vowel": "a",
+      "romaji": "za",
+      "romajiAliases": [
+        "za"
+      ],
+      "hiragana": "ざ",
+      "katakana": "ザ",
+      "baseKanaId": "sa",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ざっし",
+          "accent": "⓪",
+          "kanji": "雑誌",
+          "meaning": "杂志"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ji",
+      "groupId": "g06",
+      "voiceType": "浊音",
+      "row": "za",
+      "vowel": "i",
+      "romaji": "ji",
+      "romajiAliases": [
+        "ji",
+        "zi"
+      ],
+      "hiragana": "じ",
+      "katakana": "ジ",
+      "baseKanaId": "shi",
+      "strokePaths": [],
+      "confusable": [
+        "di"
+      ],
+      "examples": [
+        {
+          "text": "じかん",
+          "accent": "⓪",
+          "kanji": "時間",
+          "meaning": "时间",
+          "wordId": "w-31"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "zu",
+      "groupId": "g06",
+      "voiceType": "浊音",
+      "row": "za",
+      "vowel": "u",
+      "romaji": "zu",
+      "romajiAliases": [
+        "zu"
+      ],
+      "hiragana": "ず",
+      "katakana": "ズ",
+      "baseKanaId": "su",
+      "strokePaths": [],
+      "confusable": [
+        "du"
+      ],
+      "examples": [
+        {
+          "text": "ずっと",
+          "accent": "⓪",
+          "kanji": "ずっと",
+          "meaning": "一直"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ze",
+      "groupId": "g06",
+      "voiceType": "浊音",
+      "row": "za",
+      "vowel": "e",
+      "romaji": "ze",
+      "romajiAliases": [
+        "ze"
+      ],
+      "hiragana": "ぜ",
+      "katakana": "ゼ",
+      "baseKanaId": "se",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ぜんぶ",
+          "accent": "①",
+          "kanji": "全部",
+          "meaning": "全部"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "zo",
+      "groupId": "g06",
+      "voiceType": "浊音",
+      "row": "za",
+      "vowel": "o",
+      "romaji": "zo",
+      "romajiAliases": [
+        "zo"
+      ],
+      "hiragana": "ぞ",
+      "katakana": "ゾ",
+      "baseKanaId": "so",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ぞう",
+          "accent": "①",
+          "kanji": "象",
+          "meaning": "大象"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "da",
+      "groupId": "g07",
+      "voiceType": "浊音",
+      "row": "da",
+      "vowel": "a",
+      "romaji": "da",
+      "romajiAliases": [
+        "da"
+      ],
+      "hiragana": "だ",
+      "katakana": "ダ",
+      "baseKanaId": "ta",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "だいがく",
+          "accent": "⓪",
+          "kanji": "大学",
+          "meaning": "大学"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "di",
+      "groupId": "g07",
+      "voiceType": "浊音",
+      "row": "da",
+      "vowel": "i",
+      "romaji": "di",
+      "romajiAliases": [
+        "di",
+        "ji",
+        "zi"
+      ],
+      "hiragana": "ぢ",
+      "katakana": "ヂ",
+      "baseKanaId": "chi",
+      "strokePaths": [],
+      "confusable": [
+        "ji"
+      ],
+      "examples": [
+        {
+          "text": "ちぢむ",
+          "accent": "⓪",
+          "kanji": "縮む",
+          "meaning": "收缩"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "du",
+      "groupId": "g07",
+      "voiceType": "浊音",
+      "row": "da",
+      "vowel": "u",
+      "romaji": "du",
+      "romajiAliases": [
+        "du",
+        "zu"
+      ],
+      "hiragana": "づ",
+      "katakana": "ヅ",
+      "baseKanaId": "tsu",
+      "strokePaths": [],
+      "confusable": [
+        "zu"
+      ],
+      "examples": [
+        {
+          "text": "つづく",
+          "accent": "⓪",
+          "kanji": "続く",
+          "meaning": "继续"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "de",
+      "groupId": "g07",
+      "voiceType": "浊音",
+      "row": "da",
+      "vowel": "e",
+      "romaji": "de",
+      "romajiAliases": [
+        "de"
+      ],
+      "hiragana": "で",
+      "katakana": "デ",
+      "baseKanaId": "te",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "でんしゃ",
+          "accent": "⓪",
+          "kanji": "電車",
+          "meaning": "电车",
+          "wordId": "w-18"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "do",
+      "groupId": "g07",
+      "voiceType": "浊音",
+      "row": "da",
+      "vowel": "o",
+      "romaji": "do",
+      "romajiAliases": [
+        "do"
+      ],
+      "hiragana": "ど",
+      "katakana": "ド",
+      "baseKanaId": "to",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "どようび",
+          "accent": "②",
+          "kanji": "土曜日",
+          "meaning": "星期六"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ba",
+      "groupId": "g07",
+      "voiceType": "浊音",
+      "row": "ba",
+      "vowel": "a",
+      "romaji": "ba",
+      "romajiAliases": [
+        "ba"
+      ],
+      "hiragana": "ば",
+      "katakana": "バ",
+      "baseKanaId": "ha",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ばんごう",
+          "accent": "③",
+          "kanji": "番号",
+          "meaning": "号码"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "bi",
+      "groupId": "g07",
+      "voiceType": "浊音",
+      "row": "ba",
+      "vowel": "i",
+      "romaji": "bi",
+      "romajiAliases": [
+        "bi"
+      ],
+      "hiragana": "び",
+      "katakana": "ビ",
+      "baseKanaId": "hi",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "びょういん",
+          "accent": "⓪",
+          "kanji": "病院",
+          "meaning": "医院"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "bu",
+      "groupId": "g07",
+      "voiceType": "浊音",
+      "row": "ba",
+      "vowel": "u",
+      "romaji": "bu",
+      "romajiAliases": [
+        "bu"
+      ],
+      "hiragana": "ぶ",
+      "katakana": "ブ",
+      "baseKanaId": "fu",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ぶんか",
+          "accent": "①",
+          "kanji": "文化",
+          "meaning": "文化"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "be",
+      "groupId": "g07",
+      "voiceType": "浊音",
+      "row": "ba",
+      "vowel": "e",
+      "romaji": "be",
+      "romajiAliases": [
+        "be"
+      ],
+      "hiragana": "べ",
+      "katakana": "ベ",
+      "baseKanaId": "he",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "べんり",
+          "accent": "①",
+          "kanji": "便利",
+          "meaning": "方便的",
+          "wordId": "w-14"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "bo",
+      "groupId": "g07",
+      "voiceType": "浊音",
+      "row": "ba",
+      "vowel": "o",
+      "romaji": "bo",
+      "romajiAliases": [
+        "bo"
+      ],
+      "hiragana": "ぼ",
+      "katakana": "ボ",
+      "baseKanaId": "ho",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ぼうし",
+          "accent": "⓪",
+          "kanji": "帽子",
+          "meaning": "帽子"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "pa",
+      "groupId": "g08",
+      "voiceType": "半浊音",
+      "row": "pa",
+      "vowel": "a",
+      "romaji": "pa",
+      "romajiAliases": [
+        "pa"
+      ],
+      "hiragana": "ぱ",
+      "katakana": "パ",
+      "baseKanaId": "ha",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ぱん",
+          "accent": "①",
+          "kanji": "パン",
+          "meaning": "面包"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "pi",
+      "groupId": "g08",
+      "voiceType": "半浊音",
+      "row": "pa",
+      "vowel": "i",
+      "romaji": "pi",
+      "romajiAliases": [
+        "pi"
+      ],
+      "hiragana": "ぴ",
+      "katakana": "ピ",
+      "baseKanaId": "hi",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ぴあの",
+          "accent": "⓪",
+          "kanji": "ピアノ",
+          "meaning": "钢琴"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "pu",
+      "groupId": "g08",
+      "voiceType": "半浊音",
+      "row": "pa",
+      "vowel": "u",
+      "romaji": "pu",
+      "romajiAliases": [
+        "pu"
+      ],
+      "hiragana": "ぷ",
+      "katakana": "プ",
+      "baseKanaId": "fu",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ぷれぜんと",
+          "accent": "②",
+          "kanji": "プレゼント",
+          "meaning": "礼物"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "pe",
+      "groupId": "g08",
+      "voiceType": "半浊音",
+      "row": "pa",
+      "vowel": "e",
+      "romaji": "pe",
+      "romajiAliases": [
+        "pe"
+      ],
+      "hiragana": "ぺ",
+      "katakana": "ペ",
+      "baseKanaId": "he",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ぺん",
+          "accent": "①",
+          "kanji": "ペン",
+          "meaning": "笔"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "po",
+      "groupId": "g08",
+      "voiceType": "半浊音",
+      "row": "pa",
+      "vowel": "o",
+      "romaji": "po",
+      "romajiAliases": [
+        "po"
+      ],
+      "hiragana": "ぽ",
+      "katakana": "ポ",
+      "baseKanaId": "ho",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ぽすと",
+          "accent": "①",
+          "kanji": "ポスト",
+          "meaning": "邮筒"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "kya",
+      "groupId": "g09",
+      "voiceType": "拗音",
+      "row": "kya",
+      "vowel": "a",
+      "romaji": "kya",
+      "romajiAliases": [
+        "kya"
+      ],
+      "hiragana": "きゃ",
+      "katakana": "キャ",
+      "baseKanaId": "ki",
+      "strokePaths": [],
+      "confusable": [
+        "gya"
+      ],
+      "examples": [
+        {
+          "text": "きゃく",
+          "accent": "⓪",
+          "kanji": "客",
+          "meaning": "客人"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "kyu",
+      "groupId": "g09",
+      "voiceType": "拗音",
+      "row": "kya",
+      "vowel": "u",
+      "romaji": "kyu",
+      "romajiAliases": [
+        "kyu"
+      ],
+      "hiragana": "きゅ",
+      "katakana": "キュ",
+      "baseKanaId": "ki",
+      "strokePaths": [],
+      "confusable": [
+        "gyu"
+      ],
+      "examples": [
+        {
+          "text": "きゅう",
+          "accent": "⓪",
+          "kanji": "九",
+          "meaning": "九"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "kyo",
+      "groupId": "g09",
+      "voiceType": "拗音",
+      "row": "kya",
+      "vowel": "o",
+      "romaji": "kyo",
+      "romajiAliases": [
+        "kyo"
+      ],
+      "hiragana": "きょ",
+      "katakana": "キョ",
+      "baseKanaId": "ki",
+      "strokePaths": [],
+      "confusable": [
+        "gyo"
+      ],
+      "examples": [
+        {
+          "text": "きょうしつ",
+          "accent": "⓪",
+          "kanji": "教室",
+          "meaning": "教室"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "sha",
+      "groupId": "g09",
+      "voiceType": "拗音",
+      "row": "sha",
+      "vowel": "a",
+      "romaji": "sha",
+      "romajiAliases": [
+        "sha",
+        "sya"
+      ],
+      "hiragana": "しゃ",
+      "katakana": "シャ",
+      "baseKanaId": "shi",
+      "strokePaths": [],
+      "confusable": [
+        "ja"
+      ],
+      "examples": [
+        {
+          "text": "しゃしん",
+          "accent": "⓪",
+          "kanji": "写真",
+          "meaning": "照片"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "shu",
+      "groupId": "g09",
+      "voiceType": "拗音",
+      "row": "sha",
+      "vowel": "u",
+      "romaji": "shu",
+      "romajiAliases": [
+        "shu",
+        "syu"
+      ],
+      "hiragana": "しゅ",
+      "katakana": "シュ",
+      "baseKanaId": "shi",
+      "strokePaths": [],
+      "confusable": [
+        "ju"
+      ],
+      "examples": [
+        {
+          "text": "しゅみ",
+          "accent": "①",
+          "kanji": "趣味",
+          "meaning": "爱好"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "sho",
+      "groupId": "g09",
+      "voiceType": "拗音",
+      "row": "sha",
+      "vowel": "o",
+      "romaji": "sho",
+      "romajiAliases": [
+        "sho",
+        "syo"
+      ],
+      "hiragana": "しょ",
+      "katakana": "ショ",
+      "baseKanaId": "shi",
+      "strokePaths": [],
+      "confusable": [
+        "jo"
+      ],
+      "examples": [
+        {
+          "text": "しょくじ",
+          "accent": "⓪",
+          "kanji": "食事",
+          "meaning": "用餐"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "cha",
+      "groupId": "g09",
+      "voiceType": "拗音",
+      "row": "cha",
+      "vowel": "a",
+      "romaji": "cha",
+      "romajiAliases": [
+        "cha",
+        "tya",
+        "cya"
+      ],
+      "hiragana": "ちゃ",
+      "katakana": "チャ",
+      "baseKanaId": "chi",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ちゃいろ",
+          "accent": "⓪",
+          "kanji": "茶色",
+          "meaning": "茶色"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "chu",
+      "groupId": "g09",
+      "voiceType": "拗音",
+      "row": "cha",
+      "vowel": "u",
+      "romaji": "chu",
+      "romajiAliases": [
+        "chu",
+        "tyu"
+      ],
+      "hiragana": "ちゅ",
+      "katakana": "チュ",
+      "baseKanaId": "chi",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ちゅうごく",
+          "accent": "①",
+          "kanji": "中国",
+          "meaning": "中国"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "cho",
+      "groupId": "g09",
+      "voiceType": "拗音",
+      "row": "cha",
+      "vowel": "o",
+      "romaji": "cho",
+      "romajiAliases": [
+        "cho",
+        "tyo"
+      ],
+      "hiragana": "ちょ",
+      "katakana": "チョ",
+      "baseKanaId": "chi",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ちょうしょく",
+          "accent": "③",
+          "kanji": "朝食",
+          "meaning": "早餐"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "nya",
+      "groupId": "g10",
+      "voiceType": "拗音",
+      "row": "nya",
+      "vowel": "a",
+      "romaji": "nya",
+      "romajiAliases": [
+        "nya"
+      ],
+      "hiragana": "にゃ",
+      "katakana": "ニャ",
+      "baseKanaId": "ni",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "こんにゃく",
+          "accent": "⓪",
+          "kanji": "蒟蒻",
+          "meaning": "魔芋"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "nyu",
+      "groupId": "g10",
+      "voiceType": "拗音",
+      "row": "nya",
+      "vowel": "u",
+      "romaji": "nyu",
+      "romajiAliases": [
+        "nyu"
+      ],
+      "hiragana": "にゅ",
+      "katakana": "ニュ",
+      "baseKanaId": "ni",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "にゅうがく",
+          "accent": "⓪",
+          "kanji": "入学",
+          "meaning": "入学"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "nyo",
+      "groupId": "g10",
+      "voiceType": "拗音",
+      "row": "nya",
+      "vowel": "o",
+      "romaji": "nyo",
+      "romajiAliases": [
+        "nyo"
+      ],
+      "hiragana": "にょ",
+      "katakana": "ニョ",
+      "baseKanaId": "ni",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "にょうぼう",
+          "accent": "①",
+          "kanji": "女房",
+          "meaning": "妻子（口语）"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "hya",
+      "groupId": "g10",
+      "voiceType": "拗音",
+      "row": "hya",
+      "vowel": "a",
+      "romaji": "hya",
+      "romajiAliases": [
+        "hya"
+      ],
+      "hiragana": "ひゃ",
+      "katakana": "ヒャ",
+      "baseKanaId": "hi",
+      "strokePaths": [],
+      "confusable": [
+        "bya",
+        "pya"
+      ],
+      "examples": [
+        {
+          "text": "ひゃく",
+          "accent": "②",
+          "kanji": "百",
+          "meaning": "百"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "hyu",
+      "groupId": "g10",
+      "voiceType": "拗音",
+      "row": "hya",
+      "vowel": "u",
+      "romaji": "hyu",
+      "romajiAliases": [
+        "hyu"
+      ],
+      "hiragana": "ひゅ",
+      "katakana": "ヒュ",
+      "baseKanaId": "hi",
+      "strokePaths": [],
+      "confusable": [
+        "byu",
+        "pyu"
+      ],
+      "examples": [
+        {
+          "text": "ヒューズ",
+          "accent": "①",
+          "kanji": "ヒューズ",
+          "meaning": "保险丝"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "hyo",
+      "groupId": "g10",
+      "voiceType": "拗音",
+      "row": "hya",
+      "vowel": "o",
+      "romaji": "hyo",
+      "romajiAliases": [
+        "hyo"
+      ],
+      "hiragana": "ひょ",
+      "katakana": "ヒョ",
+      "baseKanaId": "hi",
+      "strokePaths": [],
+      "confusable": [
+        "byo",
+        "pyo"
+      ],
+      "examples": [
+        {
+          "text": "ひょう",
+          "accent": "①",
+          "kanji": "表",
+          "meaning": "表格"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "mya",
+      "groupId": "g10",
+      "voiceType": "拗音",
+      "row": "mya",
+      "vowel": "a",
+      "romaji": "mya",
+      "romajiAliases": [
+        "mya"
+      ],
+      "hiragana": "みゃ",
+      "katakana": "ミャ",
+      "baseKanaId": "mi",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "みゃく",
+          "accent": "⓪",
+          "kanji": "脈",
+          "meaning": "脉搏"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "myu",
+      "groupId": "g10",
+      "voiceType": "拗音",
+      "row": "mya",
+      "vowel": "u",
+      "romaji": "myu",
+      "romajiAliases": [
+        "myu"
+      ],
+      "hiragana": "みゅ",
+      "katakana": "ミュ",
+      "baseKanaId": "mi",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "ミュージック",
+          "accent": "①",
+          "kanji": "ミュージック",
+          "meaning": "音乐"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "myo",
+      "groupId": "g10",
+      "voiceType": "拗音",
+      "row": "mya",
+      "vowel": "o",
+      "romaji": "myo",
+      "romajiAliases": [
+        "myo"
+      ],
+      "hiragana": "みょ",
+      "katakana": "ミョ",
+      "baseKanaId": "mi",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "みょうじ",
+          "accent": "⓪",
+          "kanji": "名字",
+          "meaning": "姓氏"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "rya",
+      "groupId": "g11",
+      "voiceType": "拗音",
+      "row": "rya",
+      "vowel": "a",
+      "romaji": "rya",
+      "romajiAliases": [
+        "rya"
+      ],
+      "hiragana": "りゃ",
+      "katakana": "リャ",
+      "baseKanaId": "ri",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "りゃく",
+          "accent": "⓪",
+          "kanji": "略",
+          "meaning": "简略"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ryu",
+      "groupId": "g11",
+      "voiceType": "拗音",
+      "row": "rya",
+      "vowel": "u",
+      "romaji": "ryu",
+      "romajiAliases": [
+        "ryu"
+      ],
+      "hiragana": "りゅ",
+      "katakana": "リュ",
+      "baseKanaId": "ri",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "りゅう",
+          "accent": "①",
+          "kanji": "竜",
+          "meaning": "龙"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ryo",
+      "groupId": "g11",
+      "voiceType": "拗音",
+      "row": "rya",
+      "vowel": "o",
+      "romaji": "ryo",
+      "romajiAliases": [
+        "ryo"
+      ],
+      "hiragana": "りょ",
+      "katakana": "リョ",
+      "baseKanaId": "ri",
+      "strokePaths": [],
+      "confusable": [],
+      "examples": [
+        {
+          "text": "りょうり",
+          "accent": "①",
+          "kanji": "料理",
+          "meaning": "料理"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "gya",
+      "groupId": "g11",
+      "voiceType": "拗音",
+      "row": "gya",
+      "vowel": "a",
+      "romaji": "gya",
+      "romajiAliases": [
+        "gya"
+      ],
+      "hiragana": "ぎゃ",
+      "katakana": "ギャ",
+      "baseKanaId": "gi",
+      "strokePaths": [],
+      "confusable": [
+        "kya"
+      ],
+      "examples": [
+        {
+          "text": "ぎゃく",
+          "accent": "⓪",
+          "kanji": "逆",
+          "meaning": "相反"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "gyu",
+      "groupId": "g11",
+      "voiceType": "拗音",
+      "row": "gya",
+      "vowel": "u",
+      "romaji": "gyu",
+      "romajiAliases": [
+        "gyu"
+      ],
+      "hiragana": "ぎゅ",
+      "katakana": "ギュ",
+      "baseKanaId": "gi",
+      "strokePaths": [],
+      "confusable": [
+        "kyu"
+      ],
+      "examples": [
+        {
+          "text": "ぎゅうにゅう",
+          "accent": "⓪",
+          "kanji": "牛乳",
+          "meaning": "牛奶"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "gyo",
+      "groupId": "g11",
+      "voiceType": "拗音",
+      "row": "gya",
+      "vowel": "o",
+      "romaji": "gyo",
+      "romajiAliases": [
+        "gyo"
+      ],
+      "hiragana": "ぎょ",
+      "katakana": "ギョ",
+      "baseKanaId": "gi",
+      "strokePaths": [],
+      "confusable": [
+        "kyo"
+      ],
+      "examples": [
+        {
+          "text": "きんぎょ",
+          "accent": "①",
+          "kanji": "金魚",
+          "meaning": "金鱼"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ja",
+      "groupId": "g11",
+      "voiceType": "拗音",
+      "row": "ja",
+      "vowel": "a",
+      "romaji": "ja",
+      "romajiAliases": [
+        "ja",
+        "jya",
+        "zya"
+      ],
+      "hiragana": "じゃ",
+      "katakana": "ジャ",
+      "baseKanaId": "ji",
+      "strokePaths": [],
+      "confusable": [
+        "sha"
+      ],
+      "examples": [
+        {
+          "text": "じゃま",
+          "accent": "⓪",
+          "kanji": "邪魔",
+          "meaning": "妨碍"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "ju",
+      "groupId": "g11",
+      "voiceType": "拗音",
+      "row": "ja",
+      "vowel": "u",
+      "romaji": "ju",
+      "romajiAliases": [
+        "ju",
+        "jyu",
+        "zyu"
+      ],
+      "hiragana": "じゅ",
+      "katakana": "ジュ",
+      "baseKanaId": "ji",
+      "strokePaths": [],
+      "confusable": [
+        "shu"
+      ],
+      "examples": [
+        {
+          "text": "じゅぎょう",
+          "accent": "⓪",
+          "kanji": "授業",
+          "meaning": "课程"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "jo",
+      "groupId": "g11",
+      "voiceType": "拗音",
+      "row": "ja",
+      "vowel": "o",
+      "romaji": "jo",
+      "romajiAliases": [
+        "jo",
+        "jyo",
+        "zyo"
+      ],
+      "hiragana": "じょ",
+      "katakana": "ジョ",
+      "baseKanaId": "ji",
+      "strokePaths": [],
+      "confusable": [
+        "sho"
+      ],
+      "examples": [
+        {
+          "text": "じょせい",
+          "accent": "⓪",
+          "kanji": "女性",
+          "meaning": "女性"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "bya",
+      "groupId": "g12",
+      "voiceType": "拗音",
+      "row": "bya",
+      "vowel": "a",
+      "romaji": "bya",
+      "romajiAliases": [
+        "bya"
+      ],
+      "hiragana": "びゃ",
+      "katakana": "ビャ",
+      "baseKanaId": "bi",
+      "strokePaths": [],
+      "confusable": [
+        "hya",
+        "pya"
+      ],
+      "examples": [
+        {
+          "text": "さんびゃく",
+          "accent": "①",
+          "kanji": "三百",
+          "meaning": "三百"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "byu",
+      "groupId": "g12",
+      "voiceType": "拗音",
+      "row": "bya",
+      "vowel": "u",
+      "romaji": "byu",
+      "romajiAliases": [
+        "byu"
+      ],
+      "hiragana": "びゅ",
+      "katakana": "ビュ",
+      "baseKanaId": "bi",
+      "strokePaths": [],
+      "confusable": [
+        "hyu",
+        "pyu"
+      ],
+      "examples": [
+        {
+          "text": "ビュー",
+          "accent": "①",
+          "kanji": "ビュー",
+          "meaning": "视野"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "byo",
+      "groupId": "g12",
+      "voiceType": "拗音",
+      "row": "bya",
+      "vowel": "o",
+      "romaji": "byo",
+      "romajiAliases": [
+        "byo"
+      ],
+      "hiragana": "びょ",
+      "katakana": "ビョ",
+      "baseKanaId": "bi",
+      "strokePaths": [],
+      "confusable": [
+        "hyo",
+        "pyo"
+      ],
+      "examples": [
+        {
+          "text": "びょういん",
+          "accent": "⓪",
+          "kanji": "病院",
+          "meaning": "医院"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "pya",
+      "groupId": "g12",
+      "voiceType": "拗音",
+      "row": "pya",
+      "vowel": "a",
+      "romaji": "pya",
+      "romajiAliases": [
+        "pya"
+      ],
+      "hiragana": "ぴゃ",
+      "katakana": "ピャ",
+      "baseKanaId": "pi",
+      "strokePaths": [],
+      "confusable": [
+        "bya",
+        "hya"
+      ],
+      "examples": [
+        {
+          "text": "ろっぴゃく",
+          "accent": "④",
+          "kanji": "六百",
+          "meaning": "六百"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "pyu",
+      "groupId": "g12",
+      "voiceType": "拗音",
+      "row": "pya",
+      "vowel": "u",
+      "romaji": "pyu",
+      "romajiAliases": [
+        "pyu"
+      ],
+      "hiragana": "ぴゅ",
+      "katakana": "ピュ",
+      "baseKanaId": "pi",
+      "strokePaths": [],
+      "confusable": [
+        "byu",
+        "hyu"
+      ],
+      "examples": [
+        {
+          "text": "ピュア",
+          "accent": "①",
+          "kanji": "ピュア",
+          "meaning": "纯粹"
+        }
+      ],
+      "source": "human"
+    },
+    {
+      "id": "pyo",
+      "groupId": "g12",
+      "voiceType": "拗音",
+      "row": "pya",
+      "vowel": "o",
+      "romaji": "pyo",
+      "romajiAliases": [
+        "pyo"
+      ],
+      "hiragana": "ぴょ",
+      "katakana": "ピョ",
+      "baseKanaId": "pi",
+      "strokePaths": [],
+      "confusable": [
+        "byo",
+        "hyo"
+      ],
+      "examples": [
+        {
+          "text": "ぴょんぴょん",
+          "accent": "①",
+          "kanji": "ぴょんぴょん",
+          "meaning": "蹦蹦跳跳"
+        }
+      ],
+      "source": "human"
+    }
+  ]
+}

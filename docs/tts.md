@@ -23,7 +23,8 @@
 | 服务 | `services/ttsPrefetch.ts` | 预取编排：队列 + 并发上限 2 + 失败静默（唯一静默例外），不阻塞点击 |
 | 编排 | `engine/tts/index.ts:ResolvingTtsPort` | `getCapability/speak/stop/prime/prefetch`；M1~M3 互斥；`gen` 丢弃迟到响应；`player` 不可用直接跳过 HTTP |
 | 参数 | `engine/tts/request.ts`（纯函数） | `buildSynthesisParams/cacheKey/buildSpeechUrl/buildSynthesizeRequest`；`lang` 恒 `ja-JP`；`rate/pitch` 映射；`volume` 恒 `+0%` 显式发送；`format=mp3` |
-| 合成源 | `engine/tts/tts-client.wails.ts` | Wails 绑定适配：`TTS.Synthesize/Prefetch/Cancel`；空文本短路；`gen` 同步；`stale-gen` 丢弃；Go reason → 前端判别联合；`base64→bytes` |
+| 合成源 | `engine/tts/tts-client.wails.ts` | 桌面绑定适配：`TTS.Synthesize/Prefetch/Cancel`；空文本短路；`gen` 同步；`stale-gen` 丢弃；Go reason → 前端判别联合；`base64→bytes` |
+| 合成源 | `engine/tts/tts-handler.ts` | APK 同源 handler：`GET /wails/tts/v1/tts/speech?...`（同源、仅 query、无 body）→ Go `ServeHTTP`；空文本短路/`gen`/`stale-gen` 与绑定一致；无客户端缓存重试（Go 拥有） |
 | 合成源 | `engine/tts/tts-client.ts` | 浏览器回退：`fetch` 直连（仅非宿主调试用） |
 | 宿主 | `internal/services/tts.go:TTS` | `Synthesize/Prefetch/Cancel`；LRU `64条/4MB`；`singleflight` 去重；`fetchWithRetry`（用户 8s / 预取 15s；400 不重试；503 去 voice 重试 1 次 + 300ms 退避） |
 | 配置 | `internal/config/config.go` | `env NIJAPL_TTS_BASE_URL > 构建期 ldflags > 默认 http://127.0.0.1:8000`；前端 `constants/tts.ts:TTS_BASE_URL` 仅服务回退路径 |
@@ -34,10 +35,11 @@
 `http://127.0.0.1:8000` 会被 CORS 拦截；超时 / 重试 / 缓存 / 去重 / 取消是 Go 强项，
 且可用 `context` 真中断。前端降级链与 M1~M3 完全不变，只是数据源换成绑定调用。
 
-装配（`index.ts:createTtsSource`）：
+装配（`index.ts:createTtsSource`）：Android UA → 同源 handler（`GET /wails/tts/...`），
+桌面 Wails 宿主 → Go 绑定，纯浏览器 → 前端 `fetch` 直连。
 
 ```ts
-hasWailsRuntime() ? createTtsWailsClient() : createTtsHttpClient()
+isAndroid() ? createTtsHandlerClient() : hasWailsRuntime() ? createTtsWailsClient() : createTtsHttpClient()
 createAudioPlayer() // 仅 probe(createWebAudioPlayer)
 detectRealtimePort() // 仅 probe(createWebTts)，否则 Unsupported
 ```
@@ -195,7 +197,7 @@ sequenceDiagram
   end
 ```
 
-## 7. 实测（`192.168.0.137:8000`，2026-09-12）
+## 7. 实测（`192.168.0.85:8000`，2026-09-12）
 
 - `GET /v1/tts/languages` → 200，含 `ja-JP-NanamiNeural`。
 - `POST /v1/tts/synthesize {"text":"ねこ","lang":"ja-JP","format":"mp3"}` → 200，返回 base64 `audio`。
@@ -207,7 +209,7 @@ sequenceDiagram
 
 ```bash
 # 合成并存成可播放 mp3
-curl -s -m 15 -X POST http://192.168.0.137:8000/v1/tts/synthesize \
+curl -s -m 15 -X POST http://192.168.0.85:8000/v1/tts/synthesize \
   -H 'Content-Type: application/json' \
   -d '{"text":"ねこ","lang":"ja-JP","voice":"ja-JP-NanamiNeural","rate":"+0%","pitch":"+0Hz","format":"mp3"}' \
   | python3 -c "import sys,json; d=json.load(sys.stdin); open('/tmp/neko.mp3','wb').write(__import__('base64').b64decode(d['audio'])); print('voice=',d.get('voice'),'cached=',d.get('cached'),'content_type=',d.get('content_type'))"
@@ -215,7 +217,7 @@ ls -l /tmp/neko.mp3 && file /tmp/neko.mp3
 
 # 裸流备选（同等价，200 audio/mpeg）
 curl -s -m 15 -D - -o /tmp/neko2.mp3 \
-  "http://192.168.0.137:8000/v1/tts/speech?text=%E3%81%AD%E3%81%93&lang=ja-JP&format=mp3" \
+  "http://192.168.0.85:8000/v1/tts/speech?text=%E3%81%AD%E3%81%93&lang=ja-JP&format=mp3" \
   | grep -iE '^HTTP|content-type|x-tts'
 ls -l /tmp/neko2.mp3 && file /tmp/neko2.mp3
 ```

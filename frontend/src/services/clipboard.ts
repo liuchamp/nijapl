@@ -1,5 +1,5 @@
 import { System } from '../../bindings/nijapl/internal/services/index.js'
-import { hasWailsRuntime } from '../engine/wails.js'
+import { hasWailsRuntime } from '../engine/platform/index.js'
 
 /**
  * 剪贴板工具：优先 Web `navigator.clipboard`，Wails 宿主内再兜底到 Go（`pbcopy` 等）。

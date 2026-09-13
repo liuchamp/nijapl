@@ -33,6 +33,10 @@ export interface Session {
   stageId: string
   moduleId: string
   lastWordIndex: number
+  /** K 域（五十音）断点：当前关卡 id（空串表示未进入）。 */
+  kanaGroupId: string
+  /** K 域断点：关内当前音序号。 */
+  lastKanaIndex: number
   lastStudyDate: string
   todayNewCount: number
   todayReviewCount: number
@@ -47,6 +51,12 @@ export interface StudySettings {
   pitch: number
   autoSpeakOnCard: boolean
   unlockRuleEnabled: boolean
+  /**
+   * K 域**入门门控**（设计 §13 Q1，默认开）：
+   * 开启且五十音未达标时，P0 主按钮指向 K 域而非 N5 词汇；
+   * 关闭则 K 域只是普通入口，不拦路。可在 P9 切换。
+   */
+  kanaGateEnabled: boolean
 }
 
 /**

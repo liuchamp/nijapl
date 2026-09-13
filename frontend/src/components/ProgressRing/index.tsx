@@ -1,4 +1,3 @@
-import './index.css'
 import { COLORS } from '../../constants/theme.js'
 
 /**
@@ -40,7 +39,7 @@ export function ProgressRing(props: ProgressRingProps) {
   const center = size / 2
 
   return (
-    <div className="ProgressRing">
+    <div className="ProgressRing flex flex-col">
       <svg
         className="ProgressRing-svg"
         width={size}

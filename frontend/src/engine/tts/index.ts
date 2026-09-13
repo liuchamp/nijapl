@@ -13,12 +13,14 @@ import type {
   TtsSourcePort,
   TtsSynthesisParams,
 } from '../../types/tts.js'
-import { hasWailsRuntime } from '../wails.js'
+import { hasWailsRuntime, isAndroid, isMobile } from '../platform/index.js'
 import { createAudioPlayer } from './player.js'
 import { buildSynthesisParams } from './request.js'
+import { createMobileTts } from './tts.mobile.js'
 import { createWebTts } from './tts.web.js'
 import { createTtsHttpClient } from './tts-client.js'
 import { createTtsWailsClient } from './tts-client.wails.js'
+import { createTtsHandlerClient } from './tts-handler.js'
 
 /**
  * TTS 端口 facade（架构 §2.5 / 设计 §4.3）：运行时能力检测 + **编排** + 单例。
@@ -75,13 +77,20 @@ function probe(factory: () => TtsPort | null): TtsPort | null {
 }
 
 /**
- * 运行时探测可用的**实时合成**实现（Web `speechSynthesis` → 不可用）。
+ * 运行时探测可用的**实时合成**实现（移动端原生 TTS → Web `speechSynthesis` → 不可用）。
  *
  * 迁移说明：原 Lynx 的 `NativeModules.TTSEngine`（iOS `AVSpeechSynthesizer` /
- * Android `TextToSpeech`）在 Wails 下不存在，`tts.native.ts` 已删除；桌面 WebView
- * 自带 `speechSynthesis`（macOS 系统语音 / Windows SAPI），降级链第③级免费保留。
+ * Android `TextToSpeech`）在 Wails 下由 Go 侧 `application.Mobile` 承接，经
+ * `tts.mobile.ts` 暴露为 `engine:'native'`；桌面 WebView 自带 `speechSynthesis`
+ * （macOS 系统语音 / Windows SAPI），继续作为降级链第③级免费保留。
  */
 function detectRealtimePort(): TtsPort {
+  if (isMobile()) {
+    const native = probe(createMobileTts)
+    if (native !== null) {
+      return native
+    }
+  }
   const web = probe(createWebTts)
   if (web !== null) {
     return web
@@ -234,20 +243,62 @@ export class ResolvingTtsPort implements TtsPort {
 }
 
 /**
- * 合成源装配：Wails 宿主内走 Go 绑定（规避 CORS，超时 / 重试 / 缓存 / 去重全在 Go），
+ * 合成源装配：APK（Android UA）走同源 Go HTTP handler（query only，
+ * 规避 WebView 绑定不可靠）；桌面 Wails 宿主走 Go 绑定；
  * 否则回退到前端 `fetch` 实现（浏览器直连自建服务）。
  */
 function createTtsSource(): TtsSourcePort {
+  if (isAndroid()) {
+    return createTtsHandlerClient()
+  }
   if (hasWailsRuntime()) {
     return createTtsWailsClient()
   }
   return createTtsHttpClient()
 }
 
-/** 全局唯一 TTS 端口（合成 + 播放编排 + 实时合成降级）。 */
+/**
+ * 合成源的**惰性装配代理**（防御宿主注入时序，见 `engine/platform` 文件头的 ⚠️ 注）。
+ *
+ * `createTtsSource()` 靠 `hasWailsRuntime()` 选路，而宿主注入 `_wails.environment`
+ * 可能晚于本模块求值。若在模块顶层立即装配，桌面会被误判为浏览器 → 选中 `fetch`
+ * 直连实现；桌面 WebView 同样执行同源策略，直连 `http://127.0.0.1:8000` 会被
+ * CORS 拦截（见 `tts-client.wails.ts` 文件头），HTTP 路径将**永久失效**。
+ *
+ * 故推迟到**首次真正合成**时才装配（用户点击远晚于模块加载，届时宿主已就绪）：
+ * - `synthesize` → 触发装配；
+ * - `prefetch` / `cancel` → 未装配时直接跳过：既未发起请求便无需取消，
+ *   也不为一次预取就把选路固化成可能错误的实现。
+ */
+function createLazyTtsSource(): TtsSourcePort {
+  let inner: TtsSourcePort | undefined
+  const resolve = (): TtsSourcePort => (inner ??= createTtsSource())
+  return {
+    synthesize: (params, gen) => resolve().synthesize(params, gen),
+    prefetch: (params) => {
+      inner?.prefetch(params)
+    },
+    cancel: () => {
+      inner?.cancel()
+    },
+  }
+}
+
+/**
+ * 全局唯一 TTS 端口（合成 + 播放编排 + 实时合成降级）。
+ *
+ * 移动端 `player = null`：跳过 HTTP 合成 / 播放通道，彻底规避真机对局域网
+ * 自建 TTS 服务 IP 的依赖，直接走原生 TTS（`engine:'native'`）；桌面保持
+ * `createAudioPlayer()`（HTTP → 实时合成降级链不变）。
+ *
+ * 这里顶层求值 `isMobile()` 是**安全**的：移动端判据走 UA 兜底，模块加载期
+ * 即可确定（见 `engine/platform`）。受宿主注入时序影响的只有 `createTtsSource()`，
+ * 已由下方 `createLazyTtsSource()` 改为惰性装配。
+ */
+const mobile = isMobile()
 export const ttsPort: TtsPort = new ResolvingTtsPort(
-  createTtsSource(),
-  createAudioPlayer(),
+  createLazyTtsSource(),
+  mobile ? null : createAudioPlayer(),
   detectRealtimePort(),
 )
 

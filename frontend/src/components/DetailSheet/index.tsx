@@ -1,7 +1,7 @@
-import './index.css'
 import { STRINGS } from '../../constants/strings.js'
 import type { Word } from '../../types/domain.js'
 import type { StudySettings } from '../../types/progress.js'
+import { Icon } from '../Icon/index.js'
 
 /**
  * C2 半屏详解浮层（架构 §2.10 / 判据 4）。
@@ -43,33 +43,44 @@ export function DetailSheet(props: DetailSheetProps) {
     : STRINGS.detailSheet.promptBody
 
   return (
-    <div className="Sheet">
-      <div className="Sheet-mask" onClick={props.onDismiss} />
-      <div className="Sheet-panel">
-        <span className="Sheet-title">{title}</span>
-        <span className="Sheet-body">{body}</span>
+    <div className="Sheet fixed inset-0 flex flex-col justify-end">
+      <div
+        className="Sheet-mask cursor-pointer select-none fixed inset-0 bg-[rgba(0,0,0,0.55)]"
+        onClick={props.onDismiss}
+      />
+      <div className="Sheet-panel relative flex flex-col w-full p-lg bg-surface rounded-t-lg border-t-[calc(1*var(--rpx))] border-border">
+        <span className="Sheet-title text-lg font-bold">{title}</span>
+        <span className="Sheet-body mt-xs text-sm text-text-muted">{body}</span>
 
-        <div className="Sheet-word">
-          <span className="Sheet-wordKana">{word.kana}</span>
-          <span className="Sheet-wordKanji">
+        <div className="Sheet-word flex flex-col items-center mt-lg p-md bg-surface-alt rounded-md">
+          <span className="Sheet-wordKana text-xl font-bold">{word.kana}</span>
+          <span className="Sheet-wordKanji mt-xs text-md text-text-muted">
             {word.kanji === '' ? word.kana : word.kanji}
           </span>
-          <span className="Sheet-wordMeaning">{word.meaning}</span>
+          <span className="Sheet-wordMeaning mt-sm text-md">
+            {word.meaning}
+          </span>
         </div>
 
-        <div className="Sheet-actions">
-          <div className="Sheet-dismiss" onClick={props.onDismiss}>
-            <span className="Sheet-dismissLabel">
+        <div className="Sheet-actions flex flex-row items-center justify-between gap-md mt-lg">
+          <div
+            className="Sheet-dismiss cursor-pointer select-none flex-1 flex items-center justify-center py-md bg-surface-alt rounded-pill gap-8"
+            onClick={props.onDismiss}
+          >
+            <Icon name="close" size="28rpx" />
+            <span className="Sheet-dismissLabel cursor-pointer select-none text-md text-text-muted">
               {STRINGS.detailSheet.dismiss}
             </span>
           </div>
           <div
-            className="Sheet-confirm"
+            className="Sheet-confirm cursor-pointer select-none flex-1 flex items-center justify-center py-md bg-primary rounded-pill gap-8"
             onClick={() => {
               props.onConfirm(word.id)
             }}
+            style={{ color: '#8FB89B' }}
           >
-            <span className="Sheet-confirmLabel">
+            <Icon name="check" size="28rpx" />
+            <span className="Sheet-confirmLabel cursor-pointer select-none text-md font-bold text-bg">
               {STRINGS.detailSheet.confirm}
             </span>
           </div>

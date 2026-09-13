@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router'
 import {
   grammarDetailPath,
   graphPath,
+  kanaQuizPath,
+  kanaStudyPath,
   ROUTES,
   studyPath,
   vocabPath,
@@ -27,6 +29,11 @@ export interface GraphNavigationOptions {
   focus?: string
 }
 
+/** 进入 K1 的选项。 */
+export interface KanaStudyNavigationOptions {
+  mode?: 'learn' | 'review'
+}
+
 /** 导航能力集合。 */
 export interface Navigation {
   goHome(): void
@@ -39,6 +46,9 @@ export interface Navigation {
   goGrammarDetail(grammarId: string): void
   goGraph(options?: GraphNavigationOptions): void
   goQuiz(): void
+  goKana(): void
+  goKanaStudy(groupId: string, options?: KanaStudyNavigationOptions): void
+  goKanaQuiz(groupId?: string): void
   back(): void
 }
 
@@ -76,6 +86,15 @@ export function useNavigation(): Navigation {
       },
       goQuiz(): void {
         navigate(ROUTES.quiz)
+      },
+      goKana(): void {
+        navigate(ROUTES.kana)
+      },
+      goKanaStudy(groupId: string, options?: KanaStudyNavigationOptions): void {
+        navigate(kanaStudyPath(groupId, options?.mode))
+      },
+      goKanaQuiz(groupId?: string): void {
+        navigate(kanaQuizPath(groupId))
       },
       back(): void {
         navigate(-1)

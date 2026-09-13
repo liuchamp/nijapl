@@ -101,6 +101,11 @@ tasks:
       # 浏览器直连回退路径的 TTS host：显式 VITE_TTS_BASE_URL 优先，
       # 否则复用统一入口 TTS_BASE_URL（APK 真机走 Go 绑定，此项仅覆盖浏览器调试）。
       VITE_TTS_BASE_URL: '{{.VITE_TTS_BASE_URL | default .TTS_BASE_URL}}'
+      # 构建期平台固化（`darwin` / `windows` / `linux` / `ios` / `android`），
+      # 前端可经 `import.meta.env.VITE_PLATFORM` 读取，用于差异化打包裁剪。
+      # 注：运行期平台检测仍以 `engine/platform` 为主（同一产物可跑多端），
+      # 此项仅供构建期分支使用（见 docs/upgrade.md §5.3）。
+      VITE_PLATFORM: '{{.GOOS}}'
 
   frontend:run:
     summary: Run a frontend script with selected runner

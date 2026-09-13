@@ -1,7 +1,8 @@
 /**
  * 设计令牌唯一来源（架构 §8.4 / §8.2）。
  *
- * - CSS 变量写在 `src/App.css` 的 `:root`（`--color-*` / `--space-*` / `--font-*` / `--radius-*`）；
+ * - CSS 变量写在 `src/styles/index.css` 的 `@theme`（`--color-*` / `--spacing-*` /
+ *   `--text-*` / `--radius-*`，T05 后全仓仅剩这一个 CSS 文件）；
  * - 本文件提供 **JS 侧同名常量**，供内联 `style` 复用（Lynx 样式 = 内联 style + className）。
  *
  * 单位统一使用 `rpx`（响应式），颜色使用 `#RRGGBB` / `rgba()`。

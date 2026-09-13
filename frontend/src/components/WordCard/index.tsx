@@ -1,4 +1,3 @@
-import './index.css'
 import type { NodeState } from '../../constants/srs.js'
 import { STRINGS } from '../../constants/strings.js'
 import type { Word } from '../../types/domain.js'
@@ -33,31 +32,38 @@ interface WordCardProps {
 export function WordCard(props: WordCardProps) {
   const word = props.word
   return (
-    <div className="WordCard" onClick={props.onSpeak}>
-      <div className="WordCard-top">
+    <div
+      className="WordCard cursor-pointer select-none flex flex-col items-center w-full p-lg bg-surface rounded-lg border-[calc(1*var(--rpx))] border-border"
+      onClick={props.onSpeak}
+    >
+      <div className="WordCard-top cursor-pointer select-none flex flex-row items-center justify-between w-full">
         {props.nodeState !== undefined ? (
           <NodeStateBadge state={props.nodeState} />
         ) : (
-          <div className="WordCard-topSpacer" />
+          <div className="WordCard-topSpacer cursor-pointer select-none w-1 h-1" />
         )}
-        <span className="WordCard-pos">{word.pos}</span>
+        <span className="WordCard-pos cursor-pointer select-none text-xs text-text-muted">
+          {word.pos}
+        </span>
       </div>
 
-      <span className="WordCard-kana">{word.kana}</span>
-      <span className="WordCard-kanji">
+      <span className="WordCard-kana cursor-pointer select-none mt-lg text-xl font-bold text-text">
+        {word.kana}
+      </span>
+      <span className="WordCard-kanji cursor-pointer select-none mt-sm text-lg text-text-muted">
         {word.kanji === '' ? word.kana : word.kanji}
       </span>
 
-      <div className="WordCard-actions">
+      <div className="WordCard-actions cursor-pointer select-none flex flex-row items-center justify-center gap-md mt-lg">
         <div
-          className="WordCard-reveal"
+          className="WordCard-reveal cursor-pointer select-none px-md py-sm bg-surface-alt rounded-pill"
           onClick={(event) => {
             // 原 Lynx `catchtap`：阻断冒泡，避免「点看释义」连带触发整卡发音热区。
             event.stopPropagation()
             props.onToggleReveal()
           }}
         >
-          <span className="WordCard-revealLabel">
+          <span className="WordCard-revealLabel cursor-pointer select-none text-sm text-text">
             {props.revealed ? STRINGS.common.flipBack : STRINGS.common.flip}
           </span>
         </div>
@@ -69,11 +75,15 @@ export function WordCard(props: WordCardProps) {
       </div>
 
       {props.revealed ? (
-        <div className="WordCard-meaningBox">
-          <span className="WordCard-meaning">{word.meaning}</span>
+        <div className="WordCard-meaningBox cursor-pointer select-none flex flex-col mt-lg p-md bg-surface-alt rounded-md w-full">
+          <span className="WordCard-meaning cursor-pointer select-none text-lg text-text text-center">
+            {word.meaning}
+          </span>
         </div>
       ) : (
-        <span className="WordCard-hint">{STRINGS.tts.tapToSpeak}</span>
+        <span className="WordCard-hint cursor-pointer select-none mt-lg text-xs text-text-muted">
+          {STRINGS.tts.tapToSpeak}
+        </span>
       )}
     </div>
   )

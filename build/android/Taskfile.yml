@@ -47,6 +47,13 @@ tasks:
           PRODUCTION:
             ref: .PRODUCTION
     cmds:
+      - |
+        if [ -z "$TTS_BASE_URL" ]; then
+          echo "WARNING: TTS_BASE_URL is empty - baking fallback http://127.0.0.1:8000 into the APK."
+          echo "  On a physical device 127.0.0.1 is the phone itself: TTS will stay silent."
+          echo "  Fix: TTS_BASE_URL=http://<pc-lan-ip>:8000 task android:run:device (see docs/android-debug.md §2)."
+          echo "  Empty is only valid for the emulator with 'adb reverse tcp:8000 tcp:8000'."
+        fi
       - echo "Building Android app {{.APP_NAME}}..."
       - task: compile:go:shared
         vars:

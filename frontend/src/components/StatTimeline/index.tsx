@@ -1,5 +1,3 @@
-import './index.css'
-
 /**
  * 学习统计横条列表（架构 §2.10 / P9）。
  *
@@ -33,17 +31,24 @@ function clamp01(value: number): number {
 /** 学习统计横条列表。 */
 export function StatTimeline(props: StatTimelineProps) {
   return (
-    <div className="StatTimeline">
+    <div className="StatTimeline flex flex-col w-full">
       {props.rows.map((row) => (
-        <div key={row.label} className="StatTimeline-row">
-          <span className="StatTimeline-label">{row.label}</span>
-          <div className="StatTimeline-track">
+        <div
+          key={row.label}
+          className="StatTimeline-row flex flex-row items-center w-full mb-sm"
+        >
+          <span className="StatTimeline-label w-160 text-sm text-text-muted">
+            {row.label}
+          </span>
+          <div className="StatTimeline-track flex-1 h-20 bg-surface-alt rounded-pill overflow-hidden">
             <div
-              className="StatTimeline-fill"
+              className="StatTimeline-fill h-20 bg-primary rounded-pill"
               style={{ width: `${Math.round(clamp01(row.ratio) * 100)}%` }}
             />
           </div>
-          <span className="StatTimeline-value">{row.display}</span>
+          <span className="StatTimeline-value w-200 text-right text-sm text-text">
+            {row.display}
+          </span>
         </div>
       ))}
     </div>

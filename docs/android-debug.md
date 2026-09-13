@@ -31,7 +31,7 @@ task android:install:deps   # 检查并安装 Android 依赖（首次执行一�
 
 ```bash
 task android:device:list          # 看已连接设备 serial
-TTS_BASE_URL=http://192.168.1.10:8000 task android:run:device
+TTS_BASE_URL=http://192.168.0.85:18000 task android:run:device
 ```
 
 ## 2. TTS host：打包时自定
@@ -40,8 +40,8 @@ APK 进程读不到运行期环境变量（`NIJAPL_TTS_BASE_URL` 在手机上恒
 host 必须在**构建期**烘进 `libwails.so`。统一入口只有一个：
 
 ```bash
-TTS_BASE_URL=http://192.168.1.10:8000 task android:package
-TTS_BASE_URL=http://192.168.1.10:8000 task android:run:device   # 真机联调
+TTS_BASE_URL=http://192.168.0.85:18000 task android:package
+TTS_BASE_URL=http://192.168.0.85:18000 task android:run:device   # 真机联调
 ```
 
 - 优先级：运行期 `NIJAPL_TTS_BASE_URL`（桌面 `wails3 dev` 用）> 构建期 `TTS_BASE_URL` > 默认 `http://127.0.0.1:8000`；
@@ -90,7 +90,7 @@ task android:logs:all    # 全量 logcat（吵，用作兜底）
 
 ```bash
 adb logcat -v time | grep -F "[tts]"
-# 期望：[tts] baseURL=http://192.168.1.10:8000
+# 期望：[tts] baseURL=http://192.168.0.85:18000
 ```
 
 - 看到的是**去尾斜杠后的最终生效值**；
@@ -110,6 +110,9 @@ adb logcat -v time | grep -F "[tts]"
    电脑 Chrome 打开 `chrome://inspect`，能看到 App 的 WebView，
    进 DevTools 看 Console（`ttsController` 的 notice 会进界面提示，
    无提示 + 无声 = HTTP 与兜底都“成功”了，按第 3 条查）。
+5. APK 发音走同源 handler：`speak()` 发 `GET /wails/tts/v1/tts/speech?...`（同源、仅 query）
+   → Go `TTS.ServeHTTP`（`Route "/wails/tts"`，永远 200 + JSON 信封）→ 复用 `Synthesize`
+   管道打 ttsedservice；Go→ttsedservice 一跳仍用烘进包的 `TTS_BASE_URL`（§2），值不对照样无声。
 
 > 历史坑（已修，`8cb240d`）：Wails 侧 `gen` 计数器两域未同步，
 > 首击必判 `stale-gen` 导致 HTTP 永走不通、静默掉进兜底。

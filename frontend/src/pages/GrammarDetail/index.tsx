@@ -1,6 +1,6 @@
-import './index.css'
 import { useMemo } from 'react'
 import { useParams } from 'react-router'
+import { Icon } from '../../components/Icon/index.js'
 import { NodeStateBadge } from '../../components/NodeStateBadge/index.js'
 import { TtsButton } from '../../components/TtsButton/index.js'
 import { STRINGS } from '../../constants/strings.js'
@@ -16,6 +16,9 @@ import type { SelfEval } from '../../types/progress.js'
  * 结构：句型大字 → 接续 → 场景标签 → 例句（含 TTS / C1）→
  * 近义辨析（关联语法，**可互跳 P5**）→ 涉及词汇（**进 P3**）→ 掌握度自评（**经 actions 回写**）。
  * 自评复用同一 SRS 状态机（`submitGrammarSelfEval`），并累加今日语法配额。
+ *
+ * 样式：原 `index.css` 已迁移为 Tailwind 工具类（数字 = rpx，
+ * `--spacing` 基准为 `calc(1 * var(--rpx))`）；原语义类名保留作标记。
  */
 
 /** 场景标签切分（兼容中英标点）。 */
@@ -71,18 +74,22 @@ export function GrammarDetailPage() {
 
   if (grammar === undefined) {
     return (
-      <div className="GrammarDetail">
-        <div className="GrammarDetail-head">
-          <div className="GrammarDetail-back" onClick={nav.back}>
-            <span className="GrammarDetail-backLabel">
+      <div className="GrammarDetail flex flex-col flex-1 w-full p-md">
+        <div className="GrammarDetail-head flex flex-row items-center w-full mb-md">
+          <div
+            className="GrammarDetail-back cursor-pointer select-none px-md py-xs bg-surface-alt rounded-pill flex items-center gap-8"
+            onClick={nav.back}
+          >
+            <Icon name="chevron-left" size="28rpx" />
+            <span className="GrammarDetail-backLabel cursor-pointer select-none text-sm text-text">
               {STRINGS.common.back}
             </span>
           </div>
-          <span className="GrammarDetail-title">
+          <span className="GrammarDetail-title flex-1 text-center text-lg font-bold">
             {STRINGS.grammarDetail.title}
           </span>
         </div>
-        <span className="GrammarDetail-notFound">
+        <span className="GrammarDetail-notFound text-md text-text-muted mt-lg">
           {STRINGS.grammarDetail.notFound}
         </span>
       </div>
@@ -100,56 +107,78 @@ export function GrammarDetailPage() {
   }
 
   return (
-    <div className="GrammarDetail">
-      <div className="GrammarDetail-head">
-        <div className="GrammarDetail-back" onClick={nav.back}>
-          <span className="GrammarDetail-backLabel">{STRINGS.common.back}</span>
+    <div className="GrammarDetail flex flex-col flex-1 w-full p-md">
+      <div className="GrammarDetail-head flex flex-row items-center w-full mb-md">
+        <div
+          className="GrammarDetail-back cursor-pointer select-none px-md py-xs bg-surface-alt rounded-pill flex items-center gap-8"
+          onClick={nav.back}
+        >
+          <Icon name="chevron-left" size="28rpx" />
+          <span className="GrammarDetail-backLabel cursor-pointer select-none text-sm text-text">
+            {STRINGS.common.back}
+          </span>
         </div>
-        <span className="GrammarDetail-title">
+        <span className="GrammarDetail-title flex-1 text-center text-lg font-bold">
           {STRINGS.grammarDetail.title}
         </span>
       </div>
 
-      <div className="GrammarDetail-hero">
-        <span className="GrammarDetail-pattern">{grammar.pattern}</span>
-        <span className="GrammarDetail-meta">
+      <div className="GrammarDetail-hero flex flex-col items-center w-full pt-lg pb-lg">
+        <span className="GrammarDetail-pattern text-xl font-bold text-primary">
+          {grammar.pattern}
+        </span>
+        <span className="GrammarDetail-meta text-xs text-text-muted mt-xs">
           {`${grammar.week}${STRINGS.grammarList.weekLabel} · ${grammar.level}`}
         </span>
       </div>
 
-      <div className="GrammarDetail-block">
-        <span className="GrammarDetail-blockTitle">
+      <div className="GrammarDetail-block flex flex-col w-full p-md mb-sm bg-surface rounded-md">
+        <span className="GrammarDetail-blockTitle text-sm text-text-muted mb-xs">
           {STRINGS.grammarDetail.connection}
         </span>
-        <span className="GrammarDetail-body">{grammar.connection}</span>
+        <span className="GrammarDetail-body text-md text-text">
+          {grammar.connection}
+        </span>
       </div>
 
-      <div className="GrammarDetail-block">
-        <span className="GrammarDetail-blockTitle">
+      <div className="GrammarDetail-block flex flex-col w-full p-md mb-sm bg-surface rounded-md">
+        <span className="GrammarDetail-blockTitle text-sm text-text-muted mb-xs">
           {STRINGS.grammarDetail.scene}
         </span>
-        <div className="GrammarDetail-chips">
+        <div className="GrammarDetail-chips cursor-pointer select-none flex flex-row items-center flex-wrap w-full">
           {scenes.map((scene) => (
-            <div key={scene} className="GrammarDetail-chip">
-              <span className="GrammarDetail-chipLabel">{scene}</span>
+            <div
+              key={scene}
+              className="GrammarDetail-chip cursor-pointer select-none px-sm py-xs mr-xs mb-xs bg-surface-alt rounded-pill"
+            >
+              <span className="GrammarDetail-chipLabel cursor-pointer select-none text-xs text-text">
+                {scene}
+              </span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="GrammarDetail-block">
-        <span className="GrammarDetail-blockTitle">
+      <div className="GrammarDetail-block flex flex-col w-full p-md mb-sm bg-surface rounded-md">
+        <span className="GrammarDetail-blockTitle text-sm text-text-muted mb-xs">
           {STRINGS.grammarDetail.examples}
         </span>
         {sentences.length === 0 ? (
-          <span className="GrammarDetail-empty">
+          <span className="GrammarDetail-empty text-sm text-text-muted">
             {STRINGS.grammarDetail.emptyExamples}
           </span>
         ) : (
           sentences.map((sentence) => (
-            <div key={sentence.id} className="GrammarDetail-sentence">
-              <span className="GrammarDetail-sentenceJa">{sentence.ja}</span>
-              <span className="GrammarDetail-sentenceZh">{sentence.zh}</span>
+            <div
+              key={sentence.id}
+              className="GrammarDetail-sentence flex flex-col w-full pt-sm pb-sm border-b-[calc(1*var(--rpx))] border-border"
+            >
+              <span className="GrammarDetail-sentenceJa text-md text-text">
+                {sentence.ja}
+              </span>
+              <span className="GrammarDetail-sentenceZh text-sm text-text-muted mt-xs mb-xs">
+                {sentence.zh}
+              </span>
               <TtsButton
                 text={sentence.ja}
                 settings={settings}
@@ -160,27 +189,27 @@ export function GrammarDetailPage() {
         )}
       </div>
 
-      <div className="GrammarDetail-block">
-        <span className="GrammarDetail-blockTitle">
+      <div className="GrammarDetail-block flex flex-col w-full p-md mb-sm bg-surface rounded-md">
+        <span className="GrammarDetail-blockTitle text-sm text-text-muted mb-xs">
           {STRINGS.grammarDetail.related}
         </span>
         {relatedGrammars.length === 0 ? (
-          <span className="GrammarDetail-empty">
+          <span className="GrammarDetail-empty text-sm text-text-muted">
             {STRINGS.grammarDetail.emptyRelated}
           </span>
         ) : (
-          <div className="GrammarDetail-chips">
+          <div className="GrammarDetail-chips cursor-pointer select-none flex flex-row items-center flex-wrap w-full">
             {relatedGrammars.map(({ key, target }) => (
               <div
                 key={key}
-                className="GrammarDetail-chip GrammarDetail-chip--link"
+                className="GrammarDetail-chip GrammarDetail-chip--link cursor-pointer select-none px-sm py-xs mr-xs mb-xs bg-surface-alt rounded-pill border-[calc(1*var(--rpx))] border-primary"
                 onClick={() => {
                   if (target !== undefined) {
                     nav.goGrammarDetail(target.id)
                   }
                 }}
               >
-                <span className="GrammarDetail-chipLabel">
+                <span className="GrammarDetail-chipLabel cursor-pointer select-none text-xs text-text">
                   {target === undefined
                     ? STRINGS.grammarDetail.emptyRelated
                     : target.pattern}
@@ -191,23 +220,23 @@ export function GrammarDetailPage() {
         )}
       </div>
 
-      <div className="GrammarDetail-block">
-        <span className="GrammarDetail-blockTitle">
+      <div className="GrammarDetail-block flex flex-col w-full p-md mb-sm bg-surface rounded-md">
+        <span className="GrammarDetail-blockTitle text-sm text-text-muted mb-xs">
           {STRINGS.grammarDetail.words}
         </span>
         {involvedWords.length === 0 ? (
-          <span className="GrammarDetail-empty">
+          <span className="GrammarDetail-empty text-sm text-text-muted">
             {STRINGS.grammarDetail.emptyWords}
           </span>
         ) : (
-          <div className="GrammarDetail-chips">
+          <div className="GrammarDetail-chips cursor-pointer select-none flex flex-row items-center flex-wrap w-full">
             {involvedWords.map((word) => (
               <div
                 key={word.id}
-                className="GrammarDetail-chip GrammarDetail-chip--link"
+                className="GrammarDetail-chip GrammarDetail-chip--link cursor-pointer select-none px-sm py-xs mr-xs mb-xs bg-surface-alt rounded-pill border-[calc(1*var(--rpx))] border-primary"
                 onClick={() => nav.goVocab(word.id)}
               >
-                <span className="GrammarDetail-chipLabel">
+                <span className="GrammarDetail-chipLabel cursor-pointer select-none text-xs text-text">
                   {word.kanji === '' ? word.kana : word.kanji}
                 </span>
               </div>
@@ -216,41 +245,41 @@ export function GrammarDetailPage() {
         )}
       </div>
 
-      <div className="GrammarDetail-block">
-        <div className="GrammarDetail-blockHead">
-          <span className="GrammarDetail-blockTitle">
+      <div className="GrammarDetail-block flex flex-col w-full p-md mb-sm bg-surface rounded-md">
+        <div className="GrammarDetail-blockHead flex flex-row items-center justify-between w-full">
+          <span className="GrammarDetail-blockTitle text-sm text-text-muted mb-xs">
             {STRINGS.grammarDetail.mastery}
           </span>
           <NodeStateBadge state={progress?.state ?? '未学'} />
         </div>
-        <div className="GrammarDetail-eval">
+        <div className="GrammarDetail-eval flex flex-row items-center w-full mt-sm">
           <div
-            className="GrammarDetail-evalBtn GrammarDetail-evalBtn--unknown"
+            className="GrammarDetail-evalBtn GrammarDetail-evalBtn--unknown cursor-pointer select-none flex-1 flex flex-row items-center justify-center pt-md pb-md mr-sm rounded-md border-[calc(1*var(--rpx))] border-border bg-[rgba(255,95,109,0.16)]"
             onClick={() => {
               onSelfEval('不认识')
             }}
           >
-            <span className="GrammarDetail-evalLabel">
+            <span className="GrammarDetail-evalLabel text-md font-bold text-text">
               {STRINGS.study.selfEvalUnknown}
             </span>
           </div>
           <div
-            className="GrammarDetail-evalBtn GrammarDetail-evalBtn--vague"
+            className="GrammarDetail-evalBtn GrammarDetail-evalBtn--vague cursor-pointer select-none flex-1 flex flex-row items-center justify-center pt-md pb-md mr-sm rounded-md border-[calc(1*var(--rpx))] border-border bg-[rgba(240,180,74,0.16)]"
             onClick={() => {
               onSelfEval('模糊')
             }}
           >
-            <span className="GrammarDetail-evalLabel">
+            <span className="GrammarDetail-evalLabel text-md font-bold text-text">
               {STRINGS.study.selfEvalVague}
             </span>
           </div>
           <div
-            className="GrammarDetail-evalBtn GrammarDetail-evalBtn--known"
+            className="GrammarDetail-evalBtn GrammarDetail-evalBtn--known cursor-pointer select-none flex-1 flex flex-row items-center justify-center pt-md pb-md mr-sm rounded-md border-[calc(1*var(--rpx))] border-border bg-[rgba(57,196,122,0.16)]"
             onClick={() => {
               onSelfEval('认识')
             }}
           >
-            <span className="GrammarDetail-evalLabel">
+            <span className="GrammarDetail-evalLabel text-md font-bold text-text">
               {STRINGS.study.selfEvalKnown}
             </span>
           </div>

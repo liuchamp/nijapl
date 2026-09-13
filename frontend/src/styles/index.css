@@ -1,0 +1,160 @@
+/*
+ * 全局样式入口（Tailwind CSS v4）——全仓**唯一**的 CSS 文件（T05 之后）。
+ *
+ * 迁移说明：
+ * - 本文件是样式新入口，由 `src/main.tsx` 引入；原 `src/App.css`（外壳 + TabBar）
+ *   已于 T05 迁为 Tailwind 工具类并删除，24 个页面 / 组件的 `index.css` 于
+ *   T03/T04 迁移并删除。
+ * - `@import "tailwindcss"` 会注入 Tailwind v4 的 preflight（含按钮 / 列表 / 表单的重置）。
+ * - `@theme` 块把设计令牌暴露为 Tailwind 主题变量，从而自动生成工具类
+ *   （如 `p-md` / `text-lg` / `rounded-md` / `bg-bg` / `text-primary`）。
+ * - `:root` 保留 `--rpx` 流体缩放基准（1rpx = 视口宽 / 750，与原 Lynx 行为一致）；
+ *   原 PostCSS `rpxPlugin` 已随迁移完成从 `vite.config.ts` 移除——现在所有尺寸
+ *   都直接写作 `calc(N * var(--rpx))` 或 Tailwind 数字工具类（`--spacing` 基准
+ *   = `calc(1 * var(--rpx))`，故 `p-24` 就是 24rpx）。
+ * - 断点：`≥768px` 时 `--rpx` 冻结为 `1px`（见文件末尾），否则整站会被 `100vw/750`
+ *   在宽窗口下等比放大到不可用；`<320px` 时退化为 `0.5px`（不可读保护）。
+ * - `@layer base` 里显式恢复 body 基准，抵消 Tailwind preflight 把字号重置为 16px
+ *   等差异，保证视觉不漂移（重点：Lynx 的 UA 默认字号是 14px）。
+ */
+
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ * 设计令牌 → Tailwind 主题（值与 `constants/theme.ts` 严格一致）
+ *
+ * 注：`@theme` 中的值直接引用 `var(--rpx)`（该变量在下方 `:root` 定义）。
+ * Tailwind v4 会原样把这些值写入 `:root` 交给运行期求值，工具类只输出
+ * `padding: var(--spacing-md)` 之类的引用，因此 `calc(N * var(--rpx))` 可用。
+ * ------------------------------------------------------------------ */
+@theme {
+  /*
+   * ① 数字 spacing 工具类 = rpx：`--spacing` 是 Tailwind 数字间距工具的乘数基准，
+   *    设为 `1 * var(--rpx)` 后，`p-24` → `calc(var(--spacing) * 24)` =
+   *    `calc(var(--rpx) * 24)` = 24rpx；任意整数 rpx 均可 1:1 无损迁移。
+   */
+  --spacing: calc(1 * var(--rpx));
+
+  /* 颜色 */
+  --color-bg: #0b1020;
+  --color-surface: #151b30;
+  --color-surface-alt: #1d2540;
+  --color-text: #f5f7ff;
+  --color-text-muted: #9aa4c4;
+  --color-primary: #5b8cff;
+  --color-primary-soft: rgba(91, 140, 255, 0.16);
+  --color-success: #39c47a;
+  --color-warning: #f0b44a;
+  --color-danger: #ff5f6d;
+  --color-border: rgba(255, 255, 255, 0.12);
+
+  /* 间距（rpx 基准，见下方 :root 的 --rpx） */
+  --spacing-xs: calc(8 * var(--rpx));
+  --spacing-sm: calc(16 * var(--rpx));
+  --spacing-md: calc(24 * var(--rpx));
+  --spacing-lg: calc(32 * var(--rpx));
+  --spacing-xl: calc(48 * var(--rpx));
+
+  /* 字号 */
+  --text-xs: calc(20 * var(--rpx));
+  --text-sm: calc(24 * var(--rpx));
+  --text-md: calc(28 * var(--rpx));
+  --text-lg: calc(36 * var(--rpx));
+  --text-xl: calc(56 * var(--rpx));
+
+  /*
+   * ② 中和 Tailwind 默认字号自带的 line-height 伴生值：原 CSS 只设 font-size、
+   *    行高靠继承（body = normal），若不中和，`text-lg` 等会带 line-height:1.556
+   *    之类 → 整体撑高、明显漂移。仅覆盖 Tailwind 有默认伴生值的 xs/sm/lg/xl；
+   *    `text-md` 是新增令牌、无伴生值，保持干净。
+   */
+  --text-xs--line-height: normal;
+  --text-sm--line-height: normal;
+  --text-lg--line-height: normal;
+  --text-xl--line-height: normal;
+
+  /* 圆角 */
+  --radius-sm: calc(8 * var(--rpx));
+  --radius-md: calc(16 * var(--rpx));
+  --radius-lg: calc(24 * var(--rpx));
+  --radius-pill: calc(999 * var(--rpx));
+
+  /* 日文字体栈（供 font-family 工具类复用，值与原 App.css 的 body 一致） */
+  --font-sans:
+    "PingFang SC", "MiSans", "Noto Sans JP", "Hiragino Sans", system-ui,
+    -apple-system, "Segoe UI", sans-serif;
+}
+
+/* ------------------------------------------------------------------ *
+ * 运行期变量：rpx 基准
+ * ------------------------------------------------------------------ */
+:root {
+  /* rpx 基准：1rpx = 视口宽 / 750（窗口拉伸时整体等比缩放，与原 Lynx 行为一致） */
+  --rpx: calc(100vw / 750);
+}
+
+/*
+ * PC 宽屏（≥768px，与 `router/useIsWide.ts` 同一断点）：把 rpx 基准**冻结为 1px**。
+ *
+ * 原因：`100vw / 750` 会把整站按视口宽度等比放大——1180px 窗口下 1rpx≈1.57px，
+ * 正文 `--text-sm`(24rpx) 会涨到 ~38px、间距同步放大，PC 布局不可用。
+ * 冻结为 1px 后，`max-w-[calc(480*var(--rpx))]` = 480px（PRD 选定的内容列宽，
+ * 略宽于原手机列 420px），移动端（<768px，真机 / 窄窗）行为**完全不变**。
+ *
+ * ⚠️ 本文件是全仓唯一 CSS，且断点语法依赖 `vite.config.ts` 的 `build.cssTarget`：
+ * Tailwind v4 内部用 Lightning CSS，未声明 targets 时会把 `min-width` 输出成
+ * `(width>=768px)` 的 L4 range 语法，而 Ubuntu 22.04 的 WebKitGTK 2.36 不支持它，
+ * 会让本断点静默失效。改动构建配置时不要移除 `cssTarget`。
+ */
+@media (min-width: 768px) {
+  :root {
+    --rpx: 1px;
+  }
+}
+
+/* 极窄窗口（< 320px）下 rpx 会小到不可读，退化到固定基准（原 App.css 已有） */
+@media (max-width: 320px) {
+  :root {
+    --rpx: 0.5px;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * preflight 对齐：恢复被 Tailwind v4 preflight 覆盖的原 App.css 基准
+ * ------------------------------------------------------------------ */
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family:
+      "PingFang SC", "MiSans", "Noto Sans JP", "Hiragino Sans", system-ui,
+      -apple-system, "Segoe UI", sans-serif;
+    /*
+     * Lynx 的 UA 默认字号是 **14px**，而浏览器默认 16px。
+     * Tailwind v4 preflight 会把 html 字号重置为 16px（`--default-font-size`），
+     * 此处显式对齐回 14px，避免未显式设字号的文本整体漂大 ~14%。
+     */
+    font-size: 14px;
+    /*
+     * 保真：preflight 给 `html,:host` 设了 `line-height:1.5`，而改造前的
+     * App.css 未设全局行高（即浏览器默认 `normal`，日文字体约 1.2）。
+     * 若不还原，所有未显式设行高的文本会整体变高、撑开布局 → 视觉漂移。
+     */
+    line-height: normal;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  div,
+  span {
+    box-sizing: border-box;
+  }
+}

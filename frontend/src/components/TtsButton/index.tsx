@@ -1,5 +1,5 @@
-import './index.css'
 import { useSyncExternalStore } from 'react'
+import { Icon } from '../../components/Icon/index.js'
 import { STRINGS } from '../../constants/strings.js'
 import { COLORS, FONT, RADIUS, SPACING } from '../../constants/theme.js'
 import { ttsController } from '../../services/ttsController.js'
@@ -53,7 +53,7 @@ export function TtsButton(props: TtsButtonProps) {
   return (
     <div className="TtsButton" onClick={stopBubble}>
       <div
-        className="TtsButton-main"
+        className="TtsButton-main flex items-center gap-8"
         style={{
           backgroundColor: background,
           borderRadius: RADIUS.pill,
@@ -66,6 +66,7 @@ export function TtsButton(props: TtsButtonProps) {
           void ttsController.speak(props.text, props.settings)
         }}
       >
+        <Icon name="audio" size="28rpx" />
         <span
           className="TtsButton-label"
           style={{
@@ -79,7 +80,7 @@ export function TtsButton(props: TtsButtonProps) {
       </div>
 
       {notice !== null ? (
-        <div className="TtsButton-notice">
+        <div className="TtsButton-notice flex flex-col">
           <span
             className="TtsButton-noticeText"
             style={{ color: COLORS.warning }}

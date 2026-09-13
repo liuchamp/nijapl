@@ -74,4 +74,11 @@ export const appActions: Actions = {
   updateSettings: initialState.updateSettings,
   toggleUnlockRule: initialState.toggleUnlockRule,
   resetAllProgress: initialState.resetAllProgress,
+  startKanaGroup: initialState.startKanaGroup,
+  setKanaIndex: initialState.setKanaIndex,
+  setKanaScript: initialState.setKanaScript,
+  toggleKanaMemory: initialState.toggleKanaMemory,
+  setKanaPeekVisible: initialState.setKanaPeekVisible,
+  toggleKanaGate: initialState.toggleKanaGate,
+  resetKanaProgress: initialState.resetKanaProgress,
 }

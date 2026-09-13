@@ -66,7 +66,7 @@ NIJAPL_TTS_BASE_URL=http://127.0.0.1:9000 wails3 dev
 在构建期烘入（Go 绑定与前端回退路径同时生效，不传则回落默认值）：
 
 ```bash
-TTS_BASE_URL=http://192.168.1.10:8000 task android:package
+TTS_BASE_URL=http://192.168.0.85:18000 task android:package
 ```
 
 与服务端契约：

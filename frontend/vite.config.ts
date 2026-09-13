@@ -1,25 +1,19 @@
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import wails from '@wailsio/runtime/plugins/vite'
 import { defineConfig } from 'vite'
 
 /**
- * rpx → calc(var(--rpx) * N) 的 PostCSS 插件。
- *
  * 原 Lynx 工程全量使用 `rpx`（1rpx = 视口宽 / 750）。Wails/Web 下没有该单位，
- * 统一在构建期改写为 `calc(N * var(--rpx))`，`--rpx` 由 `App.css` 的 `:root` 定义。
- * 这样所有搬运过来的 CSS 可以**保持 rpx 原文**，无需逐条手改。
+ * 迁移期由 PostCSS 插件 `rpxPlugin` 在构建期改写为 `calc(N * var(--rpx))`，
+ * 使搬运过来的 CSS 可保持 rpx 原文。
+ *
+ * T05：24 个页面/组件 `.css` + `App.css` **全部**迁为 Tailwind 工具类并删除，
+ * 全仓仅剩 `src/styles/index.css`，其中已直接书写 `calc(N * var(--rpx))`，
+ * 不再需要 PostCSS 改写 —— **插件与 `css.postcss` 配置块一并移除**。
+ * `var(--rpx)` 本身保留为运行期变量（定义见 `src/styles/index.css` 的 `:root`），
+ * Tailwind 的 `--spacing` 基准即 `calc(1 * var(--rpx))`，故数字工具类仍是 rpx 语义。
  */
-const rpxPlugin = {
-  postcssPlugin: 'postcss-rpx',
-  Declaration(decl: { value: string }) {
-    if (typeof decl.value === 'string' && decl.value.includes('rpx')) {
-      decl.value = decl.value.replace(
-        /(-?\d*\.?\d+)rpx/g,
-        (_m: string, n: string) => `calc(${n} * var(--rpx))`,
-      )
-    }
-  },
-}
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -28,10 +22,8 @@ export default defineConfig({
     port: Number(process.env.WAILS_VITE_PORT) || 9245,
     strictPort: true,
   },
-  css: {
-    postcss: {
-      plugins: [rpxPlugin],
-    },
+  plugins: [react(), wails('./bindings'), tailwindcss()],
+  build: {
+    cssTarget: 'safari14',
   },
-  plugins: [react(), wails('./bindings')],
 })
