@@ -1,4 +1,3 @@
-import './index.css'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useParams } from 'react-router'
 import { KanaCanvas } from '../../components/KanaCanvas/index.js'
@@ -36,6 +35,9 @@ import type { SelfEval } from '../../types/progress.js'
  *
  * 翻页约定：**循环取模**（末张「下一张」回到首张），对齐参考产品 swiper 的 `>= length → 0`。
  * 取模在 `actions.setKanaIndex` 里做，本页只负责 ±1，不自己夹取。
+ *
+ * 样式：原 `index.css` 已迁移为 Tailwind 工具类（数字 = rpx，
+ * `--spacing` 基准为 `calc(1 * var(--rpx))`）；原语义类名保留作标记。
  */
 export function KanaStudyPage() {
   const params = useParams<{ groupId: string }>()
@@ -105,15 +107,24 @@ export function KanaStudyPage() {
 
   if (group === undefined || members.length === 0 || kana === undefined) {
     return (
-      <div className="KanaStudy">
-        <div className="KanaStudy-head">
-          <div className="KanaStudy-back" onClick={nav.back}>
-            <span className="KanaStudy-backLabel">{STRINGS.common.back}</span>
+      <div className="KanaStudy flex flex-col flex-1 w-full p-md">
+        <div className="KanaStudy-head flex flex-row items-center justify-between w-full">
+          <div
+            className="KanaStudy-back cursor-pointer select-none px-md py-xs bg-surface-alt rounded-pill"
+            onClick={nav.back}
+          >
+            <span className="KanaStudy-backLabel text-sm text-text">
+              {STRINGS.common.back}
+            </span>
           </div>
-          <span className="KanaStudy-title">{STRINGS.kana.studyTitle}</span>
+          <span className="KanaStudy-title text-lg font-bold">
+            {STRINGS.kana.studyTitle}
+          </span>
         </div>
-        <div className="KanaStudy-empty">
-          <span className="KanaStudy-emptyLabel">{STRINGS.kana.empty}</span>
+        <div className="KanaStudy-empty flex flex-row items-center justify-center flex-1">
+          <span className="KanaStudy-emptyLabel text-md text-text-muted">
+            {STRINGS.kana.empty}
+          </span>
         </div>
       </div>
     )
@@ -175,46 +186,57 @@ export function KanaStudyPage() {
   const next = selectKanaNextGroup(state, groupId)
 
   return (
-    <div className="KanaStudy">
-      <div className="KanaStudy-head">
-        <div className="KanaStudy-back" onClick={nav.back}>
-          <span className="KanaStudy-backLabel">{STRINGS.common.back}</span>
+    <div className="KanaStudy flex flex-col flex-1 w-full p-md">
+      <div className="KanaStudy-head flex flex-row items-center justify-between w-full">
+        <div
+          className="KanaStudy-back cursor-pointer select-none px-md py-xs bg-surface-alt rounded-pill"
+          onClick={nav.back}
+        >
+          <span className="KanaStudy-backLabel text-sm text-text">
+            {STRINGS.common.back}
+          </span>
         </div>
-        <span className="KanaStudy-title">
+        <span className="KanaStudy-title text-lg font-bold">
           {isReview ? STRINGS.kana.reviewTitle : STRINGS.kana.studyTitle}
         </span>
-        <span className="KanaStudy-progress">
+        <span className="KanaStudy-progress text-xs text-text-muted">
           {`${STRINGS.kana.cardProgress} ${safeIndex + 1}/${members.length}`}
         </span>
       </div>
 
-      <span className="KanaStudy-groupName">{group.name}</span>
+      <span className="KanaStudy-groupName mt-xs text-xs text-text-muted">
+        {group.name}
+      </span>
 
-      <div className="KanaStudy-body">
+      <div className="KanaStudy-body flex flex-col flex-1 w-full mt-md">
         {/* ① 认形 */}
-        <div className="KanaStudy-section">
-          <div className="KanaStudy-glyphRow">
+        <div className="KanaStudy-section flex flex-col w-full mb-md p-md bg-surface rounded-lg">
+          <div className="KanaStudy-glyphRow flex flex-row items-center gap-md w-full">
             <div
-              className="KanaStudy-glyph"
+              className="KanaStudy-glyph cursor-pointer select-none flex flex-row items-center justify-center w-240 h-240 bg-surface-alt rounded-lg"
               onClick={() => speak(kana.hiragana)}
             >
-              <span className="KanaStudy-glyphText">{glyph}</span>
+              <span className="KanaStudy-glyphText text-[calc(140*var(--rpx))] leading-none">
+                {glyph}
+              </span>
             </div>
-            <div className="KanaStudy-glyphMeta">
-              <span className="KanaStudy-romaji">{kana.romaji}</span>
+            <div className="KanaStudy-glyphMeta flex flex-col items-start flex-1">
+              <span className="KanaStudy-romaji mb-xs text-lg font-bold text-primary">
+                {kana.romaji}
+              </span>
               <NodeStateBadge state={nodeState} />
-              <div className="KanaStudy-scripts">
+              <div className="KanaStudy-scripts flex flex-row gap-xs mt-sm">
                 {(['hiragana', 'katakana'] as KanaScript[]).map((item) => (
                   <div
                     key={item}
                     className={
                       script === item
-                        ? 'KanaStudy-script KanaStudy-script--on'
-                        : 'KanaStudy-script'
+                        ? 'KanaStudy-script KanaStudy-script--on cursor-pointer select-none flex flex-row items-center justify-center px-sm py-xs rounded-pill bg-primary-soft opacity-100'
+                        : 'KanaStudy-script cursor-pointer select-none flex flex-row items-center justify-center px-sm py-xs rounded-pill bg-surface-alt opacity-55'
                     }
                     onClick={() => appActions.setKanaScript(item)}
                   >
-                    <span className="KanaStudy-scriptLabel">
+                    <span className="KanaStudy-scriptLabel text-xs text-text">
                       {item === 'hiragana'
                         ? STRINGS.kana.scriptHiragana
                         : STRINGS.kana.scriptKatakana}
@@ -229,16 +251,16 @@ export function KanaStudyPage() {
 
         {/* ② 字源联想（复习模式隐藏：去掉学习辅助，直接自评检验） */}
         {isReview ? null : (
-          <div className="KanaStudy-section">
-            <span className="KanaStudy-sectionTitle">
+          <div className="KanaStudy-section flex flex-col w-full mb-md p-md bg-surface rounded-lg">
+            <span className="KanaStudy-sectionTitle mb-sm text-xs text-text-muted">
               {kana.origin === undefined
                 ? STRINGS.kana.derivationLabel
                 : STRINGS.kana.originHiragana}
             </span>
             {kana.origin === undefined ? (
-              <div className="KanaStudy-origin">
+              <div className="KanaStudy-origin flex flex-row items-center gap-sm w-full mb-xs">
                 <span
-                  className="KanaStudy-originChar"
+                  className="KanaStudy-originChar cursor-pointer select-none flex flex-row items-center justify-center w-72 h-72 bg-surface-alt rounded-md text-lg text-primary"
                   onClick={() => {
                     if (base !== undefined) {
                       speak(base.hiragana)
@@ -247,7 +269,7 @@ export function KanaStudyPage() {
                 >
                   {base === undefined ? '—' : base.hiragana}
                 </span>
-                <span className="KanaStudy-originNote">
+                <span className="KanaStudy-originNote flex-1 text-sm text-text-muted">
                   {`${derivationSuffix()}${
                     base === undefined ? '' : ` · ${base.romaji}`
                   }`}
@@ -255,25 +277,25 @@ export function KanaStudyPage() {
               </div>
             ) : (
               <>
-                <div className="KanaStudy-origin">
+                <div className="KanaStudy-origin flex flex-row items-center gap-sm w-full mb-xs">
                   <span
-                    className="KanaStudy-originChar"
+                    className="KanaStudy-originChar cursor-pointer select-none flex flex-row items-center justify-center w-72 h-72 bg-surface-alt rounded-md text-lg text-primary"
                     onClick={() => speak(kana.hiragana)}
                   >
                     {kana.origin.hiragana.char}
                   </span>
-                  <span className="KanaStudy-originNote">
+                  <span className="KanaStudy-originNote flex-1 text-sm text-text-muted">
                     {`${kana.hiragana} ← ${kana.origin.hiragana.note}`}
                   </span>
                 </div>
-                <div className="KanaStudy-origin">
+                <div className="KanaStudy-origin flex flex-row items-center gap-sm w-full mb-xs">
                   <span
-                    className="KanaStudy-originChar"
+                    className="KanaStudy-originChar cursor-pointer select-none flex flex-row items-center justify-center w-72 h-72 bg-surface-alt rounded-md text-lg text-primary"
                     onClick={() => speak(kana.hiragana)}
                   >
                     {kana.origin.katakana.char}
                   </span>
-                  <span className="KanaStudy-originNote">
+                  <span className="KanaStudy-originNote flex-1 text-sm text-text-muted">
                     {`${kana.katakana} ← ${kana.origin.katakana.note}`}
                   </span>
                 </div>
@@ -283,35 +305,42 @@ export function KanaStudyPage() {
         )}
 
         {/* ③ 应用实例 */}
-        <div className="KanaStudy-section">
-          <span className="KanaStudy-sectionTitle">
+        <div className="KanaStudy-section flex flex-col w-full mb-md p-md bg-surface rounded-lg">
+          <span className="KanaStudy-sectionTitle mb-sm text-xs text-text-muted">
             {STRINGS.kana.examples}
           </span>
           {kana.examples.map((example) => (
-            <div key={example.text} className="KanaStudy-example">
+            <div
+              key={example.text}
+              className="KanaStudy-example flex flex-row items-center justify-between w-full mb-xs p-sm bg-surface-alt rounded-md"
+            >
               <div
-                className="KanaStudy-exampleMain"
+                className="KanaStudy-exampleMain cursor-pointer select-none flex flex-row items-center flex-wrap gap-xs flex-1"
                 onClick={() => speak(example.text)}
               >
-                <span className="KanaStudy-exampleText">{example.text}</span>
-                <span className="KanaStudy-exampleAccent">
+                <span className="KanaStudy-exampleText text-md text-text">
+                  {example.text}
+                </span>
+                <span className="KanaStudy-exampleAccent text-xs text-text-muted">
                   {example.accent}
                 </span>
-                <span className="KanaStudy-exampleKanji">{example.kanji}</span>
-                <span className="KanaStudy-exampleMeaning">
+                <span className="KanaStudy-exampleKanji text-md text-text">
+                  {example.kanji}
+                </span>
+                <span className="KanaStudy-exampleMeaning text-sm text-text-muted">
                   {example.meaning}
                 </span>
               </div>
               {example.wordId === undefined ? null : (
                 <div
-                  className="KanaStudy-chip"
+                  className="KanaStudy-chip cursor-pointer select-none ml-sm px-sm py-2 bg-primary-soft rounded-pill"
                   onClick={() => {
                     if (example.wordId !== undefined) {
                       nav.goVocab(example.wordId)
                     }
                   }}
                 >
-                  <span className="KanaStudy-chipLabel">
+                  <span className="KanaStudy-chipLabel text-xs text-primary">
                     {STRINGS.kana.inWordList}
                   </span>
                 </div>
@@ -321,8 +350,10 @@ export function KanaStudyPage() {
         </div>
 
         {/* ④ 书写（描红 / 默写；v1 不做笔顺动画，见设计 §13 Q2） */}
-        <div className="KanaStudy-section">
-          <span className="KanaStudy-sectionTitle">{STRINGS.kana.writing}</span>
+        <div className="KanaStudy-section flex flex-col w-full mb-md p-md bg-surface rounded-lg">
+          <span className="KanaStudy-sectionTitle mb-sm text-xs text-text-muted">
+            {STRINGS.kana.writing}
+          </span>
           <KanaCanvas
             char={glyph}
             memoryMode={state.runtime.kanaMemoryMode}
@@ -334,103 +365,121 @@ export function KanaStudyPage() {
       </div>
 
       {/* 三档自评：文案与配色与 P2 完全一致 */}
-      <div className="KanaStudy-eval">
+      <div className="KanaStudy-eval flex flex-row items-center justify-between gap-sm w-full mt-xs">
         <div
-          className="KanaStudy-evalBtn KanaStudy-evalBtn--unknown"
+          className="KanaStudy-evalBtn KanaStudy-evalBtn--unknown cursor-pointer select-none flex-1 flex flex-row items-center justify-center py-md rounded-md border-[calc(1*var(--rpx))] border-border bg-[rgba(255,95,109,0.16)]"
           onClick={() => {
             onSelfEval('不认识')
           }}
         >
-          <span className="KanaStudy-evalLabel">
+          <span className="KanaStudy-evalLabel text-md font-bold text-text">
             {STRINGS.study.selfEvalUnknown}
           </span>
         </div>
         <div
-          className="KanaStudy-evalBtn KanaStudy-evalBtn--vague"
+          className="KanaStudy-evalBtn KanaStudy-evalBtn--vague cursor-pointer select-none flex-1 flex flex-row items-center justify-center py-md rounded-md border-[calc(1*var(--rpx))] border-border bg-[rgba(240,180,74,0.16)]"
           onClick={() => {
             onSelfEval('模糊')
           }}
         >
-          <span className="KanaStudy-evalLabel">
+          <span className="KanaStudy-evalLabel text-md font-bold text-text">
             {STRINGS.study.selfEvalVague}
           </span>
         </div>
         <div
-          className="KanaStudy-evalBtn KanaStudy-evalBtn--known"
+          className="KanaStudy-evalBtn KanaStudy-evalBtn--known cursor-pointer select-none flex-1 flex flex-row items-center justify-center py-md rounded-md border-[calc(1*var(--rpx))] border-border bg-[rgba(57,196,122,0.16)]"
           onClick={() => {
             onSelfEval('认识')
           }}
         >
-          <span className="KanaStudy-evalLabel">
+          <span className="KanaStudy-evalLabel text-md font-bold text-text">
             {STRINGS.study.selfEvalKnown}
           </span>
         </div>
       </div>
 
-      <div className="KanaStudy-nav">
+      <div className="KanaStudy-nav flex flex-row items-center justify-between gap-sm w-full mt-md">
         <div
-          className="KanaStudy-navBtn"
+          className="KanaStudy-navBtn cursor-pointer select-none flex-1 flex flex-row items-center justify-center py-sm bg-surface-alt rounded-pill"
           onClick={() => {
             advance(-1)
           }}
         >
-          <span className="KanaStudy-navLabel">{STRINGS.kana.prevKana}</span>
+          <span className="KanaStudy-navLabel text-sm text-text">
+            {STRINGS.kana.prevKana}
+          </span>
         </div>
-        <div className="KanaStudy-wrong" onClick={() => undefined}>
-          <span className="KanaStudy-wrongLabel">
+        <div
+          className="KanaStudy-wrong cursor-pointer select-none px-sm"
+          onClick={() => undefined}
+        >
+          <span className="KanaStudy-wrongLabel cursor-pointer select-none text-xs text-text-muted">
             {`${STRINGS.study.sessionWrong} ${state.runtime.kanaSessionWrongCount}`}
           </span>
         </div>
-        <div className="KanaStudy-navBtn" onClick={onSkip}>
-          <span className="KanaStudy-navLabel">{STRINGS.kana.skipKana}</span>
+        <div
+          className="KanaStudy-navBtn cursor-pointer select-none flex-1 flex flex-row items-center justify-center py-sm bg-surface-alt rounded-pill"
+          onClick={onSkip}
+        >
+          <span className="KanaStudy-navLabel text-sm text-text">
+            {STRINGS.kana.skipKana}
+          </span>
         </div>
         <div
-          className="KanaStudy-navBtn"
+          className="KanaStudy-navBtn cursor-pointer select-none flex-1 flex flex-row items-center justify-center py-sm bg-surface-alt rounded-pill"
           onClick={() => {
             advance(1)
           }}
         >
-          <span className="KanaStudy-navLabel">{STRINGS.kana.nextKana}</span>
+          <span className="KanaStudy-navLabel text-sm text-text">
+            {STRINGS.kana.nextKana}
+          </span>
         </div>
       </div>
 
       {groupMastered && !doneDismissed ? (
         // 点遮罩关闭浮层（留在本关复习），点卡片内部不关闭。
-        <div className="KanaStudy-done" onClick={() => setDoneDismissed(true)}>
+        <div
+          className="KanaStudy-done fixed inset-0 flex flex-row items-center justify-center bg-[rgba(0,0,0,0.35)]"
+          onClick={() => setDoneDismissed(true)}
+        >
           <div
-            className="KanaStudy-doneCard"
+            className="KanaStudy-doneCard flex flex-col items-center w-[80%] p-lg bg-surface rounded-lg"
             onClick={(event) => event.stopPropagation()}
           >
-            <span className="KanaStudy-doneTitle">
+            <span className="KanaStudy-doneTitle text-lg font-bold text-text">
               {STRINGS.kana.groupDoneTitle}
             </span>
-            <span className="KanaStudy-doneBody">
+            <span className="KanaStudy-doneBody mt-sm text-sm text-text-muted text-center">
               {STRINGS.kana.groupDoneBody}
             </span>
-            <div className="KanaStudy-doneActions">
+            <div className="KanaStudy-doneActions flex flex-col gap-sm w-full mt-lg">
               <div
-                className="KanaStudy-doneBtn KanaStudy-doneBtn--primary"
+                className="KanaStudy-doneBtn KanaStudy-doneBtn--primary cursor-pointer select-none flex flex-row items-center justify-center py-sm bg-primary rounded-pill"
                 onClick={() => nav.goKanaQuiz(groupId)}
               >
-                <span className="KanaStudy-doneBtnLabel">
+                <span className="KanaStudy-doneBtnLabel text-sm text-text">
                   {STRINGS.kana.startQuiz}
                 </span>
               </div>
               {next !== null ? (
                 <div
-                  className="KanaStudy-doneBtn"
+                  className="KanaStudy-doneBtn cursor-pointer select-none flex flex-row items-center justify-center py-sm bg-surface-alt rounded-pill"
                   onClick={() => {
                     enterKanaGroup(next.groupId, next.index)
                     nav.goKanaStudy(next.groupId)
                   }}
                 >
-                  <span className="KanaStudy-doneBtnLabel">
+                  <span className="KanaStudy-doneBtnLabel text-sm text-text">
                     {STRINGS.kana.nextGroup}
                   </span>
                 </div>
               ) : null}
-              <div className="KanaStudy-doneBtn" onClick={nav.goKana}>
-                <span className="KanaStudy-doneBtnLabel">
+              <div
+                className="KanaStudy-doneBtn cursor-pointer select-none flex flex-row items-center justify-center py-sm bg-surface-alt rounded-pill"
+                onClick={nav.goKana}
+              >
+                <span className="KanaStudy-doneBtnLabel text-sm text-text">
                   {STRINGS.kana.backToKana}
                 </span>
               </div>

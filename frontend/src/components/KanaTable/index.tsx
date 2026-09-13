@@ -1,4 +1,3 @@
-import './index.css'
 import { useMemo } from 'react'
 import { KANA_VOWELS, kanaProgressKey } from '../../constants/kana.js'
 import { STRINGS } from '../../constants/strings.js'
@@ -89,21 +88,32 @@ export function KanaTable(props: KanaTableProps) {
 
   if (props.kana.length === 0) {
     return (
-      <div className="KanaTable">
-        <span className="KanaTable-empty">{STRINGS.kana.empty}</span>
+      <div className="KanaTable flex flex-col w-full p-sm rounded-lg">
+        <span className="KanaTable-empty text-sm text-text-muted">
+          {STRINGS.kana.empty}
+        </span>
       </div>
     )
   }
 
   return (
     <div
-      className={props.studyMode ? 'KanaTable KanaTable--study' : 'KanaTable'}
+      className={
+        props.studyMode
+          ? 'KanaTable KanaTable--study flex flex-col w-full p-sm rounded-lg bg-primary-soft shadow-[0_0_0_calc(2*var(--rpx))_var(--color-primary)]'
+          : 'KanaTable flex flex-col w-full p-sm rounded-lg'
+      }
     >
       {/* 表头：首列空出（行首列），其余为段名。 */}
-      <div className="KanaTable-head">
-        <span className="KanaTable-headCell">{STRINGS.kana.columnHeader}</span>
+      <div className="KanaTable-head grid w-full gap-8 mb-xs grid-cols-[calc(92*var(--rpx))_repeat(6,minmax(0,1fr))]">
+        <span className="KanaTable-headCell flex flex-row items-center justify-center text-xs text-text-muted">
+          {STRINGS.kana.columnHeader}
+        </span>
         {KANA_VOWELS.map((vowel) => (
-          <span key={vowel} className="KanaTable-headCell">
+          <span
+            key={vowel}
+            className="KanaTable-headCell flex flex-row items-center justify-center text-xs text-text-muted"
+          >
             {vowel}
           </span>
         ))}
@@ -115,12 +125,15 @@ export function KanaTable(props: KanaTableProps) {
             props.progress[kanaProgressKey(item.id)]?.state === '已掌握',
         ).length
         return (
-          <div key={group.row} className="KanaTable-row">
-            <div className="KanaTable-rowHead">
-              <span className="KanaTable-rowLabel">
+          <div
+            key={group.row}
+            className="KanaTable-row grid w-full gap-8 grid-cols-[calc(92*var(--rpx))_repeat(6,minmax(0,1fr))]"
+          >
+            <div className="KanaTable-rowHead flex flex-col items-center justify-center py-xs">
+              <span className="KanaTable-rowLabel text-sm text-text">
                 {rowLabel(group.items, props.scripts)}
               </span>
-              <span className="KanaTable-rowMeta">
+              <span className="KanaTable-rowMeta mt-2 text-xs text-text-muted">
                 {`${mastered}/${group.items.length}`}
               </span>
             </div>
@@ -133,10 +146,10 @@ export function KanaTable(props: KanaTableProps) {
               // `KanaVowelSchema` 枚举约束，故 `indexOf` 不会返回 -1；一旦返回 -1，
               // 列号会变成 1 顶掉行首单元格，在 UI 上表现为「行名消失」这种极难反查的错位。
               const cellClass = !props.studyMode
-                ? 'KanaTable-cell'
+                ? 'KanaTable-cell relative flex flex-col items-center justify-center min-h-96 mt-4 py-6 bg-surface-alt rounded-md'
                 : props.lockedGroupIds.includes(item.groupId)
-                  ? 'KanaTable-cell KanaTable-cell--locked'
-                  : 'KanaTable-cell KanaTable-cell--clickable'
+                  ? 'KanaTable-cell KanaTable-cell--locked relative flex flex-col items-center justify-center min-h-96 mt-4 py-6 bg-surface-alt rounded-md opacity-45'
+                  : 'KanaTable-cell KanaTable-cell--clickable relative flex flex-col items-center justify-center min-h-96 mt-4 py-6 bg-surface-alt rounded-md cursor-pointer select-none hover:bg-surface'
               return (
                 <div
                   key={item.id}
@@ -151,24 +164,26 @@ export function KanaTable(props: KanaTableProps) {
                     }
                   }}
                 >
-                  <div className="KanaTable-cellChars">
+                  <div className="KanaTable-cellChars flex flex-col items-center justify-center">
                     {showHiragana ? (
-                      <span className="KanaTable-hiragana">
+                      <span className="KanaTable-hiragana text-lg text-text">
                         {item.hiragana}
                       </span>
                     ) : null}
                     {showKatakana ? (
-                      <span className="KanaTable-katakana">
+                      <span className="KanaTable-katakana mt-2 text-sm text-text-muted">
                         {item.katakana}
                       </span>
                     ) : null}
                   </div>
                   {props.showRomaji ? (
-                    <span className="KanaTable-romaji">{item.romaji}</span>
+                    <span className="KanaTable-romaji mt-2 text-xs text-text-muted">
+                      {item.romaji}
+                    </span>
                   ) : null}
                   {/* 五态圆点：配色复用 NodeStateBadge 的唯一配色表。 */}
                   <span
-                    className="KanaTable-dot"
+                    className="KanaTable-dot absolute top-8 right-8 w-12 h-12 rounded-pill"
                     style={{ backgroundColor: STATE_STYLE[state].color }}
                   />
                 </div>

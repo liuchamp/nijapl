@@ -26,5 +26,5 @@ TTS 端口实现。选路：`index.ts`（Android→`tts-handler`，Wails 宿主�
 
 ## 测试
 
-- `__tests__/`：`request` / `resolve` / `audio-cache` / `tts-client` / `tts-handler`。
+- `__tests__/`：`request` / `resolve` / `audio-cache` / `tts-client` / `tts-handler` / `tts-mobile`。
 - 真实 HTTP 集成在 `frontend/tests/qa/tts/`，服务不可达时自动跳过。细则见 `docs/design/TTS-集成方案.md` v3.0。

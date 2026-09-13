@@ -346,6 +346,22 @@ export const STRINGS = {
     splitHint: '点音格去复习这个音（っ / ー 不单独成音）',
     gateBadge: '假名基础已达标',
   },
+  // —— 侧边栏（PC 宽屏导航，T05 新增） ——
+  sidebar: {
+    home: '首页',
+    study: '词汇学习',
+    stages: '阶段地图',
+    review: '复习',
+    grammar: '语法',
+    graph: '知识图谱',
+    me: '我的',
+    kanaGroup: '假名基础',
+    kana: '五十音图',
+    kanaStudy: '假名学习',
+    kanaQuiz: '假名测验',
+    collapse: '收起',
+    expand: '展开',
+  },
 } as const
 
 export type Strings = typeof STRINGS

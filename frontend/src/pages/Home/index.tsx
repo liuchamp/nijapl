@@ -1,4 +1,3 @@
-import './index.css'
 import { Icon } from '../../components/Icon/index.js'
 import { NodeStateBadge } from '../../components/NodeStateBadge/index.js'
 import { ProgressRing } from '../../components/ProgressRing/index.js'
@@ -80,66 +79,79 @@ export function HomePage() {
   }
 
   return (
-    <div className="Home">
-      <div className="Home-head">
-        <span className="Home-greeting">{STRINGS.home.greeting}</span>
-        <span className="Home-appName">{STRINGS.app.name}</span>
+    <div className="Home flex flex-col flex-1 w-full p-md">
+      <div className="Home-head flex flex-row items-end justify-between w-full">
+        <span className="Home-greeting text-lg font-bold">
+          {STRINGS.home.greeting}
+        </span>
+        <span className="Home-appName text-xs text-text-muted">
+          {STRINGS.app.name}
+        </span>
       </div>
 
-      <div className="Home-goal">
+      <div className="Home-goal flex flex-row items-center w-full mt-md p-md bg-surface rounded-lg">
         <ProgressRing
           value={newRatio}
           label={`${stats.newCount}/${DAILY_NEW_GOAL}`}
         />
-        <div className="Home-goalSide">
-          <span className="Home-goalTitle">{STRINGS.home.todayGoal}</span>
-          <span className="Home-goalLine">
+        <div className="Home-goalSide flex flex-col flex-1 ml-lg">
+          <span className="Home-goalTitle text-md font-bold mb-xs">
+            {STRINGS.home.todayGoal}
+          </span>
+          <span className="Home-goalLine text-sm text-text-muted mt-xs">
             {`${STRINGS.home.newLearned} ${stats.newCount}/${DAILY_NEW_GOAL}`}
           </span>
-          <span className="Home-goalLine">
+          <span className="Home-goalLine text-sm text-text-muted mt-xs">
             {`${STRINGS.home.reviewed} ${stats.reviewCount}/${DAILY_REVIEW_GOAL}`}
           </span>
-          <span className="Home-goalLine">
+          <span className="Home-goalLine text-sm text-text-muted mt-xs">
             {`${STRINGS.home.grammarLearned} ${stats.grammarCount}/${DAILY_GRAMMAR_GOAL}`}
           </span>
         </div>
       </div>
 
       {/* 假名基础卡（设计 §5.6）：门控未解除时它是首页的第一优先级动作 */}
-      <div className="Home-kana">
+      <div className="Home-kana flex flex-row items-center w-full mt-md p-md bg-surface rounded-lg">
         <ProgressRing
           value={kanaRatio}
           label={`${kanaMastered}/${KANA_TOTAL}`}
           size={120}
           stroke={12}
         />
-        <div className="Home-kanaSide">
-          <div className="Home-kanaHead">
-            <span className="Home-kanaTitle">{STRINGS.kana.title}</span>
+        <div className="Home-kanaSide flex flex-col flex-1 ml-lg">
+          <div className="Home-kanaHead flex flex-row items-center gap-sm">
+            <span className="Home-kanaTitle text-md font-bold">
+              {STRINGS.kana.title}
+            </span>
             {kanaGraduated ? (
-              <span className="Home-kanaBadge">{STRINGS.kana.gateBadge}</span>
+              <span className="Home-kanaBadge px-xs py-[calc(2*var(--rpx))] bg-[rgba(57,196,122,0.16)] rounded-pill text-xs text-success">
+                {STRINGS.kana.gateBadge}
+              </span>
             ) : null}
           </div>
-          <span className="Home-kanaMeta">
+          <span className="Home-kanaMeta mt-xs text-xs text-text-muted">
             {kanaGraduated
               ? STRINGS.kana.graduationBody
               : kanaGate
                 ? STRINGS.kana.gateHint
                 : `${STRINGS.kana.overallLabel} ${kanaMastered}/${KANA_TOTAL}`}
           </span>
-          <div className="Home-kanaActions">
-            <div className="Home-kanaBtn" onClick={goKana}>
-              <span className="Home-kanaBtnLabel">
+          <div className="Home-kanaActions flex flex-row gap-sm w-full mt-sm">
+            <div
+              className="Home-kanaBtn cursor-pointer select-none flex flex-row items-center justify-center px-md py-xs bg-primary rounded-pill"
+              onClick={goKana}
+            >
+              <span className="Home-kanaBtnLabel text-xs text-text">
                 {kanaMastered === 0
                   ? STRINGS.kana.startEntry
                   : STRINGS.kana.continueEntry}
               </span>
             </div>
             <div
-              className="Home-kanaBtn Home-kanaBtn--ghost"
+              className="Home-kanaBtn Home-kanaBtn--ghost cursor-pointer select-none flex flex-row items-center justify-center px-md py-xs bg-surface-alt rounded-pill"
               onClick={nav.goKana}
             >
-              <span className="Home-kanaBtnLabel">
+              <span className="Home-kanaBtnLabel text-xs text-text">
                 {STRINGS.kana.openTable}
               </span>
             </div>
@@ -147,56 +159,53 @@ export function HomePage() {
         </div>
       </div>
 
-      <div className="Home-stats">
-        <div className="Home-stat">
-          <span
-            className="Home-statValue"
-            style={{ display: 'flex', alignItems: 'center', gap: '6rpx' }}
-          >
+      <div className="Home-stats flex flex-row items-center justify-between w-full mt-md">
+        <div className="Home-stat flex flex-col items-center flex-1">
+          <span className="Home-statValue text-lg font-bold flex items-center gap-6">
             <Icon name="trophy" size="24rpx" />
             {stats.newCount}
           </span>
-          <span className="Home-statLabel">{STRINGS.home.newLearned}</span>
+          <span className="Home-statLabel mt-xs text-xs text-text-muted">
+            {STRINGS.home.newLearned}
+          </span>
         </div>
-        <div className="Home-stat">
-          <span
-            className="Home-statValue"
-            style={{ display: 'flex', alignItems: 'center', gap: '6rpx' }}
-          >
+        <div className="Home-stat flex flex-col items-center flex-1">
+          <span className="Home-statValue text-lg font-bold flex items-center gap-6">
             <Icon name="star" size="24rpx" />
             {stats.reviewCount}
           </span>
-          <span className="Home-statLabel">{STRINGS.home.reviewed}</span>
+          <span className="Home-statLabel mt-xs text-xs text-text-muted">
+            {STRINGS.home.reviewed}
+          </span>
         </div>
-        <div className="Home-stat">
+        <div className="Home-stat flex flex-col items-center flex-1">
           <span
-            className="Home-statValue"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6rpx',
-              color: '#F5A8BC',
-            }}
+            className="Home-statValue text-lg font-bold flex items-center gap-6"
+            style={{ color: '#F5A8BC' }}
           >
             <Icon name="flame" size="24rpx" />
             {`${stats.streakDays}${STRINGS.home.dayUnit}`}
           </span>
-          <span className="Home-statLabel">{STRINGS.home.streak}</span>
+          <span className="Home-statLabel mt-xs text-xs text-text-muted">
+            {STRINGS.home.streak}
+          </span>
         </div>
-        <div className="Home-stat">
-          <span
-            className="Home-statValue"
-            style={{ display: 'flex', alignItems: 'center', gap: '6rpx' }}
-          >
+        <div className="Home-stat flex flex-col items-center flex-1">
+          <span className="Home-statValue text-lg font-bold flex items-center gap-6">
             <Icon name="calendar" size="24rpx" />
             {stats.dueCount}
           </span>
-          <span className="Home-statLabel">{STRINGS.home.dueToday}</span>
+          <span className="Home-statLabel mt-xs text-xs text-text-muted">
+            {STRINGS.home.dueToday}
+          </span>
         </div>
       </div>
 
-      <div className="Home-primary" onClick={onPrimary}>
-        <span className="Home-primaryLabel">
+      <div
+        className="Home-primary cursor-pointer select-none flex flex-row items-center justify-center w-full mt-lg py-md bg-primary rounded-pill"
+        onClick={onPrimary}
+      >
+        <span className="Home-primaryLabel cursor-pointer select-none text-md font-bold text-bg">
           {kanaGate
             ? kanaMastered === 0
               ? STRINGS.kana.startEntry
@@ -207,50 +216,68 @@ export function HomePage() {
         </span>
       </div>
       {kanaGate ? (
-        <span className="Home-hint">{STRINGS.kana.gateHint}</span>
+        <span className="Home-hint mt-sm text-xs text-text-muted">
+          {STRINGS.kana.gateHint}
+        </span>
       ) : hasSession ? null : (
-        <span className="Home-hint">{STRINGS.home.noSessionHint}</span>
+        <span className="Home-hint mt-sm text-xs text-text-muted">
+          {STRINGS.home.noSessionHint}
+        </span>
       )}
 
-      <div className="Home-section">
-        <span className="Home-sectionTitle">{STRINGS.home.weakWarning}</span>
+      <div className="Home-section flex flex-col w-full mt-lg">
+        <span className="Home-sectionTitle text-md font-bold">
+          {STRINGS.home.weakWarning}
+        </span>
         {weakTop.length === 0 ? (
-          <span className="Home-sectionEmpty">{STRINGS.home.weakEmpty}</span>
+          <span className="Home-sectionEmpty mt-sm text-sm text-text-muted">
+            {STRINGS.home.weakEmpty}
+          </span>
         ) : (
-          <div className="Home-weakList">
+          <div className="Home-weakList flex flex-col w-full mt-sm">
             {weakTop.map((word) => (
               <div
                 key={word.id}
-                className="Home-weakItem"
+                className="Home-weakItem cursor-pointer select-none flex flex-row items-center justify-between w-full p-sm mt-xs bg-surface rounded-md"
                 onClick={() => nav.goVocab(word.id)}
               >
-                <span className="Home-weakKana">{word.kana}</span>
-                <span className="Home-weakMeaning">{word.meaning}</span>
+                <span className="Home-weakKana text-md">{word.kana}</span>
+                <span className="Home-weakMeaning text-sm text-text-muted">
+                  {word.meaning}
+                </span>
               </div>
             ))}
           </div>
         )}
       </div>
 
-      <div className="Home-section">
-        <div className="Home-sectionHead">
-          <span className="Home-sectionTitle">
+      <div className="Home-section flex flex-col w-full mt-lg">
+        <div className="Home-sectionHead flex flex-row items-center justify-between w-full">
+          <span className="Home-sectionTitle text-md font-bold">
             {STRINGS.home.stageProgress}
           </span>
-          <div className="Home-graphEntry" onClick={() => nav.goGraph()}>
-            <span className="Home-graphLabel">{STRINGS.home.graphEntry}</span>
+          <div
+            className="Home-graphEntry cursor-pointer select-none px-sm py-xs bg-primary-soft rounded-pill"
+            onClick={() => nav.goGraph()}
+          >
+            <span className="Home-graphLabel text-xs text-primary">
+              {STRINGS.home.graphEntry}
+            </span>
           </div>
         </div>
-        <div className="Home-stageList">
+        <div className="Home-stageList flex flex-col w-full mt-sm">
           {stages.map((stage) => {
             const completion = selectStageCompletion(state, stage.id)
             const nodeState = selectStageNodeState(state, stage.id)
             const percent = completion < 0 ? 0 : Math.round(completion * 100)
             return (
-              <div key={stage.id} className="Home-stageItem">
-                <div className="Home-stageLeft">
-                  <span className="Home-stageName">{stage.name}</span>
-                  <span className="Home-stagePercent">
+              <div
+                key={stage.id}
+                className="Home-stageItem flex flex-row items-center justify-between w-full p-sm mt-xs bg-surface rounded-md"
+              >
+                <div className="Home-stageLeft flex flex-col">
+                  <span className="Home-stageName text-md">{stage.name}</span>
+                  <span className="Home-stagePercent mt-xs text-xs text-text-muted">
                     {stage.hasContent
                       ? `${percent}%`
                       : STRINGS.stage.sprintTitle}

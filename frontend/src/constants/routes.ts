@@ -59,6 +59,107 @@ export const TABS: TabDefinition[] = [
 /** 5 个 Tab 路径（唯一来源）。 */
 export const TAB_PATHS: string[] = TABS.map((tab) => tab.path)
 
+/* ------------------------------------------------------------------ *
+ * PC 侧边栏导航分组（T05）
+ *
+ * 只描述**结构与路径前缀**；中文文案在 `constants/strings.ts` 的
+ * `STRINGS.sidebar`，跳转动作在 `components/Sidebar`（走 `useNavigation()`）。
+ * ------------------------------------------------------------------ */
+
+/** 侧边栏导航动作（与 `STRINGS.sidebar` 的键一一对应）。 */
+export type SidebarAction =
+  | 'home'
+  | 'study'
+  | 'stages'
+  | 'review'
+  | 'grammar'
+  | 'graph'
+  | 'me'
+  | 'kana'
+  | 'kanaStudy'
+  | 'kanaQuiz'
+
+/** 侧边栏条目。 */
+export interface SidebarItem {
+  /** 导航动作（决定文案与跳转）。 */
+  action: SidebarAction
+  /** 图标名（`components/Icon` 的 18 个品牌图标之一）。 */
+  icon: string
+  /** 活跃态判定的**路径前缀**（取最长匹配，见 `matchSidebarAction`）。 */
+  match: string
+}
+
+/** 侧边栏分组。 */
+export interface SidebarGroup {
+  /** 分组标识（折叠状态与分组标题的键）。 */
+  key: string
+  /** 是否可折叠（K 域为可折叠的次级分组）。 */
+  collapsible: boolean
+  items: SidebarItem[]
+}
+
+/**
+ * 侧边栏分组结构（顺序即展示顺序）。
+ *
+ * 主分组 7 项 + K 域可折叠分组 3 项（K0 / K1 / K2）。
+ */
+export const SIDEBAR_GROUPS: SidebarGroup[] = [
+  {
+    key: 'main',
+    collapsible: false,
+    items: [
+      { action: 'home', icon: 'home', match: ROUTES.home },
+      { action: 'study', icon: 'study', match: '/study' },
+      { action: 'stages', icon: 'stages', match: ROUTES.stages },
+      { action: 'review', icon: 'review', match: ROUTES.review },
+      { action: 'grammar', icon: 'book', match: ROUTES.grammar },
+      { action: 'graph', icon: 'graph', match: ROUTES.graph },
+      { action: 'me', icon: 'settings', match: ROUTES.me },
+    ],
+  },
+  {
+    key: 'kana',
+    collapsible: true,
+    items: [
+      { action: 'kana', icon: 'star', match: ROUTES.kana },
+      { action: 'kanaStudy', icon: 'study', match: '/kana/study' },
+      { action: 'kanaQuiz', icon: 'check', match: ROUTES.kanaQuiz },
+    ],
+  },
+]
+
+/** 路径前缀是否命中（`/` 为精确匹配，其余为「等于或以 `prefix/` 开头」）。 */
+function isSidebarMatch(prefix: string, pathname: string): boolean {
+  if (prefix === ROUTES.home) {
+    return pathname === prefix
+  }
+  return pathname === prefix || pathname.startsWith(`${prefix}/`)
+}
+
+/**
+ * 当前路径命中的侧边栏动作。
+ *
+ * **取最长前缀**：`/kana` 同时是 `/kana/study/:groupId` 与 `/kana/quiz` 的前缀，
+ * 最长匹配才能让 K1 / K2 正确高亮（而非永远高亮 K0）。无命中返回 `null`。
+ */
+export function matchSidebarAction(pathname: string): SidebarAction | null {
+  // 容差：只吃 path 部分（调用方传的是 `useLocation().pathname`，本身不含
+  // `?query#hash`；若误传整条 URL 也不会让匹配全部落空）。
+  const path = pathname.split(/[?#]/)[0] ?? pathname
+  let best: SidebarItem | null = null
+  for (const group of SIDEBAR_GROUPS) {
+    for (const item of group.items) {
+      if (!isSidebarMatch(item.match, path)) {
+        continue
+      }
+      if (best === null || item.match.length > best.match.length) {
+        best = item
+      }
+    }
+  }
+  return best === null ? null : best.action
+}
+
 /** 当前路径是否命中某个 Tab（决定 TabBar 显隐）。 */
 export function isTabPath(pathname: string): boolean {
   return TAB_PATHS.includes(pathname)

@@ -1,4 +1,3 @@
-import './index.css'
 import { KanaConfusableCard } from '../../components/KanaConfusableCard/index.js'
 import { STRINGS } from '../../constants/strings.js'
 import { repository } from '../../data/index.js'
@@ -32,9 +31,16 @@ import type { Kana } from '../../types/kana.js'
 /** 词条行。 */
 function WordRow(props: { word: Word; onTap: () => void }) {
   return (
-    <div className="Review-row" onClick={props.onTap}>
-      <span className="Review-rowKana">{props.word.kana}</span>
-      <span className="Review-rowMeaning">{props.word.meaning}</span>
+    <div
+      className="Review-row cursor-pointer select-none flex flex-row items-center justify-between w-full p-sm mt-xs bg-surface rounded-md"
+      onClick={props.onTap}
+    >
+      <span className="Review-rowKana cursor-pointer select-none text-md">
+        {props.word.kana}
+      </span>
+      <span className="Review-rowMeaning cursor-pointer select-none text-sm text-text-muted">
+        {props.word.meaning}
+      </span>
     </div>
   )
 }
@@ -42,11 +48,16 @@ function WordRow(props: { word: Word; onTap: () => void }) {
 /** 假名行（平/片 + 罗马音）。 */
 function KanaRow(props: { kana: Kana; onTap: () => void }) {
   return (
-    <div className="Review-row" onClick={props.onTap}>
-      <span className="Review-rowKana">
+    <div
+      className="Review-row cursor-pointer select-none flex flex-row items-center justify-between w-full p-sm mt-xs bg-surface rounded-md"
+      onClick={props.onTap}
+    >
+      <span className="Review-rowKana cursor-pointer select-none text-md">
         {`${props.kana.hiragana} / ${props.kana.katakana}`}
       </span>
-      <span className="Review-rowMeaning">{props.kana.romaji}</span>
+      <span className="Review-rowMeaning cursor-pointer select-none text-sm text-text-muted">
+        {props.kana.romaji}
+      </span>
     </div>
   )
 }
@@ -77,19 +88,25 @@ export function ReviewPage() {
   }
 
   return (
-    <div className="Review">
-      <span className="Review-title">{STRINGS.review.title}</span>
+    <div className="Review flex flex-col flex-1 w-full p-md">
+      <span className="Review-title text-lg font-bold">
+        {STRINGS.review.title}
+      </span>
 
-      <div className="Review-summary">
-        <span className="Review-summaryValue">{due.length}</span>
-        <span className="Review-summaryLabel">{STRINGS.review.dueCount}</span>
+      <div className="Review-summary flex flex-col items-center w-full mt-md p-md bg-surface rounded-lg">
+        <span className="Review-summaryValue text-xl font-bold text-primary">
+          {due.length}
+        </span>
+        <span className="Review-summaryLabel mt-xs text-sm text-text-muted">
+          {STRINGS.review.dueCount}
+        </span>
       </div>
 
       <div
         className={
           firstDue === undefined
-            ? 'Review-start Review-start--disabled'
-            : 'Review-start'
+            ? 'Review-start Review-start--disabled opacity-50 flex flex-row items-center justify-center w-full mt-md py-md bg-primary rounded-pill'
+            : 'Review-start flex flex-row items-center justify-center w-full mt-md py-md bg-primary rounded-pill'
         }
         onClick={() => {
           if (firstDue !== undefined) {
@@ -97,15 +114,21 @@ export function ReviewPage() {
           }
         }}
       >
-        <span className="Review-startLabel">{STRINGS.review.start}</span>
+        <span className="Review-startLabel text-md font-bold text-bg">
+          {STRINGS.review.start}
+        </span>
       </div>
 
-      <div className="Review-section">
-        <span className="Review-sectionTitle">{STRINGS.review.dueTitle}</span>
+      <div className="Review-section flex flex-col w-full mt-lg">
+        <span className="Review-sectionTitle text-md font-bold">
+          {STRINGS.review.dueTitle}
+        </span>
         {due.length === 0 ? (
-          <span className="Review-empty">{STRINGS.review.dueEmpty}</span>
+          <span className="Review-empty mt-sm text-sm text-text-muted">
+            {STRINGS.review.dueEmpty}
+          </span>
         ) : (
-          <div className="Review-list">
+          <div className="Review-list flex flex-col w-full mt-sm">
             {due.map((word) => (
               <WordRow
                 key={word.id}
@@ -117,12 +140,16 @@ export function ReviewPage() {
         )}
       </div>
 
-      <div className="Review-section">
-        <span className="Review-sectionTitle">{STRINGS.review.weakTitle}</span>
+      <div className="Review-section flex flex-col w-full mt-lg">
+        <span className="Review-sectionTitle text-md font-bold">
+          {STRINGS.review.weakTitle}
+        </span>
         {weak.length === 0 ? (
-          <span className="Review-empty">{STRINGS.review.weakEmpty}</span>
+          <span className="Review-empty mt-sm text-sm text-text-muted">
+            {STRINGS.review.weakEmpty}
+          </span>
         ) : (
-          <div className="Review-list">
+          <div className="Review-list flex flex-col w-full mt-sm">
             {weak.map((word) => (
               <WordRow
                 key={word.id}
@@ -135,16 +162,16 @@ export function ReviewPage() {
       </div>
 
       {/* —— K3 假名分区 —— */}
-      <div className="Review-section">
-        <div className="Review-sectionHead">
-          <span className="Review-sectionTitle">
+      <div className="Review-section flex flex-col w-full mt-lg">
+        <div className="Review-sectionHead flex flex-row items-center justify-between w-full">
+          <span className="Review-sectionTitle text-md font-bold">
             {STRINGS.kana.reviewDueTitle}
           </span>
           <div
             className={
               firstKanaDue === undefined
-                ? 'Review-kanaStart Review-kanaStart--disabled'
-                : 'Review-kanaStart'
+                ? 'Review-kanaStart Review-kanaStart--disabled opacity-50 cursor-pointer select-none px-sm py-xs bg-primary-soft rounded-pill'
+                : 'Review-kanaStart cursor-pointer select-none px-sm py-xs bg-primary-soft rounded-pill'
             }
             onClick={() => {
               if (firstKanaDue !== undefined) {
@@ -152,15 +179,17 @@ export function ReviewPage() {
               }
             }}
           >
-            <span className="Review-kanaStartLabel">
+            <span className="Review-kanaStartLabel text-xs text-primary">
               {STRINGS.kana.reviewStart}
             </span>
           </div>
         </div>
         {kanaDue.length === 0 ? (
-          <span className="Review-empty">{STRINGS.kana.reviewDueEmpty}</span>
+          <span className="Review-empty mt-sm text-sm text-text-muted">
+            {STRINGS.kana.reviewDueEmpty}
+          </span>
         ) : (
-          <div className="Review-list">
+          <div className="Review-list flex flex-col w-full mt-sm">
             {kanaDue.map((item) => (
               <KanaRow
                 key={item.id}
@@ -172,14 +201,16 @@ export function ReviewPage() {
         )}
       </div>
 
-      <div className="Review-section">
-        <span className="Review-sectionTitle">
+      <div className="Review-section flex flex-col w-full mt-lg">
+        <span className="Review-sectionTitle text-md font-bold">
           {STRINGS.kana.reviewWeakTitle}
         </span>
         {kanaWeak.length === 0 ? (
-          <span className="Review-empty">{STRINGS.kana.reviewWeakEmpty}</span>
+          <span className="Review-empty mt-sm text-sm text-text-muted">
+            {STRINGS.kana.reviewWeakEmpty}
+          </span>
         ) : (
-          <div className="Review-list">
+          <div className="Review-list flex flex-col w-full mt-sm">
             {kanaWeak.map((item) => (
               <KanaRow
                 key={item.id}
@@ -191,16 +222,16 @@ export function ReviewPage() {
         )}
       </div>
 
-      <div className="Review-section">
-        <span className="Review-sectionTitle">
+      <div className="Review-section flex flex-col w-full mt-lg">
+        <span className="Review-sectionTitle text-md font-bold">
           {STRINGS.kana.reviewConfusableTitle}
         </span>
         {kanaPairs.length === 0 ? (
-          <span className="Review-empty">
+          <span className="Review-empty mt-sm text-sm text-text-muted">
             {STRINGS.kana.reviewConfusableEmpty}
           </span>
         ) : (
-          <div className="Review-list">
+          <div className="Review-list flex flex-col w-full mt-sm">
             {kanaPairs.map((pair) => (
               <KanaConfusableCard
                 // 一对只出现一次（`confusable` 是对称表，selector 已按字典序去重），

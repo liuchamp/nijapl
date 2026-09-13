@@ -5,7 +5,8 @@ import { defineConfig } from 'vitest/config'
  *
  * 仅收录**不依赖 Lynx 运行时**（不含页面 / 端口实现 / CSS）的纯模块：
  * `src/engine/**`、`src/services/**`（highlight / jumpService / swipe / platform）、
- * `src/store/**`（selectors）、`scripts/gen-data/**` 与 `tests/qa/**`。
+ * `src/store/**`（selectors）、`src/constants/**`（T05 侧边栏分组与活跃态匹配）、
+ * `scripts/gen-data/**` 与 `tests/qa/**`。
  */
 export default defineConfig({
   test: {
@@ -14,6 +15,7 @@ export default defineConfig({
       'src/engine/**/__tests__/**/*.test.ts',
       'src/services/__tests__/**/*.test.ts',
       'src/store/__tests__/**/*.test.ts',
+      'src/constants/**/__tests__/**/*.test.ts',
       'scripts/gen-data/__tests__/**/*.test.ts',
       'tests/qa/**/*.test.ts',
     ],

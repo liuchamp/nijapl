@@ -7,16 +7,18 @@
 - `engine/{tts,storage}/`：端口 facade（`index.ts`）+ 平台实现（`*.wails.ts` / `*.web.ts`）。
 - `engine/*.ts`（根）：纯引擎，零框架 / 零 DOM（`srs` / `progress` / `jumpRules` / `conjugation` / `kana`）。
 - `engine/graph/`：图谱布局 / SVG / 视图（纯函数）。
-- `engine/wails.ts`：运行时探测 `hasWailsRuntime()` / `isAndroid()`。
+- `engine/platform/`：平台探测**单一真相源**（`detectPlatform()` / `isMobile()` / `isDesktop()` / `isIOS()` / `isAndroid()` / `getFormFactor()` / `hasWailsRuntime()`）。
+  先读 `globalThis._wails.environment.OS`，缺失 / 非预期时回退 UA（Android 尤须保留 UA 兜底：宿主注入可能晚于模块加载）。页面 / store / service 一律经此判断，**禁止**散落 UA / `_wails` 判断。
 
 ## 端口契约（红线）
 
 - 页面 / store / service **只** import `engine/tts/index.js`、`engine/storage/index.js`。
-- facade 内部实现文件（`tts.web.ts`、`tts-client.wails.ts`、`tts-client.ts`、`tts-handler.ts`、
-  `player*.ts`、`request.ts`、`storage.*.ts`、`types.ts`）**禁止**被外部 import。
+- facade 内部实现文件（`tts.web.ts`、`tts.mobile.ts`、`tts-client.wails.ts`、`tts-client.ts`、
+  `tts-handler.ts`、`player*.ts`、`request.ts`、`audio-cache.ts`、`inflight.ts`、
+  `storage.*.ts`、`types.ts`）**禁止**被外部 import。
 - 端口**永不 throw**：失败返回判别结果 + 明确降级文案，调用方零静默。
-- 仅 3 个文件允许 import `frontend/bindings/`：`engine/tts/tts-client.wails.ts`、
-  `engine/storage/storage.wails.ts`，以及例外 `services/clipboard.ts`（见根 AGENTS.md）。
+- 仅 4 个文件允许 import `frontend/bindings/`：`engine/tts/tts-client.wails.ts`、
+  `engine/tts/tts.mobile.ts`、`engine/storage/storage.wails.ts`，以及例外 `services/clipboard.ts`（见根 AGENTS.md）。
 
 ## TTS 链路（细则见 `tts/AGENTS.md` 与 `docs/design/TTS-集成方案.md` v3.0）
 
@@ -39,7 +41,7 @@
 ## 测试
 
 - `engine/__tests__/`：`srs` / `progress` / `jumpRules` / `layout` / `kana`。
-- `engine/tts/__tests__/`：`request` / `resolve` / `audio-cache` / `tts-client` / `tts-handler`。
+- `engine/tts/__tests__/`：`request` / `resolve` / `audio-cache` / `tts-client` / `tts-handler` / `tts-mobile`。
 - 真实 HTTP 集成在 `frontend/tests/qa/tts/`，服务不可达时自动跳过。
 
 ## 反模式

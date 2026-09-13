@@ -6,8 +6,6 @@
  * 原始契约不变。颜色语义：`check` → Sage `#8FB89B`、`flame` → Sakura `#F5A8BC`，
  * 其余默认 `currentColor`（跟随文字色，品牌规范 §4）。
  */
-import './index.css'
-
 import audioSvg from '../../assets/icons/audio.svg?raw'
 import bookSvg from '../../assets/icons/book.svg?raw'
 import calendarSvg from '../../assets/icons/calendar.svg?raw'
@@ -79,7 +77,16 @@ const SEMANTIC_COLOR: Partial<Record<IconName, string>> = {
 export interface IconProps {
   /** 图标名称（18 个品牌图标之一，或兼容旧用法的任意字符串）。 */
   name: IconName | string
-  /** 尺寸：数字时渲染为 `calc(N * var(--rpx))`，字符串时直接透传（兼容旧用法）。默认 24。 */
+  /**
+   * 尺寸：
+   * - **数字** → `calc(N * var(--rpx))`（rpx 语义，随视口缩放）；
+   * - **`"Nrpx"` 字符串** → 同样解析为 `calc(N * var(--rpx))`
+   *   （T05：浏览器不认识 `rpx` 单位，原样透传会让整条声明被丢弃、图标尺寸失效；
+   *   原调用方 `size="28rpx"` 的意图显然就是 28rpx，故与数字走同一转换）；
+   * - **其它字符串**（如 `"18px"`）→ 原样透传。
+   *
+   * 默认 24。
+   */
   size?: number | string
   /** 显式颜色；未传时 `check`/`flame` 走语义色，其余 `currentColor`。 */
   color?: string
@@ -94,15 +101,30 @@ export interface IconProps {
  * - `aria-hidden={true}`：纯装饰图标，不参与无障碍树；
  * - 尺寸与颜色均通过内联 `style` 传递（与 Lynx 内联样式习惯一致）。
  */
+
+/** `"Nrpx"` → `calc(N * var(--rpx))`；其余字符串原样返回。 */
+const RPX_PATTERN = /^(\d+(?:\.\d+)?)rpx$/
+
+/** 把 `size` 解析成合法 CSS 长度。 */
+function resolveSize(size: number | string): string {
+  if (typeof size === 'number') {
+    return `calc(${size} * var(--rpx))`
+  }
+  const matched = RPX_PATTERN.exec(size)
+  if (matched === null) {
+    return size
+  }
+  return `calc(${matched[1]} * var(--rpx))`
+}
+
 export function Icon({ name, size = 24, color, className = '' }: IconProps) {
   const svgText = (SVG_MAP as Record<string, string>)[name as string]
   if (svgText === undefined) {
     // 端口契约：永不静默失败，给出可见降级提示（此处为开发期防御）。
-    const sizeValue =
-      typeof size === 'number' ? `calc(${size} * var(--rpx))` : size
+    const sizeValue = resolveSize(size)
     return (
       <span
-        className={`Icon Icon-degraded ${className}`.trim()}
+        className={`Icon Icon-degraded inline-flex items-center justify-center leading-[0] align-middle text-text-muted font-bold select-none ${className}`.trim()}
         aria-hidden={true}
         style={{
           display: 'inline-flex',
@@ -126,12 +148,11 @@ export function Icon({ name, size = 24, color, className = '' }: IconProps) {
     color ??
     (SEMANTIC_COLOR as Partial<Record<string, string>>)[name as string] ??
     'currentColor'
-  const sizeValue =
-    typeof size === 'number' ? `calc(${size} * var(--rpx))` : size
+  const sizeValue = resolveSize(size)
 
   return (
     <span
-      className={`Icon ${className}`.trim()}
+      className={`Icon inline-flex items-center justify-center leading-[0] align-middle ${className}`.trim()}
       aria-hidden={true}
       style={{
         display: 'inline-flex',

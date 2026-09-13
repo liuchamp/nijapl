@@ -1,4 +1,3 @@
-import './index.css'
 import { useMemo, useRef, useState } from 'react'
 import { STRINGS } from '../../constants/strings.js'
 import { COLORS, FONT } from '../../constants/theme.js'
@@ -66,7 +65,7 @@ function clampZoom(value: number): number {
   return Math.min(Math.max(value, MIN_ZOOM), MAX_ZOOM)
 }
 
-/** rpx → CSS 长度（`--rpx` 基准由 `App.css` 的 `:root` 定义）。 */
+/** rpx → CSS 长度（`--rpx` 基准由 `styles/index.css` 的 `:root` 定义）。 */
 function rpx(value: number): string {
   return `calc(${value} * var(--rpx))`
 }
@@ -167,45 +166,48 @@ export function GraphCanvas(props: GraphCanvasProps) {
   }
 
   return (
-    <div className="GraphCanvas">
-      <div className="GraphCanvas-toolbar">
+    <div className="GraphCanvas flex flex-col w-full">
+      <div className="GraphCanvas-toolbar cursor-pointer select-none flex flex-row items-center w-full mb-sm">
         <div
-          className="GraphCanvas-tool"
+          className="GraphCanvas-tool cursor-pointer select-none px-sm py-xs mr-sm bg-surface-alt rounded-pill flex items-center gap-8"
           onClick={() => {
             setZoom((current) => clampZoom(current / ZOOM_STEP))
           }}
-          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
           <Icon name="search" size="28rpx" />
-          <span className="GraphCanvas-toolLabel">{STRINGS.graph.zoomOut}</span>
+          <span className="GraphCanvas-toolLabel cursor-pointer select-none text-sm text-text">
+            {STRINGS.graph.zoomOut}
+          </span>
         </div>
         <div
-          className="GraphCanvas-tool"
+          className="GraphCanvas-tool cursor-pointer select-none px-sm py-xs mr-sm bg-surface-alt rounded-pill flex items-center gap-8"
           onClick={() => {
             setZoom((current) => clampZoom(current * ZOOM_STEP))
           }}
-          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
           <Icon name="plus" size="28rpx" />
-          <span className="GraphCanvas-toolLabel">{STRINGS.graph.zoomIn}</span>
+          <span className="GraphCanvas-toolLabel cursor-pointer select-none text-sm text-text">
+            {STRINGS.graph.zoomIn}
+          </span>
         </div>
         <div
-          className="GraphCanvas-tool"
+          className="GraphCanvas-tool cursor-pointer select-none px-sm py-xs mr-sm bg-surface-alt rounded-pill flex items-center gap-8"
           onClick={() => {
             setZoom(1)
             setPanX(0)
             setPanY(0)
           }}
-          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
           <Icon name="close" size="28rpx" />
-          <span className="GraphCanvas-toolLabel">{STRINGS.graph.reset}</span>
+          <span className="GraphCanvas-toolLabel cursor-pointer select-none text-sm text-text">
+            {STRINGS.graph.reset}
+          </span>
         </div>
       </div>
 
-      <div className="GraphCanvas-viewport">
+      <div className="GraphCanvas-viewport relative flex items-center justify-center w-full h-760 overflow-hidden bg-surface rounded-lg">
         <div
-          className="GraphCanvas-outer"
+          className="GraphCanvas-outer cursor-pointer select-none relative"
           style={{
             width: rpx(layout.width),
             height: rpx(layout.height),
@@ -215,7 +217,7 @@ export function GraphCanvas(props: GraphCanvasProps) {
         >
           <div
             ref={contentRef}
-            className="GraphCanvas-content"
+            className="GraphCanvas-content relative touch-none"
             style={{
               width: rpx(layout.width),
               height: rpx(layout.height),
@@ -225,7 +227,7 @@ export function GraphCanvas(props: GraphCanvasProps) {
             onTouchEnd={onTouchEnd}
           >
             <div
-              className="GraphCanvas-svg"
+              className="GraphCanvas-svg absolute left-0 top-0 [&_svg]:block"
               style={{
                 width: rpx(layout.width),
                 height: rpx(layout.height),
@@ -237,7 +239,7 @@ export function GraphCanvas(props: GraphCanvasProps) {
             {displayNodes.map((node) => (
               <div
                 key={node.id}
-                className="GraphCanvas-node"
+                className="GraphCanvas-node absolute flex flex-row items-center justify-center rounded-pill cursor-pointer"
                 style={{
                   left: rpx(node.x - node.r),
                   top: rpx(node.y - node.r),
@@ -253,7 +255,7 @@ export function GraphCanvas(props: GraphCanvasProps) {
                 }}
               >
                 <span
-                  className="GraphCanvas-nodeLabel"
+                  className="GraphCanvas-nodeLabel cursor-pointer select-none text-bg font-bold"
                   style={{ fontSize: FONT.xs }}
                 >
                   {node.label}

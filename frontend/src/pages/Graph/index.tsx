@@ -1,4 +1,3 @@
-import './index.css'
 import { useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
 import { GraphCanvas } from '../../components/GraphCanvas/index.js'
@@ -33,6 +32,9 @@ import type {
  * - **交互**：节点 `bindtap` 聚焦（重算边色 + 降 opacity），再次点击进入
  *   （词→P3 / 语法→P5 / 模块→P2）；点空白取消聚焦；
  * - **缩放**：`GraphCanvas` 外层 `transform: scale(k) translate(dx,dy)`（手势在主线程）。
+ *
+ * 样式：原 `index.css` 已迁移为 Tailwind 工具类（数字 = rpx，
+ * `--spacing` 基准为 `calc(1 * var(--rpx))`）；原语义类名保留作标记。
  */
 
 /** 画布尺寸（rpx）。 */
@@ -143,49 +145,65 @@ export function GraphPage() {
     selectedTarget.kind !== 'stage'
 
   return (
-    <div className="Graph">
-      <div className="Graph-head">
+    <div className="Graph flex flex-col flex-1 w-full p-md">
+      <div className="Graph-head flex flex-row items-center w-full mb-sm">
         <div
-          className="Graph-back"
+          className="Graph-back cursor-pointer select-none px-md py-xs bg-surface-alt rounded-pill flex items-center gap-8"
           onClick={nav.back}
-          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
           <Icon name="chevron-left" size="28rpx" />
-          <span className="Graph-backLabel">{STRINGS.common.back}</span>
+          <span className="Graph-backLabel cursor-pointer select-none text-sm text-text">
+            {STRINGS.common.back}
+          </span>
         </div>
-        <span className="Graph-title">{STRINGS.graph.title}</span>
+        <span className="Graph-title flex-1 text-center text-lg font-bold">
+          {STRINGS.graph.title}
+        </span>
       </div>
 
-      <div className="Graph-tabs">
+      <div className="Graph-tabs flex flex-row items-center w-full mb-sm">
         {VIEW_ORDER.map((mode) => (
           <div
             key={mode}
             className={
-              query.view === mode ? 'Graph-tab Graph-tab--on' : 'Graph-tab'
+              query.view === mode
+                ? 'Graph-tab Graph-tab--on flex-1 flex flex-row items-center justify-center py-xs mr-xs bg-primary rounded-pill'
+                : 'Graph-tab flex-1 flex flex-row items-center justify-center py-xs mr-xs bg-surface-alt rounded-pill'
             }
             onClick={() => nav.goGraph({ view: mode })}
           >
-            <span className="Graph-tabLabel">{viewLabel(mode)}</span>
+            <span className="Graph-tabLabel text-sm text-text">
+              {viewLabel(mode)}
+            </span>
           </div>
         ))}
       </div>
 
-      <span className="Graph-hint">{STRINGS.graph.focusHint}</span>
+      <span className="Graph-hint text-xs text-text-muted mb-xs">
+        {STRINGS.graph.focusHint}
+      </span>
 
-      <div className="Graph-legend">
+      <div className="Graph-legend flex flex-row items-center flex-wrap w-full mb-sm">
         {LEGEND.map((item) => (
-          <div key={item.label} className="Graph-legendItem">
+          <div
+            key={item.label}
+            className="Graph-legendItem flex flex-row items-center mr-md"
+          >
             <div
-              className="Graph-legendDot"
+              className="Graph-legendDot w-18 h-18 rounded-pill mr-xs"
               style={{ backgroundColor: item.color }}
             />
-            <span className="Graph-legendLabel">{item.label}</span>
+            <span className="Graph-legendLabel text-xs text-text-muted">
+              {item.label}
+            </span>
           </div>
         ))}
       </div>
 
       {layoutResult.nodes.length === 0 ? (
-        <span className="Graph-empty">{STRINGS.graph.empty}</span>
+        <span className="Graph-empty text-md text-text-muted mt-lg">
+          {STRINGS.graph.empty}
+        </span>
       ) : (
         <GraphCanvas
           view={view}
@@ -197,14 +215,16 @@ export function GraphPage() {
       )}
 
       {selected !== null ? (
-        <div className="Graph-detail">
-          <span className="Graph-detailLabel">{selected.label}</span>
+        <div className="Graph-detail flex flex-row items-center justify-between w-full p-md mt-sm bg-surface rounded-md">
+          <span className="Graph-detailLabel text-md font-bold text-text">
+            {selected.label}
+          </span>
           {canEnter ? (
             <div
-              className="Graph-detailBtn"
+              className="Graph-detailBtn cursor-pointer select-none px-md py-xs bg-primary rounded-pill"
               onClick={() => enterNode(selected)}
             >
-              <span className="Graph-detailBtnLabel">
+              <span className="Graph-detailBtnLabel cursor-pointer select-none text-sm text-bg font-bold">
                 {STRINGS.graph.enter}
               </span>
             </div>

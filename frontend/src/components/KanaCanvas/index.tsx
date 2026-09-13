@@ -1,4 +1,3 @@
-import './index.css'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { KANA_CANVAS_GRID } from '../../constants/kana.js'
 import { STRINGS } from '../../constants/strings.js'
@@ -52,6 +51,14 @@ function drawGrid(
     ctx.stroke()
   }
 }
+
+/** 底字层公共样式（原 `.KanaCanvas-guide`：绝对定位铺满 + `line-height:1` + 半透明底字）。 */
+const GUIDE_BASE =
+  'KanaCanvas-guide absolute inset-0 flex flex-row items-center justify-center text-[calc(200*var(--rpx))] leading-none text-text-muted select-none pointer-events-none'
+
+/** 按钮公共样式（原 `.KanaCanvas-btn`）；变体只覆盖背景 / 透明度。 */
+const BTN_BASE =
+  'KanaCanvas-btn cursor-pointer select-none flex flex-row items-center justify-center flex-1 py-xs rounded-pill'
 
 /** 描红画布。 */
 export function KanaCanvas(props: KanaCanvasProps) {
@@ -152,18 +159,18 @@ export function KanaCanvas(props: KanaCanvasProps) {
   // 默写态下底字默认被遮盖；「偷看」只临时揭示（恢复由服务层计时，本组件不碰计时器）。
   const guideHidden = props.memoryMode && !props.peekVisible
   const guideClass = guideHidden
-    ? 'KanaCanvas-guide KanaCanvas-guide--hidden'
+    ? `${GUIDE_BASE} KanaCanvas-guide--hidden opacity-0`
     : props.memoryMode
-      ? 'KanaCanvas-guide KanaCanvas-guide--peek'
-      : 'KanaCanvas-guide'
+      ? `${GUIDE_BASE} KanaCanvas-guide--peek opacity-60`
+      : `${GUIDE_BASE} opacity-45`
 
   return (
-    <div className="KanaCanvas">
-      <div className="KanaCanvas-board">
+    <div className="KanaCanvas flex flex-col w-full">
+      <div className="KanaCanvas-board relative w-full h-[calc(320*var(--rpx))] bg-surface-alt rounded-md overflow-hidden">
         <span className={guideClass}>{props.char}</span>
         <canvas
           ref={canvasRef}
-          className="KanaCanvas-surface"
+          className="KanaCanvas-surface absolute top-0 left-0 w-full h-full cursor-crosshair touch-none"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
@@ -171,14 +178,16 @@ export function KanaCanvas(props: KanaCanvasProps) {
         />
       </div>
 
-      <span className="KanaCanvas-hint">{STRINGS.kana.writingHint}</span>
+      <span className="KanaCanvas-hint mt-xs text-xs text-text-muted">
+        {STRINGS.kana.writingHint}
+      </span>
 
-      <div className="KanaCanvas-actions">
+      <div className="KanaCanvas-actions flex flex-row items-center gap-sm w-full mt-sm">
         <div
           className={
             hasInk
-              ? 'KanaCanvas-btn KanaCanvas-btn--on'
-              : 'KanaCanvas-btn KanaCanvas-btn--disabled'
+              ? `${BTN_BASE} KanaCanvas-btn--on bg-primary-soft`
+              : `${BTN_BASE} KanaCanvas-btn--disabled bg-surface-alt opacity-45`
           }
           onClick={() => {
             if (hasInk) {
@@ -186,13 +195,16 @@ export function KanaCanvas(props: KanaCanvasProps) {
             }
           }}
         >
-          <span className="KanaCanvas-btnLabel">
+          <span className="KanaCanvas-btnLabel text-xs text-text">
             {STRINGS.kana.clearCanvas}
           </span>
         </div>
 
-        <div className="KanaCanvas-btn" onClick={props.onToggleMemory}>
-          <span className="KanaCanvas-btnLabel">
+        <div
+          className={`${BTN_BASE} bg-surface-alt`}
+          onClick={props.onToggleMemory}
+        >
+          <span className="KanaCanvas-btnLabel text-xs text-text">
             {props.memoryMode
               ? `${STRINGS.kana.memoryMode}·${STRINGS.kana.memoryOn}`
               : `${STRINGS.kana.memoryMode}·${STRINGS.kana.memoryOff}`}
@@ -201,16 +213,20 @@ export function KanaCanvas(props: KanaCanvasProps) {
 
         {props.memoryMode ? (
           <div
-            className="KanaCanvas-btn KanaCanvas-btn--peek"
+            className={`${BTN_BASE} KanaCanvas-btn--peek bg-primary-soft`}
             onClick={props.onPeek}
           >
-            <span className="KanaCanvas-btnLabel">{STRINGS.kana.peek}</span>
+            <span className="KanaCanvas-btnLabel text-xs text-text">
+              {STRINGS.kana.peek}
+            </span>
           </div>
         ) : null}
       </div>
 
       {props.memoryMode ? (
-        <span className="KanaCanvas-peekHint">{STRINGS.kana.peekHint}</span>
+        <span className="KanaCanvas-peekHint mt-xs text-xs text-text-muted">
+          {STRINGS.kana.peekHint}
+        </span>
       ) : null}
     </div>
   )

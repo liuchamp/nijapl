@@ -33,10 +33,12 @@ interface PlaceholderProps {
 function PagePlaceholder(props: PlaceholderProps) {
   const location = useLocation()
   return (
-    <div className="Page">
-      <span className="Page-title">{props.title}</span>
-      <span className="Page-path">{location.pathname}</span>
-      <span className="Page-note">{props.note}</span>
+    <div className="Page flex-1 flex flex-col items-center justify-center p-lg">
+      <span className="Page-title text-lg font-bold mb-sm">{props.title}</span>
+      <span className="Page-path text-sm text-primary mb-xs">
+        {location.pathname}
+      </span>
+      <span className="Page-note text-xs text-text-muted">{props.note}</span>
     </div>
   )
 }

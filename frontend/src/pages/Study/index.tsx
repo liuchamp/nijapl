@@ -1,4 +1,3 @@
-import './index.css'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useParams } from 'react-router'
 import { DetailSheet } from '../../components/DetailSheet/index.js'
@@ -40,6 +39,9 @@ import type { SelfEval } from '../../types/progress.js'
  *   三级降级（`pagerFailCount` / `pagerToken` / `containerBroken`）与 `services/platform.ts`、
  *   `services/pagerSeek.ts` **整体删除**：Web 下 `element.scrollTo()` 同步可靠，
  *   不存在 "宿主未注册 Behavior 导致 UI 创建失败（60301 / 9902）" 的问题。
+ *
+ * 样式：原 `index.css` 已迁移为 Tailwind 工具类（数字 = rpx，
+ * `--spacing` 基准为 `calc(1 * var(--rpx))`）；原语义类名保留作标记。
  */
 export function StudyPage() {
   const params = useParams<{ moduleId: string }>()
@@ -239,123 +241,151 @@ export function StudyPage() {
 
   if (words.length === 0) {
     return (
-      <div className="Study">
-        <div className="Study-head">
+      <div className="Study flex flex-col flex-1 w-full p-md">
+        <div className="Study-head flex flex-row items-center justify-between w-full">
           <div
-            className="Study-back"
+            className="Study-back cursor-pointer select-none px-md py-xs bg-surface-alt rounded-pill flex items-center gap-8"
             onClick={nav.back}
-            style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
           >
             <Icon name="chevron-left" size="28rpx" />
-            <span className="Study-backLabel">{STRINGS.common.back}</span>
+            <span className="Study-backLabel cursor-pointer select-none text-sm text-text">
+              {STRINGS.common.back}
+            </span>
           </div>
-          <span className="Study-title">{STRINGS.study.title}</span>
+          <span className="Study-title text-lg font-bold">
+            {STRINGS.study.title}
+          </span>
         </div>
-        <div className="Study-empty">
-          <span className="Study-emptyLabel">{STRINGS.study.emptyModule}</span>
+        <div className="Study-empty flex flex-row items-center justify-center flex-1">
+          <span className="Study-emptyLabel text-md text-text-muted">
+            {STRINGS.study.emptyModule}
+          </span>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="Study">
-      <div className="Study-head">
+    <div className="Study flex flex-col flex-1 w-full p-md">
+      <div className="Study-head flex flex-row items-center justify-between w-full">
         <div
-          className="Study-back"
+          className="Study-back cursor-pointer select-none px-md py-xs bg-surface-alt rounded-pill flex items-center gap-8"
           onClick={nav.back}
-          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
           <Icon name="chevron-left" size="28rpx" />
-          <span className="Study-backLabel">{STRINGS.common.back}</span>
+          <span className="Study-backLabel cursor-pointer select-none text-sm text-text">
+            {STRINGS.common.back}
+          </span>
         </div>
-        <span className="Study-title">
+        <span className="Study-title text-lg font-bold">
           {isReview ? STRINGS.study.reviewTitle : STRINGS.study.title}
         </span>
-        <span className="Study-progress">
+        <span className="Study-progress text-xs text-text-muted">
           {`${STRINGS.study.cardProgress} ${safeIndex + 1}/${words.length}`}
         </span>
       </div>
 
-      <span className="Study-fallback">{STRINGS.study.webFallbackHint}</span>
+      <span className="Study-fallback mt-sm text-xs text-warning">
+        {STRINGS.study.webFallbackHint}
+      </span>
 
-      <div className="Study-stage">
+      <div className="Study-stage flex flex-row flex-1 w-full mt-md">
         <div
           ref={pagerRef}
-          className="Study-pager"
+          className="Study-pager flex flex-row w-full h-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory [scrollbar-width:none] [-webkit-overflow-scrolling:touch] [&::-webkit-scrollbar]:hidden"
           onScroll={handlePagerScroll}
         >
           {words.map((cardWord, cardIndex) => (
-            <div key={cardWord.id} className="Study-item">
+            <div
+              key={cardWord.id}
+              className="Study-item flex flex-row items-center justify-center grow-0 shrink-0 basis-full w-full p-md snap-start snap-always"
+            >
               {renderCard(cardWord, cardIndex === safeIndex)}
             </div>
           ))}
         </div>
       </div>
 
-      <div className="Study-eval">
+      <div className="Study-eval flex flex-row items-center justify-between gap-sm w-full mt-md">
         <div
-          className="Study-evalBtn Study-evalBtn--unknown"
+          className="Study-evalBtn Study-evalBtn--unknown cursor-pointer select-none flex-1 flex flex-row items-center justify-center py-md rounded-md border-[calc(1*var(--rpx))] border-border bg-[rgba(255,95,109,0.16)]"
           onClick={() => {
             onSelfEval('不认识')
           }}
         >
-          <span className="Study-evalLabel">
+          <span className="Study-evalLabel text-md font-bold text-text">
             {STRINGS.study.selfEvalUnknown}
           </span>
         </div>
         <div
-          className="Study-evalBtn Study-evalBtn--vague"
+          className="Study-evalBtn Study-evalBtn--vague cursor-pointer select-none flex-1 flex flex-row items-center justify-center py-md rounded-md border-[calc(1*var(--rpx))] border-border bg-[rgba(240,180,74,0.16)]"
           onClick={() => {
             onSelfEval('模糊')
           }}
         >
-          <span className="Study-evalLabel">{STRINGS.study.selfEvalVague}</span>
+          <span className="Study-evalLabel text-md font-bold text-text">
+            {STRINGS.study.selfEvalVague}
+          </span>
         </div>
         <div
-          className="Study-evalBtn Study-evalBtn--known"
+          className="Study-evalBtn Study-evalBtn--known cursor-pointer select-none flex-1 flex flex-row items-center justify-center py-md rounded-md border-[calc(1*var(--rpx))] border-border bg-[rgba(57,196,122,0.16)]"
           onClick={() => {
             onSelfEval('认识')
           }}
         >
-          <span className="Study-evalLabel">{STRINGS.study.selfEvalKnown}</span>
+          <span className="Study-evalLabel text-md font-bold text-text">
+            {STRINGS.study.selfEvalKnown}
+          </span>
         </div>
       </div>
 
-      <div className="Study-nav">
+      <div className="Study-nav flex flex-row items-center justify-between gap-sm w-full mt-md">
         <div
-          className="Study-navBtn"
+          className="Study-navBtn cursor-pointer select-none flex-1 flex flex-row items-center justify-center py-sm bg-surface-alt rounded-pill gap-8"
           onClick={() => {
             advance(-1)
           }}
-          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
           <Icon name="chevron-left" size="28rpx" />
-          <span className="Study-navLabel">{STRINGS.common.prev}</span>
+          <span className="Study-navLabel text-sm text-text">
+            {STRINGS.common.prev}
+          </span>
         </div>
-        <div className="Study-wrong" onClick={() => undefined}>
-          <span className="Study-wrongLabel">
+        <div
+          className="Study-wrong cursor-pointer select-none px-sm"
+          onClick={() => undefined}
+        >
+          <span className="Study-wrongLabel cursor-pointer select-none text-xs text-text-muted">
             {`${STRINGS.study.sessionWrong} ${state.runtime.sessionWrongCount}`}
           </span>
         </div>
-        <div className="Study-navBtn" onClick={onSkip}>
-          <span className="Study-navLabel">{STRINGS.common.skip}</span>
+        <div
+          className="Study-navBtn cursor-pointer select-none flex-1 flex flex-row items-center justify-center py-sm bg-surface-alt rounded-pill"
+          onClick={onSkip}
+        >
+          <span className="Study-navLabel text-sm text-text">
+            {STRINGS.common.skip}
+          </span>
         </div>
         <div
-          className="Study-navBtn"
+          className="Study-navBtn cursor-pointer select-none flex-1 flex flex-row items-center justify-center py-sm bg-surface-alt rounded-pill gap-8"
           onClick={() => {
             advance(1)
           }}
-          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
-          <span className="Study-navLabel">{STRINGS.common.next}</span>
+          <span className="Study-navLabel text-sm text-text">
+            {STRINGS.common.next}
+          </span>
           <Icon name="chevron-right" size="28rpx" />
         </div>
       </div>
 
       {effect.promptGraph ? (
-        <div className="Study-graphHint" onClick={() => nav.goGraph()}>
-          <span className="Study-graphHintLabel">
+        <div
+          className="Study-graphHint cursor-pointer select-none flex flex-col mt-sm"
+          onClick={() => nav.goGraph()}
+        >
+          <span className="Study-graphHintLabel cursor-pointer select-none text-xs text-primary">
             {STRINGS.home.graphEntry}
           </span>
         </div>
@@ -371,36 +401,42 @@ export function StudyPage() {
       />
 
       {moduleDone ? (
-        <div className="Study-done">
-          <div className="Study-doneCard">
-            <span className="Study-doneTitle">
+        <div className="Study-done fixed inset-0 flex flex-row items-center justify-center bg-[rgba(0,0,0,0.35)]">
+          <div className="Study-doneCard flex flex-col items-center w-[80%] p-lg bg-surface rounded-lg">
+            <span className="Study-doneTitle text-lg font-bold text-text">
               {selectStageComplete(state, state.session.stageId)
                 ? STRINGS.study.stageDoneTitle
                 : STRINGS.study.moduleDoneTitle}
             </span>
-            <span className="Study-doneBody">
+            <span className="Study-doneBody mt-sm text-sm text-text-muted text-center">
               {selectStageComplete(state, state.session.stageId)
                 ? STRINGS.study.stageDoneBody
                 : STRINGS.study.moduleDoneBody}
             </span>
-            <div className="Study-doneActions">
+            <div className="Study-doneActions flex flex-col gap-sm w-full mt-lg">
               <div
-                className="Study-doneBtn Study-doneBtn--primary"
+                className="Study-doneBtn Study-doneBtn--primary cursor-pointer select-none flex flex-row items-center justify-center py-sm bg-primary rounded-pill"
                 onClick={() => nav.goGraph()}
               >
-                <span className="Study-doneBtnLabel">
+                <span className="Study-doneBtnLabel text-sm text-text">
                   {STRINGS.study.viewGraph}
                 </span>
               </div>
               {nextModuleId !== null ? (
-                <div className="Study-doneBtn" onClick={goNextModule}>
-                  <span className="Study-doneBtnLabel">
+                <div
+                  className="Study-doneBtn cursor-pointer select-none flex flex-row items-center justify-center py-sm bg-surface-alt rounded-pill"
+                  onClick={goNextModule}
+                >
+                  <span className="Study-doneBtnLabel text-sm text-text">
                     {STRINGS.study.nextModule}
                   </span>
                 </div>
               ) : null}
-              <div className="Study-doneBtn" onClick={nav.goStages}>
-                <span className="Study-doneBtnLabel">
+              <div
+                className="Study-doneBtn cursor-pointer select-none flex flex-row items-center justify-center py-sm bg-surface-alt rounded-pill"
+                onClick={nav.goStages}
+              >
+                <span className="Study-doneBtnLabel text-sm text-text">
                   {STRINGS.study.backToStages}
                 </span>
               </div>

@@ -16,8 +16,9 @@ const DefaultTTSBaseURL = "http://127.0.0.1:8000"
 const EnvTTSBaseURL = "NIJAPL_TTS_BASE_URL"
 
 // buildTTSBaseURL 是构建期注入的 TTS 服务地址（`go build -ldflags
-// "-X nijapl/internal/config.buildTTSBaseURL=..."`，见 build/android/Taskfile.yml）。
-// Android APK 跑在独立进程里读不到运行期环境变量，只能靠它把 host 烘进包。
+// "-X nijapl/internal/config.buildTTSBaseURL=..."`，见 build/android/Taskfile.yml
+// 与 build/ios/Taskfile.yml）。真机跑在独立进程里读不到运行期环境变量，只能靠它
+// 把 host 烘进包；注入为空时由 `TTSBaseURL()` 回退到 `DefaultTTSBaseURL`。
 var buildTTSBaseURL string
 
 // DataDir 返回应用数据目录（不存在时创建）。

@@ -10,6 +10,7 @@
 - 系统设计 / 迁移规格：`docs/design/ARCH-系统设计.md`、`docs/migration/spec-*.md`
 - 迁移差异与保真决策：`docs/migration/PORTING-NOTES.md`、`docs/migration/PLAN.md`（§9 红线）
 - 学习交互全图：`docs/design/learning-flow.mermaid`
+- 品牌图标规范：`docs/design/BRAND-Nijapl-品牌规范.md`（`components/Icon` 语义色依据）
 
 ## 常用命令
 
@@ -41,16 +42,16 @@
 ```
 main.go                     应用入口（Wails 装配 + 窗口选项）
 internal/config/            TTS 地址与数据目录
-internal/services/          Go 服务：KVStore / TTS / System（剪贴板）
-frontend/src/engine/        平台端口（storage/tts）+ 纯引擎（srs/progress/jumpRules/conjugation/graph/kana）
+internal/services/          Go 服务：KVStore / TTS / System（剪贴板）/ Mobile（原生能力，桌面 no-op）
+frontend/src/engine/        平台端口（storage/tts）+ 平台探测（platform/，唯一真相源）+ 纯引擎（srs/progress/jumpRules/conjugation/graph/kana）
 frontend/src/store/         zustand vanilla：actions(唯一写入口)/selectors/hooks/persistence
 frontend/src/services/      编排层：studySession / kanaWriteSession / ttsController / jumpService / quiz / clipboard…
-frontend/src/pages/         P0–P9 页面 + K 域（Kana / KanaStudy / KanaQuiz）（每页一目录：index.tsx + index.css）
-frontend/src/components/    C1/C2 + 通用组件 + K 域（KanaTable / KanaCanvas / KanaConfusableCard）（同目录结构）
+frontend/src/pages/         P0–P9 页面 + K 域（Kana / KanaStudy / KanaQuiz）（每页一目录：index.tsx；样式为 Tailwind 工具类）
+frontend/src/components/    C1/C2 + 通用组件（含宽屏 Sidebar）+ K 域（KanaTable / KanaCanvas / KanaConfusableCard）（同目录结构）
 frontend/src/constants/     routes / strings / theme / srs / pos / tts / jumpRules / kana（唯一真相源，无路径别名）
-frontend/src/router/        index.tsx（AppShell + MemoryRouter 装配）/ routes.tsx / navigation.ts（页面一律 `useNavigation()`，禁用 `<Link>`）
+frontend/src/router/        index.tsx（AppShell 按 `useIsWide()` 768px 切窄屏 TabBar / 宽屏 Sidebar + MemoryRouter 装配）/ routes.tsx / navigation.ts / useIsWide.ts（页面一律 `useNavigation()`，禁用 `<Link>`）
 frontend/src/types/         domain / progress / graph / kana（K 域实体）
-frontend/src/data/          repository.ts（唯一数据入口，组装 JSON；上层禁直读 JSON）
+frontend/src/data/          index.ts（单例 repository，唯一数据入口）+ repository.ts（组装 JSON；上层禁直读 JSON）
 frontend/data/build/        构建产物 *.json（words/modules/stages/sentences/grammar + 独立 kana.json，禁手改）
 frontend/data/source/       种子 TS：seed/（W 域）+ kana/（K 域）
 frontend/scripts/gen-data/  seed→JSON 管线（`npm run gen:data`；含 schema/validate/build-kana/validate-kana）
@@ -66,7 +67,7 @@ docs/                       设计 / 迁移 / PRD / QA / 评审
   **不得**直接调用 Wails 绑定或浏览器原生 API。
   **唯一例外**：`services/clipboard.ts` 直连 `System` 绑定（本项目未定义 Clipboard 端口，见
   `docs/migration/spec-architecture.md` §E.4）。端口实现文件（`*.web.ts` / `*.wails.ts` /
-  `tts-client.ts` / `player*.ts`）**禁止**被外部 import。
+  `tts.mobile.ts` / `tts-client.ts` / `player*.ts`）**禁止**被外部 import。
 - **端口契约**：端口**永不 throw**；失败必给用户可见降级文案（零静默失败）。
 - **写操作唯一入口**：页面 / service 只 dispatch `store/actions.ts`，不自行改状态；
   `store/selectors.ts` 必须是纯函数 `(state,…) => 值`，且**返回稳定引用或原始值**
@@ -83,7 +84,7 @@ docs/                       设计 / 迁移 / PRD / QA / 评审
 - **文本/容器语义**：原 Lynx `<view>` 默认 `display:flex; flex-direction:column`（子元素被块级化），
   Web `<div>` 是 block。若容器含多个相邻 `<span>` / `<svg>`，或子 `<span>` 依赖 `width` /
   `text-align`，**必须显式补** `display:flex; flex-direction:column`。
-- **默认字号**：Lynx 的 UA 默认字号是 **14px**（浏览器 16px），已在 `frontend/src/App.css`
+- **默认字号**：Lynx 的 UA 默认字号是 **14px**（浏览器 16px），已在 `frontend/src/styles/index.css`
   的 `body` 上对齐；新增未显式设字号的元素时留意。
   **例外**：`pages/KanaQuiz` 的「输入罗马音」是本仓库唯一的 `<input>`；表单控件不继承
   `body` 的字号 / 配色，故它显式声明了 font-size / color / background / border。
@@ -92,8 +93,8 @@ docs/                       设计 / 迁移 / PRD / QA / 评审
 - **禁止硬编码**：中文 UI 文案一律 `constants/strings.ts`（`STRINGS.*`）；TTS 地址一律
   `constants/tts.ts` 的 `TTS_BASE_URL`（业务代码禁止出现 IP / 域名字面量）。
 - **不要"顺手修好"**：要求与原 Lynx 行为逐处一致，包括反直觉之处；红线清单见
-  `docs/migration/PLAN.md` §9。已知有意保留项：Quiz 无入口、Graph 暗色下白圈边线、
-  TTS 降级时 `.WordCard-reveal` 被压窄、18 个 SVG 图标不接入。
+   `docs/migration/PLAN.md` §9。已知有意保留项：Quiz 无入口、Graph 暗色下白圈边线、
+   TTS 降级时 `.WordCard-reveal` 被压窄（18 个 SVG 图标**已**按品牌规范接入 `components/Icon`，不再是保留项）。
 
 ### K 域（五十音）专项红线
 

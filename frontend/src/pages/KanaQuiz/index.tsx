@@ -1,4 +1,3 @@
-import './index.css'
 import { useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
 import { Icon } from '../../components/Icon/index.js'
@@ -31,7 +30,9 @@ import type { KanaQuizKind, KanaQuizQuestion } from '../../types/kana.js'
  * 答错 → `需强化` + `wrongCount + 1` → 自动进错音本（P7 的假名分区）。
  *
  * 题型⑤ 是本项目**第一个 `<input>`**：`body` 的 14px 字号不会被继承，
- * 故 `.KanaQuiz-input` 必须显式声明字号与配色（见 `index.css`）。
+ * 故 `.KanaQuiz-input` 必须显式声明字号与配色（原 `index.css`，
+ * 已迁移为 Tailwind 工具类：数字 = rpx，`--spacing` 基准为 `calc(1 * var(--rpx))`；
+ * 原语义类名保留作标记）。
  */
 
 /** 题型 → 题干提示文案。 */
@@ -160,54 +161,67 @@ export function KanaQuizPage() {
   }
 
   return (
-    <div className="KanaQuiz">
-      <div className="KanaQuiz-head">
+    <div className="KanaQuiz flex flex-col flex-1 w-full p-md">
+      <div className="KanaQuiz-head flex flex-row items-center justify-between w-full">
         <div
-          className="KanaQuiz-back"
+          className="KanaQuiz-back cursor-pointer select-none px-md py-xs bg-surface-alt rounded-pill flex items-center gap-8"
           onClick={nav.back}
-          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
           <Icon name="chevron-left" size="28rpx" />
-          <span className="KanaQuiz-backLabel">{STRINGS.kana.quizBack}</span>
+          <span className="KanaQuiz-backLabel text-sm text-text">
+            {STRINGS.kana.quizBack}
+          </span>
         </div>
-        <span className="KanaQuiz-title">{STRINGS.kana.quizTitle}</span>
+        <span className="KanaQuiz-title text-lg font-bold">
+          {STRINGS.kana.quizTitle}
+        </span>
       </div>
 
-      <span className="KanaQuiz-scope">
+      <span className="KanaQuiz-scope mt-xs text-xs text-text-muted">
         {group === undefined ? STRINGS.kana.graduationEntry : group.name}
       </span>
 
       {questions.length === 0 ? (
-        <span className="KanaQuiz-empty">{STRINGS.kana.quizEmpty}</span>
+        <span className="KanaQuiz-empty mt-lg text-md text-text-muted">
+          {STRINGS.kana.quizEmpty}
+        </span>
       ) : done ? (
-        <div className="KanaQuiz-result">
-          <span className="KanaQuiz-resultTitle">{STRINGS.kana.quizDone}</span>
-          <span className="KanaQuiz-resultScore">
+        <div className="KanaQuiz-result flex flex-col items-center w-full mt-xl">
+          <span className="KanaQuiz-resultTitle text-lg font-bold">
+            {STRINGS.kana.quizDone}
+          </span>
+          <span className="KanaQuiz-resultScore mt-sm text-md text-text-muted">
             {`${STRINGS.kana.quizScore} ${score}/${questions.length}`}
           </span>
-          <div className="KanaQuiz-restart" onClick={resetRound}>
-            <span className="KanaQuiz-restartLabel">
+          <div
+            className="KanaQuiz-restart cursor-pointer select-none flex flex-row items-center justify-center w-full mt-md py-sm bg-surface-alt rounded-pill"
+            onClick={resetRound}
+          >
+            <span className="KanaQuiz-restartLabel text-sm text-text">
               {STRINGS.kana.quizRestart}
             </span>
           </div>
-          <div className="KanaQuiz-restart" onClick={nav.goKana}>
-            <span className="KanaQuiz-restartLabel">
+          <div
+            className="KanaQuiz-restart cursor-pointer select-none flex flex-row items-center justify-center w-full mt-md py-sm bg-surface-alt rounded-pill"
+            onClick={nav.goKana}
+          >
+            <span className="KanaQuiz-restartLabel text-sm text-text">
               {STRINGS.kana.backToKana}
             </span>
           </div>
         </div>
       ) : question !== undefined ? (
-        <div className="KanaQuiz-body">
-          <span className="KanaQuiz-progress">
+        <div className="KanaQuiz-body flex flex-col w-full mt-md">
+          <span className="KanaQuiz-progress text-xs text-text-muted">
             {`${STRINGS.kana.quizProgress} ${index + 1}/${questions.length}`}
           </span>
 
-          <span className="KanaQuiz-promptLabel">
+          <span className="KanaQuiz-promptLabel mt-sm text-sm text-text-muted">
             {promptLabel(question.kind, index)}
           </span>
 
           {question.kind === 'listenToKana' ? (
-            <div className="KanaQuiz-listen">
+            <div className="KanaQuiz-listen flex flex-row items-center mt-md">
               <TtsButton
                 text={question.answer}
                 settings={settings}
@@ -215,16 +229,18 @@ export function KanaQuizPage() {
               />
             </div>
           ) : (
-            <span className="KanaQuiz-prompt">{question.prompt}</span>
+            <span className="KanaQuiz-prompt mt-sm text-xl font-bold text-text">
+              {question.prompt}
+            </span>
           )}
 
           {question.kind === 'typeRomaji' ? (
             <>
-              <div className="KanaQuiz-inputRow">
+              <div className="KanaQuiz-inputRow flex flex-row items-center gap-sm w-full mt-md">
                 <input
                   // key 逐题变化：连续两道输入题时强制重挂载，`autoFocus` 才会再次生效。
                   key={question.targetId}
-                  className="KanaQuiz-input"
+                  className="KanaQuiz-input flex-1 min-w-0 px-md py-sm bg-surface-alt text-text font-sans text-lg border-[calc(1*var(--rpx))] border-border rounded-md outline-none focus:border-primary disabled:opacity-60"
                   value={typed}
                   placeholder={STRINGS.kana.quizInputPlaceholder}
                   disabled={settled}
@@ -237,27 +253,33 @@ export function KanaQuizPage() {
                     }
                   }}
                 />
-                <div className="KanaQuiz-submit" onClick={() => settle(null)}>
-                  <span className="KanaQuiz-submitLabel">
+                <div
+                  className="KanaQuiz-submit cursor-pointer select-none flex flex-row items-center justify-center px-lg py-sm bg-primary rounded-pill"
+                  onClick={() => settle(null)}
+                >
+                  <span className="KanaQuiz-submitLabel text-sm text-text">
                     {STRINGS.kana.quizSubmit}
                   </span>
                 </div>
               </div>
               {settled ? null : (
-                <span className="KanaQuiz-inputHint">
+                <span className="KanaQuiz-inputHint mt-xs text-xs text-text-muted">
                   {STRINGS.kana.quizTypeRomajiHint}
                 </span>
               )}
             </>
           ) : (
-            <div className="KanaQuiz-options">
+            <div className="KanaQuiz-options flex flex-col gap-sm w-full mt-md">
               {question.options.map((option, optionIndex) => {
-                let className = 'KanaQuiz-option'
+                let className =
+                  'KanaQuiz-option cursor-pointer select-none flex flex-row items-center justify-center w-full py-md bg-surface-alt rounded-md border-[calc(1*var(--rpx))] border-border'
                 if (settled) {
                   if (option === question.answer) {
-                    className = 'KanaQuiz-option KanaQuiz-option--correct'
+                    className =
+                      'KanaQuiz-option KanaQuiz-option--correct cursor-pointer select-none flex flex-row items-center justify-center w-full py-md rounded-md bg-[rgba(57,196,122,0.16)] border-[calc(1*var(--rpx))] border-success'
                   } else if (optionIndex === picked) {
-                    className = 'KanaQuiz-option KanaQuiz-option--wrong'
+                    className =
+                      'KanaQuiz-option KanaQuiz-option--wrong cursor-pointer select-none flex flex-row items-center justify-center w-full py-md rounded-md bg-[rgba(255,95,109,0.16)] border-[calc(1*var(--rpx))] border-danger'
                   }
                 }
                 return (
@@ -267,7 +289,9 @@ export function KanaQuizPage() {
                     className={className}
                     onClick={() => settle(optionIndex)}
                   >
-                    <span className="KanaQuiz-optionLabel">{option}</span>
+                    <span className="KanaQuiz-optionLabel text-lg text-text">
+                      {option}
+                    </span>
                   </div>
                 )
               })}
@@ -275,20 +299,23 @@ export function KanaQuizPage() {
           )}
 
           {settled ? (
-            <div className="KanaQuiz-feedback">
+            <div className="KanaQuiz-feedback flex flex-col w-full mt-md">
               <span
                 className={
                   correct
-                    ? 'KanaQuiz-feedbackText KanaQuiz-feedbackText--ok'
-                    : 'KanaQuiz-feedbackText KanaQuiz-feedbackText--bad'
+                    ? 'KanaQuiz-feedbackText KanaQuiz-feedbackText--ok text-sm text-success'
+                    : 'KanaQuiz-feedbackText KanaQuiz-feedbackText--bad text-sm text-danger'
                 }
               >
                 {correct
                   ? STRINGS.kana.quizCorrect
                   : `${STRINGS.kana.quizWrong} · ${STRINGS.kana.quizAnswer}: ${question.answer}`}
               </span>
-              <div className="KanaQuiz-next" onClick={next}>
-                <span className="KanaQuiz-nextLabel">
+              <div
+                className="KanaQuiz-next cursor-pointer select-none flex flex-row items-center justify-center mt-md py-sm bg-surface-alt rounded-pill"
+                onClick={next}
+              >
+                <span className="KanaQuiz-nextLabel text-sm text-text">
                   {index + 1 >= questions.length
                     ? STRINGS.kana.quizFinish
                     : STRINGS.kana.quizNext}

@@ -1,4 +1,3 @@
-import './index.css'
 import { STRINGS } from '../../constants/strings.js'
 import { ttsController } from '../../services/ttsController.js'
 import type { Kana } from '../../types/kana.js'
@@ -27,22 +26,29 @@ export function KanaConfusableCard(props: KanaConfusableCardProps) {
   const sides = [props.a, props.b]
 
   return (
-    <div className="KanaConfusableCard">
+    <div className="KanaConfusableCard flex flex-row items-center w-full mt-xs p-sm bg-surface rounded-md">
       {sides.map((item) => (
         <div
           key={item.id}
-          className="KanaConfusableCard-side"
+          // 原 `.side + .side { margin-left }`（相邻兄弟选择器）→ 等价于「非首个子元素」。
+          className="KanaConfusableCard-side cursor-pointer select-none flex flex-row items-center justify-center gap-xs flex-1 py-xs bg-surface-alt rounded-md border-[calc(1*var(--rpx))] border-border [&:not(:first-child)]:ml-sm"
           onClick={() => {
             // 朗读依据恒为平假名（与 K1 / P2 一致）。
             void ttsController.speak(item.hiragana, props.settings)
           }}
         >
-          <span className="KanaConfusableCard-hiragana">{item.hiragana}</span>
-          <span className="KanaConfusableCard-katakana">{item.katakana}</span>
-          <span className="KanaConfusableCard-romaji">{item.romaji}</span>
+          <span className="KanaConfusableCard-hiragana text-lg text-text">
+            {item.hiragana}
+          </span>
+          <span className="KanaConfusableCard-katakana text-sm text-text-muted">
+            {item.katakana}
+          </span>
+          <span className="KanaConfusableCard-romaji text-xs text-primary">
+            {item.romaji}
+          </span>
         </div>
       ))}
-      <span className="KanaConfusableCard-times">
+      <span className="KanaConfusableCard-times ml-sm text-xs text-text-muted">
         {`${STRINGS.kana.reviewPairTimes} ${props.wrongCount}`}
       </span>
     </div>

@@ -65,3 +65,4 @@ Thumbs.db
 .workbuddy/
 dist/
 node_modules/
+.opencode

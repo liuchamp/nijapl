@@ -1,6 +1,6 @@
 # AGENTS.md — internal/services
 
-Go 服务：`kvstore.go`（KVStore）/ `tts.go`（TTS）/ `system.go`（System）。错误永不过绑定边界。
+Go 服务：`kvstore.go`（KVStore）/ `tts.go`（TTS）/ `system.go`（System）/ `mobile.go`（Mobile：原生 TTS / 常亮 / 触觉 / 安全区）。错误永不过绑定边界。
 
 ## WHERE TO LOOK
 
@@ -9,6 +9,7 @@ Go 服务：`kvstore.go`（KVStore）/ `tts.go`（TTS）/ `system.go`（System�
   超时 8s（用户）/ 15s（预取），300ms 后重试一次；LRU 64 + 字节上限；在途去重；400→`bad-request`（不重试）/
   503→`unavailable`（去 `voice` 重试一次）/ 504·408→超时；`repairPlusSign` 回补 Android 转发丢的 `+`。
 - `system.go`：`Platform()` 返回 `runtime.GOOS`；`SetClipboard()`（darwin 经 `pbcopy`，其余返回 false）。
+- `mobile.go`：`Available` / `Speak` / `StopSpeak` / `SetKeepAwake` / `Haptic` / `SafeArea`；桌面 no-op 由 Wails `application.Mobile` 包级单例提供——**本目录无 `mobile_stub.go`**，本服务无需 build tag，前端经 `engine/platform` 判定形态后决定是否调用。
 - `tts_test.go` / `tts_servehttp_test.go`：服务不可达时跳过并标注「未执行」，禁止 mock 冒充真实 TTS。
 - 配置：`internal/config/config.go`（优先级 `NIJAPL_TTS_BASE_URL` > ldflags 烘入 > 默认值）；注册在 `main.go`。
 

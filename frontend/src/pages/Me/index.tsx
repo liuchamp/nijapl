@@ -1,4 +1,3 @@
-import './index.css'
 import { useMemo, useState } from 'react'
 import { Icon } from '../../components/Icon/index.js'
 import {
@@ -182,76 +181,94 @@ export function MePage() {
   }
 
   return (
-    <div className="Me">
-      <div className="Me-head">
+    <div className="Me flex flex-col flex-1 w-full p-md">
+      <div className="Me-head flex flex-row items-center w-full mb-md">
         <div
-          className="Me-back"
+          className="Me-back cursor-pointer select-none px-md py-xs bg-surface-alt rounded-pill flex items-center gap-8"
           onClick={nav.back}
-          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
           <Icon name="chevron-left" size="28rpx" />
-          <span className="Me-backLabel">{STRINGS.common.back}</span>
+          <span className="Me-backLabel cursor-pointer select-none text-sm text-text">
+            {STRINGS.common.back}
+          </span>
         </div>
-        <span className="Me-title">{STRINGS.me.title}</span>
+        <span className="Me-title flex-1 text-center text-lg font-bold">
+          {STRINGS.me.title}
+        </span>
       </div>
 
-      <div className="Me-block">
-        <span className="Me-blockTitle">{STRINGS.me.pronunciation}</span>
+      <div className="Me-block flex flex-col w-full p-md mb-sm bg-surface rounded-md">
+        <span className="Me-blockTitle text-sm text-text-muted mb-sm">
+          {STRINGS.me.pronunciation}
+        </span>
 
-        <div className="Me-setting">
-          <span className="Me-settingLabel">{STRINGS.me.rate}</span>
-          <div className="Me-stepper">
+        <div className="Me-setting cursor-pointer select-none flex flex-row items-center justify-between w-full py-xs">
+          <span className="Me-settingLabel cursor-pointer select-none text-md text-text">
+            {STRINGS.me.rate}
+          </span>
+          <div className="Me-stepper flex flex-row items-center">
             <div
-              className="Me-stepBtn"
+              className="Me-stepBtn cursor-pointer select-none flex flex-row items-center justify-center w-56 h-56 bg-surface-alt rounded-pill"
               onClick={() => {
                 adjustRate(-RATE_STEP)
               }}
             >
-              <span className="Me-stepLabel">−</span>
+              <span className="Me-stepLabel text-md text-text">−</span>
             </div>
-            <span className="Me-stepValue">{settings.rate.toFixed(1)}</span>
+            <span className="Me-stepValue w-100 text-center text-md text-text">
+              {settings.rate.toFixed(1)}
+            </span>
             <div
-              className="Me-stepBtn"
+              className="Me-stepBtn cursor-pointer select-none flex flex-row items-center justify-center w-56 h-56 bg-surface-alt rounded-pill"
               onClick={() => {
                 adjustRate(RATE_STEP)
               }}
             >
-              <span className="Me-stepLabel">＋</span>
+              <span className="Me-stepLabel text-md text-text">＋</span>
             </div>
           </div>
         </div>
 
-        <div className="Me-setting">
-          <span className="Me-settingLabel">{STRINGS.me.pitch}</span>
-          <div className="Me-stepper">
+        <div className="Me-setting cursor-pointer select-none flex flex-row items-center justify-between w-full py-xs">
+          <span className="Me-settingLabel cursor-pointer select-none text-md text-text">
+            {STRINGS.me.pitch}
+          </span>
+          <div className="Me-stepper flex flex-row items-center">
             <div
-              className="Me-stepBtn"
+              className="Me-stepBtn cursor-pointer select-none flex flex-row items-center justify-center w-56 h-56 bg-surface-alt rounded-pill"
               onClick={() => {
                 adjustPitch(-RATE_STEP)
               }}
             >
-              <span className="Me-stepLabel">−</span>
+              <span className="Me-stepLabel text-md text-text">−</span>
             </div>
-            <span className="Me-stepValue">{settings.pitch.toFixed(1)}</span>
+            <span className="Me-stepValue w-100 text-center text-md text-text">
+              {settings.pitch.toFixed(1)}
+            </span>
             <div
-              className="Me-stepBtn"
+              className="Me-stepBtn cursor-pointer select-none flex flex-row items-center justify-center w-56 h-56 bg-surface-alt rounded-pill"
               onClick={() => {
                 adjustPitch(RATE_STEP)
               }}
             >
-              <span className="Me-stepLabel">＋</span>
+              <span className="Me-stepLabel text-md text-text">＋</span>
             </div>
           </div>
         </div>
 
-        <div className="Me-setting" onClick={toggleAutoSpeak}>
-          <span className="Me-settingLabel">{STRINGS.me.autoSpeak}</span>
-          <span className="Me-settingValue">
+        <div
+          className="Me-setting cursor-pointer select-none flex flex-row items-center justify-between w-full py-xs"
+          onClick={toggleAutoSpeak}
+        >
+          <span className="Me-settingLabel cursor-pointer select-none text-md text-text">
+            {STRINGS.me.autoSpeak}
+          </span>
+          <span className="Me-settingValue cursor-pointer select-none text-md text-primary font-bold">
             {settings.autoSpeakOnCard ? STRINGS.me.on : STRINGS.me.off}
           </span>
         </div>
 
-        <div className="Me-preview">
+        <div className="Me-preview flex flex-row w-full mt-sm">
           <TtsButton
             text={STRINGS.me.previewText}
             settings={settings}
@@ -260,66 +277,107 @@ export function MePage() {
         </div>
       </div>
 
-      <div className="Me-block">
-        <span className="Me-blockTitle">{STRINGS.me.unlockSection}</span>
-        <div className="Me-setting" onClick={appActions.toggleUnlockRule}>
-          <span className="Me-settingLabel">{STRINGS.me.unlockRule}</span>
-          <span className="Me-settingValue">
+      <div className="Me-block flex flex-col w-full p-md mb-sm bg-surface rounded-md">
+        <span className="Me-blockTitle text-sm text-text-muted mb-sm">
+          {STRINGS.me.unlockSection}
+        </span>
+        <div
+          className="Me-setting cursor-pointer select-none flex flex-row items-center justify-between w-full py-xs"
+          onClick={appActions.toggleUnlockRule}
+        >
+          <span className="Me-settingLabel cursor-pointer select-none text-md text-text">
+            {STRINGS.me.unlockRule}
+          </span>
+          <span className="Me-settingValue cursor-pointer select-none text-md text-primary font-bold">
             {settings.unlockRuleEnabled ? STRINGS.me.on : STRINGS.me.off}
           </span>
         </div>
       </div>
 
       {/* 假名基础（设计 §5.6）：门控开关（Q1 裁决默认开、此处可关）+ 只清 K 域进度 */}
-      <div className="Me-block">
-        <span className="Me-blockTitle">{STRINGS.kana.settingsSection}</span>
-        <div className="Me-setting" onClick={appActions.toggleKanaGate}>
-          <span className="Me-settingLabel">{STRINGS.kana.settingsGate}</span>
-          <span className="Me-settingValue">
+      <div className="Me-block flex flex-col w-full p-md mb-sm bg-surface rounded-md">
+        <span className="Me-blockTitle text-sm text-text-muted mb-sm">
+          {STRINGS.kana.settingsSection}
+        </span>
+        <div
+          className="Me-setting cursor-pointer select-none flex flex-row items-center justify-between w-full py-xs"
+          onClick={appActions.toggleKanaGate}
+        >
+          <span className="Me-settingLabel cursor-pointer select-none text-md text-text">
+            {STRINGS.kana.settingsGate}
+          </span>
+          <span className="Me-settingValue cursor-pointer select-none text-md text-primary font-bold">
             {settings.kanaGateEnabled ? STRINGS.me.on : STRINGS.me.off}
           </span>
         </div>
-        <span className="Me-hint">{STRINGS.kana.settingsGateHint}</span>
-        <span className="Me-hint">
+        <span className="Me-hint text-xs text-text-muted mt-xs">
+          {STRINGS.kana.settingsGateHint}
+        </span>
+        <span className="Me-hint text-xs text-text-muted mt-xs">
           {`${STRINGS.kana.overallLabel} ${kanaMastered}/${KANA_TOTAL}`}
         </span>
         <div
-          className={kanaResetArmed ? 'Me-reset Me-reset--armed' : 'Me-reset'}
+          className={
+            kanaResetArmed
+              ? 'Me-reset Me-reset--armed flex flex-row items-center justify-center w-full py-sm mt-md rounded-pill border-[calc(1*var(--rpx))] border-danger bg-[rgba(255,95,109,0.2)]'
+              : 'Me-reset flex flex-row items-center justify-center w-full py-sm mt-md rounded-pill border-[calc(1*var(--rpx))] border-danger bg-surface-alt'
+          }
           onClick={onKanaReset}
         >
-          <span className="Me-resetLabel">
+          <span className="Me-resetLabel text-md text-danger">
             {kanaResetArmed
               ? STRINGS.kana.settingsResetConfirm
               : STRINGS.kana.settingsReset}
           </span>
         </div>
         {kanaNotice !== null ? (
-          <span className="Me-notice">{kanaNotice}</span>
+          <span className="Me-notice text-sm text-warning mt-xs">
+            {kanaNotice}
+          </span>
         ) : null}
       </div>
 
-      <div className="Me-block">
-        <span className="Me-blockTitle">{STRINGS.me.statsSection}</span>
+      <div className="Me-block flex flex-col w-full p-md mb-sm bg-surface rounded-md">
+        <span className="Me-blockTitle text-sm text-text-muted mb-sm">
+          {STRINGS.me.statsSection}
+        </span>
         <StatTimeline rows={statRows} />
       </div>
 
-      <div className="Me-block">
-        <span className="Me-blockTitle">{STRINGS.me.dataSection}</span>
-        <div className="Me-export" onClick={exportData}>
-          <span className="Me-exportLabel">{STRINGS.me.exportData}</span>
+      <div className="Me-block flex flex-col w-full p-md mb-sm bg-surface rounded-md">
+        <span className="Me-blockTitle text-sm text-text-muted mb-sm">
+          {STRINGS.me.dataSection}
+        </span>
+        <div
+          className="Me-export cursor-pointer select-none flex flex-row items-center justify-center w-full py-sm bg-primary rounded-pill"
+          onClick={exportData}
+        >
+          <span className="Me-exportLabel cursor-pointer select-none text-md font-bold text-bg">
+            {STRINGS.me.exportData}
+          </span>
         </div>
-        <span className="Me-hint">{STRINGS.me.exportHint}</span>
+        <span className="Me-hint text-xs text-text-muted mt-xs">
+          {STRINGS.me.exportHint}
+        </span>
         {exportNotice !== null ? (
-          <span className="Me-notice">{exportNotice}</span>
+          <span className="Me-notice text-sm text-warning mt-xs">
+            {exportNotice}
+          </span>
         ) : null}
         {exportText !== null ? (
-          <span className="Me-exportText">{exportText}</span>
+          <span className="Me-exportText cursor-pointer select-none text-xs text-text-muted mt-xs">
+            {exportText}
+          </span>
         ) : null}
         <div
-          className={resetArmed ? 'Me-reset Me-reset--armed' : 'Me-reset'}
+          className={
+            resetArmed
+              ? 'Me-reset Me-reset--armed flex flex-row items-center justify-center w-full py-sm mt-md rounded-pill border-[calc(1*var(--rpx))] border-danger bg-[rgba(255,95,109,0.2)]'
+              : 'Me-reset flex flex-row items-center justify-center w-full py-sm mt-md rounded-pill border-[calc(1*var(--rpx))] border-danger bg-surface-alt'
+          }
           onClick={onReset}
         >
-          <span className="Me-resetLabel">
+          <span className="Me-resetLabel text-md text-danger">
             {resetArmed ? STRINGS.me.resetConfirm : STRINGS.me.resetData}
           </span>
         </div>

@@ -1,4 +1,3 @@
-import './index.css'
 import { useState } from 'react'
 import { KanaTable } from '../../components/KanaTable/index.js'
 import { NodeStateBadge } from '../../components/NodeStateBadge/index.js'
@@ -102,48 +101,73 @@ export function KanaPage() {
 
   if (groups.length === 0) {
     return (
-      <div className="Kana">
-        <div className="Kana-head">
-          <div className="Kana-back" onClick={nav.back}>
-            <span className="Kana-backLabel">{STRINGS.common.back}</span>
+      <div className="Kana flex flex-col flex-1 w-full p-md">
+        <div className="Kana-head flex flex-row items-center justify-between w-full">
+          <div
+            className="Kana-back cursor-pointer select-none px-md py-xs bg-surface-alt rounded-pill"
+            onClick={nav.back}
+          >
+            <span className="Kana-backLabel text-sm text-text">
+              {STRINGS.common.back}
+            </span>
           </div>
-          <span className="Kana-title">{STRINGS.kana.title}</span>
+          <span className="Kana-title text-lg font-bold">
+            {STRINGS.kana.title}
+          </span>
         </div>
-        <div className="Kana-empty">
-          <span className="Kana-emptyLabel">{STRINGS.kana.empty}</span>
+        <div className="Kana-empty flex flex-row items-center justify-center flex-1">
+          <span className="Kana-emptyLabel text-md text-text-muted">
+            {STRINGS.kana.empty}
+          </span>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="Kana">
-      <div className="Kana-head">
-        <div className="Kana-back" onClick={nav.back}>
-          <span className="Kana-backLabel">{STRINGS.common.back}</span>
+    <div className="Kana flex flex-col flex-1 w-full p-md">
+      <div className="Kana-head flex flex-row items-center justify-between w-full">
+        <div
+          className="Kana-back cursor-pointer select-none px-md py-xs bg-surface-alt rounded-pill"
+          onClick={nav.back}
+        >
+          <span className="Kana-backLabel text-sm text-text">
+            {STRINGS.common.back}
+          </span>
         </div>
-        <span className="Kana-title">{STRINGS.kana.title}</span>
+        <span className="Kana-title text-lg font-bold">
+          {STRINGS.kana.title}
+        </span>
       </div>
 
-      <span className="Kana-subtitle">{STRINGS.kana.subtitle}</span>
+      <span className="Kana-subtitle mt-xs text-xs text-text-muted">
+        {STRINGS.kana.subtitle}
+      </span>
 
       {/* 总进度 + 主 CTA */}
-      <div className="Kana-overall">
+      <div className="Kana-overall flex flex-row items-center gap-md w-full mt-md p-md bg-surface rounded-lg">
         <ProgressRing
           value={overall}
           label={`${mastered}/${KANA_TOTAL}`}
           size={160}
         />
-        <div className="Kana-overallRight">
-          <span className="Kana-overallLabel">{STRINGS.kana.overallLabel}</span>
+        <div className="Kana-overallRight flex flex-col flex-1">
+          <span className="Kana-overallLabel text-md font-bold">
+            {STRINGS.kana.overallLabel}
+          </span>
           {graduated ? (
             <>
-              <span className="Kana-badge">{STRINGS.kana.gateBadge}</span>
-              <span className="Kana-overallBody">
+              <span className="Kana-badge mt-xs text-xs text-success">
+                {STRINGS.kana.gateBadge}
+              </span>
+              <span className="Kana-overallBody mt-xs text-xs text-text-muted">
                 {STRINGS.kana.graduationBody}
               </span>
-              <div className="Kana-primary" onClick={nav.goStages}>
-                <span className="Kana-primaryLabel">
+              <div
+                className="Kana-primary cursor-pointer select-none flex flex-row items-center justify-center mt-sm py-sm bg-primary rounded-pill"
+                onClick={nav.goStages}
+              >
+                <span className="Kana-primaryLabel text-sm font-bold text-text">
                   {STRINGS.kana.goVocab}
                 </span>
               </div>
@@ -151,12 +175,15 @@ export function KanaPage() {
           ) : (
             <>
               {gateActive ? (
-                <span className="Kana-overallBody">
+                <span className="Kana-overallBody mt-xs text-xs text-text-muted">
                   {STRINGS.kana.gateHint}
                 </span>
               ) : null}
-              <div className="Kana-primary" onClick={onPrimary}>
-                <span className="Kana-primaryLabel">
+              <div
+                className="Kana-primary cursor-pointer select-none flex flex-row items-center justify-center mt-sm py-sm bg-primary rounded-pill"
+                onClick={onPrimary}
+              >
+                <span className="Kana-primaryLabel text-sm font-bold text-text">
                   {target === null
                     ? STRINGS.kana.graduationEntry
                     : mastered === 0
@@ -170,19 +197,21 @@ export function KanaPage() {
       </div>
 
       {/* 主 Tab：音类（4 个，半浊音独立成类，不混进浊音） */}
-      <div className="Kana-tabs">
+      <div className="Kana-tabs flex flex-row gap-xs w-full mt-md">
         {KANA_VOICE_TYPES.map((item) => (
           <div
             key={item}
             className={
-              voiceType === item ? 'Kana-tab Kana-tab--on' : 'Kana-tab'
+              voiceType === item
+                ? 'Kana-tab Kana-tab--on cursor-pointer select-none flex flex-col items-center justify-center flex-1 py-sm rounded-md bg-primary-soft border-[calc(1*var(--rpx))] border-primary'
+                : 'Kana-tab cursor-pointer select-none flex flex-col items-center justify-center flex-1 py-sm rounded-md bg-surface-alt border-[calc(1*var(--rpx))] border-border'
             }
             onClick={() => setVoiceType(item)}
           >
-            <span className="Kana-tabLabel">
+            <span className="Kana-tabLabel text-sm text-text">
               {STRINGS.kana.voiceLabels[item]}
             </span>
-            <span className="Kana-tabCount">
+            <span className="Kana-tabCount mt-2 text-xs text-text-muted">
               {repository.getKanaByVoiceType(item).length}
             </span>
           </div>
@@ -190,18 +219,18 @@ export function KanaPage() {
       </div>
 
       {/* 子 Tab：书写体系（多选）+ 罗马音层 */}
-      <div className="Kana-subTabs">
+      <div className="Kana-subTabs flex flex-row items-center gap-xs w-full mt-sm">
         {KANA_SCRIPTS.map((item) => (
           <div
             key={item}
             className={
               scripts.includes(item)
-                ? 'Kana-subTab Kana-subTab--on'
-                : 'Kana-subTab'
+                ? 'Kana-subTab Kana-subTab--on cursor-pointer select-none flex flex-row items-center justify-center px-sm py-xs rounded-pill bg-primary-soft opacity-100'
+                : 'Kana-subTab cursor-pointer select-none flex flex-row items-center justify-center px-sm py-xs rounded-pill bg-surface-alt opacity-55'
             }
             onClick={() => toggleScript(item)}
           >
-            <span className="Kana-subTabLabel">
+            <span className="Kana-subTabLabel text-xs text-text">
               {item === 'hiragana'
                 ? STRINGS.kana.scriptHiragana
                 : STRINGS.kana.scriptKatakana}
@@ -209,21 +238,33 @@ export function KanaPage() {
           </div>
         ))}
         <div
-          className={showRomaji ? 'Kana-subTab Kana-subTab--on' : 'Kana-subTab'}
+          className={
+            showRomaji
+              ? 'Kana-subTab Kana-subTab--on cursor-pointer select-none flex flex-row items-center justify-center px-sm py-xs rounded-pill bg-primary-soft opacity-100'
+              : 'Kana-subTab cursor-pointer select-none flex flex-row items-center justify-center px-sm py-xs rounded-pill bg-surface-alt opacity-55'
+          }
           onClick={() => setShowRomaji((prev) => !prev)}
         >
-          <span className="Kana-subTabLabel">{STRINGS.kana.scriptRomaji}</span>
+          <span className="Kana-subTabLabel text-xs text-text">
+            {STRINGS.kana.scriptRomaji}
+          </span>
         </div>
         <div
-          className={studyMode ? 'Kana-mode Kana-mode--on' : 'Kana-mode'}
+          className={
+            studyMode
+              ? 'Kana-mode Kana-mode--on cursor-pointer select-none flex flex-row items-center justify-center ml-auto px-sm py-xs rounded-pill bg-primary'
+              : 'Kana-mode cursor-pointer select-none flex flex-row items-center justify-center ml-auto px-sm py-xs rounded-pill bg-surface-alt'
+          }
           onClick={() => setStudyMode((prev) => !prev)}
         >
-          <span className="Kana-modeLabel">
+          <span className="Kana-modeLabel text-xs text-text">
             {studyMode ? STRINGS.kana.studyModeOn : STRINGS.kana.studyModeOff}
           </span>
         </div>
       </div>
-      <span className="Kana-modeHint">{STRINGS.kana.studyModeHint}</span>
+      <span className="Kana-modeHint mt-xs mb-xs text-xs text-text-muted">
+        {STRINGS.kana.studyModeHint}
+      </span>
 
       <KanaTable
         kana={kana}
@@ -236,8 +277,10 @@ export function KanaPage() {
       />
 
       {/* 12 关列表 */}
-      <span className="Kana-sectionTitle">{STRINGS.kana.groupSection}</span>
-      <div className="Kana-groups">
+      <span className="Kana-sectionTitle mt-md mb-xs text-sm font-bold">
+        {STRINGS.kana.groupSection}
+      </span>
+      <div className="Kana-groups flex flex-col w-full">
         {groups.map((group) => {
           const unlocked = selectKanaUnlocked(state, group.id)
           const progress = selectKanaGroupProgress(state, group.id)
@@ -245,7 +288,9 @@ export function KanaPage() {
             <div
               key={group.id}
               className={
-                unlocked ? 'Kana-group' : 'Kana-group Kana-group--locked'
+                unlocked
+                  ? 'Kana-group cursor-pointer select-none flex flex-row items-center justify-between w-full mt-xs p-sm rounded-md bg-surface-alt'
+                  : 'Kana-group Kana-group--locked cursor-default opacity-50 select-none flex flex-row items-center justify-between w-full mt-xs p-sm rounded-md bg-surface-alt'
               }
               onClick={() => {
                 if (unlocked) {
@@ -253,9 +298,9 @@ export function KanaPage() {
                 }
               }}
             >
-              <div className="Kana-groupLeft">
-                <span className="Kana-groupName">{group.name}</span>
-                <span className="Kana-groupMeta">
+              <div className="Kana-groupLeft flex flex-col flex-1">
+                <span className="Kana-groupName text-sm">{group.name}</span>
+                <span className="Kana-groupMeta mt-xs text-xs text-text-muted">
                   {unlocked
                     ? `${progress.mastered}/${progress.total}${STRINGS.kana.kanaUnit}`
                     : STRINGS.kana.lockedHint}

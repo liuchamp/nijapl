@@ -1,6 +1,6 @@
 import { KVStore } from '../../../bindings/nijapl/internal/services/index.js'
 import type { StoragePort } from '../../types/ports.js'
-import { hasWailsRuntime } from '../wails.js'
+import { hasWailsRuntime } from '../platform/index.js'
 
 /**
  * Wails 存储端口（`StoragePort` 的 Go 侧适配器）。

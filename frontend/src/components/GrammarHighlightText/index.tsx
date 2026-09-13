@@ -1,4 +1,3 @@
-import './index.css'
 import { buildSegments, type HighlightRange } from '../../services/highlight.js'
 
 /**
@@ -22,13 +21,13 @@ export function GrammarHighlightText(props: GrammarHighlightTextProps) {
   const segments = buildSegments(props.text, props.ranges)
   const handler = props.onTapGrammar
   return (
-    <span className="Ght">
+    <span className="Ght text-md leading-[1.6]">
       {segments.map((segment) => {
         const className = segment.grammar
-          ? 'Ght-seg Ght-seg--grammar'
+          ? 'Ght-seg Ght-seg--grammar text-md text-primary underline'
           : segment.word
-            ? 'Ght-seg Ght-seg--word'
-            : 'Ght-seg'
+            ? 'Ght-seg Ght-seg--word text-md bg-primary-soft rounded-sm'
+            : 'Ght-seg text-md'
         const grammarId = segment.grammarId
         const tappable = segment.grammar && grammarId !== undefined && handler
         return (
