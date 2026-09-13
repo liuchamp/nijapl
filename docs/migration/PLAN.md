@@ -116,7 +116,7 @@
 | `lynx.setClipboardData` | `navigator.clipboard.writeText`（Go 兜底可选） | 删分支 |
 | 页面无滚动容器 | 补 `overflow-y:auto` | 见 §8.4 决策 D |
 | `source.define.__TTS_BASE_URL__` | Go 侧配置（env / config） | 改写 |
-| 18 个 SVG 图标（0 处引用） | 保持不接入 | 见 §8.5 决策 E |
+| 18 个 SVG 图标（原 0 处引用） | 已按品牌规范接入（`components/Icon`） | 见 §8 决策 E |
 
 ---
 
@@ -358,7 +358,7 @@ Go 侧**必须**用 `url.Values.Encode()`，**禁止** `fmt.Sprintf` 拼 query�
 | **B** | **持久化** | ✅ **一期 localStorage**（`storage.web.ts` 原样复用，零成本） | 二期按需上 Go KVStore（端口 API 一致，可无痛切换） | 端口层 |
 | **C** | **TTS HTTP** | ⏳ **服务端 HTTP 接口已提供**（`ttsedservice`）。调用侧待定 → **建议 Go 侧代理**（规避 CORS）；若坚持前端直连，必须先给服务端补 `Access-Control-Allow-Origin` + `Access-Control-Expose-Headers: X-TTS-Cache, X-TTS-Voice` | 见左 | 端口层 + Go service |
 | **D** | **滚动** | ✅ **补 `overflow-y:auto`**（`.Shell-content` 滚动、TabBar 固定底部） | 严格不滚动 | Lynx 原缺陷（内容超高被裁切）的体验修复 |
-| **E** | **18 个 SVG 图标** | ✅ 保持**不接入**（原代码 0 处引用） | 接入并改 `currentColor` | 无 |
+| **E** | **18 个 SVG 图标** | ✅ 已按品牌规范接入（`components/Icon` 统一入口，TabBar/返回/TTS/统计等补图标；`check`→Sage、`flame`→Sakura 语义色） | — | 有 |
 | **F** | **品牌配色** | ✅ 复刻**现有代码**（深色 `#0b1020` 系） | 品牌规范浅色系（独立改版项目） | 全局 |
 | **G** | **路由** | ✅ `MemoryRouter`（与原实现一致） | `HashRouter` | 路由层 |
 | **H** | **pager 降级代码** | ✅ 删除 `platform.ts` / `pagerSeek.ts` / `swipe.ts` | 保留为死代码 | 无（注意 `.Study-fallback` 在原实现恒显示） |
@@ -379,7 +379,7 @@ Go 侧**必须**用 `url.Values.Encode()`，**禁止** `fmt.Sprintf` 拼 query�
 7. `GrammarDetail` 例句**未使用** `GrammarHighlightText`（该组件只在 `VocabDetail` 用）；
 8. Me 页导出**成功与失败都会**展示 JSON 原文（单行、无格式化）；
 9. GraphCanvas 背景 SVG 与前景节点**半径相同**（都乘 2.4），白填充被覆盖只露 **2px `#4c6ef5` 蓝环**；`panX/panY` 恒为 0；
-10. TabBar 选中是**整格背景**，非仅文字变色，且**无图标**。
+10. TabBar 图标 + 文字上下结构（选中图标随文字变色，110rpx 高与整格底色选中规则不变）；返回按钮统一 `chevron-left`（文案保留）。
 
 ---
 

@@ -135,6 +135,7 @@ No 'Access-Control-Allow-Origin' header is present on the requested resource.
 | 4.5 | `flex-shrink` 默认值 | Lynx 文档 `Initial value: 1`，与 Web **一致**，无差异 |
 | 4.6 | Quiz 页无入口（`goQuiz` 仅有定义无调用） | 参考树同样如此，**保留** |
 | 4.7 | `public/style.css` 等 Wails 脚手架遗留资源 | `index.html` 重写后已无引用，**删除**（减小打包体积） |
+| 4.8 | 18 个品牌图标原 0 处引用（迁移时保真红线"保持不接入"） | 品牌规范 v1.0 落地后**有意偏离**原红线：`components/Icon` 统一入口已接入 TabBar/返回/TTS/统计等（`PLAN.md §8-E` 已更新，`spec-ui-shell.md §13` 保留为 Lynx 历史记录） |
 
 ---
 

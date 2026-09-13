@@ -1,6 +1,7 @@
 import './index.css'
 import { useMemo } from 'react'
 import { useParams } from 'react-router'
+import { Icon } from '../../components/Icon/index.js'
 import { NodeStateBadge } from '../../components/NodeStateBadge/index.js'
 import { TtsButton } from '../../components/TtsButton/index.js'
 import { STRINGS } from '../../constants/strings.js'
@@ -73,7 +74,12 @@ export function GrammarDetailPage() {
     return (
       <div className="GrammarDetail">
         <div className="GrammarDetail-head">
-          <div className="GrammarDetail-back" onClick={nav.back}>
+          <div
+            className="GrammarDetail-back"
+            onClick={nav.back}
+            style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
+          >
+            <Icon name="chevron-left" size="28rpx" />
             <span className="GrammarDetail-backLabel">
               {STRINGS.common.back}
             </span>
@@ -102,7 +108,12 @@ export function GrammarDetailPage() {
   return (
     <div className="GrammarDetail">
       <div className="GrammarDetail-head">
-        <div className="GrammarDetail-back" onClick={nav.back}>
+        <div
+          className="GrammarDetail-back"
+          onClick={nav.back}
+          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
+        >
+          <Icon name="chevron-left" size="28rpx" />
           <span className="GrammarDetail-backLabel">{STRINGS.common.back}</span>
         </div>
         <span className="GrammarDetail-title">

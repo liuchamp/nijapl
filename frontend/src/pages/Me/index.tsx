@@ -1,5 +1,6 @@
 import './index.css'
 import { useMemo, useState } from 'react'
+import { Icon } from '../../components/Icon/index.js'
 import {
   type StatRow,
   StatTimeline,
@@ -183,7 +184,12 @@ export function MePage() {
   return (
     <div className="Me">
       <div className="Me-head">
-        <div className="Me-back" onClick={nav.back}>
+        <div
+          className="Me-back"
+          onClick={nav.back}
+          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
+        >
+          <Icon name="chevron-left" size="28rpx" />
           <span className="Me-backLabel">{STRINGS.common.back}</span>
         </div>
         <span className="Me-title">{STRINGS.me.title}</span>

@@ -2,6 +2,7 @@ import './index.css'
 import { STRINGS } from '../../constants/strings.js'
 import type { Word } from '../../types/domain.js'
 import type { StudySettings } from '../../types/progress.js'
+import { Icon } from '../Icon/index.js'
 
 /**
  * C2 半屏详解浮层（架构 §2.10 / 判据 4）。
@@ -58,7 +59,12 @@ export function DetailSheet(props: DetailSheetProps) {
         </div>
 
         <div className="Sheet-actions">
-          <div className="Sheet-dismiss" onClick={props.onDismiss}>
+          <div
+            className="Sheet-dismiss"
+            onClick={props.onDismiss}
+            style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
+          >
+            <Icon name="close" size="28rpx" />
             <span className="Sheet-dismissLabel">
               {STRINGS.detailSheet.dismiss}
             </span>
@@ -68,7 +74,14 @@ export function DetailSheet(props: DetailSheetProps) {
             onClick={() => {
               props.onConfirm(word.id)
             }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8rpx',
+              color: '#8FB89B',
+            }}
           >
+            <Icon name="check" size="28rpx" />
             <span className="Sheet-confirmLabel">
               {STRINGS.detailSheet.confirm}
             </span>

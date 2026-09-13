@@ -9,6 +9,7 @@ import type {
   GraphView,
   LayoutResult,
 } from '../../types/graph.js'
+import { Icon } from '../Icon/index.js'
 
 /**
  * P6 知识图谱画布（原架构 §1.4 / §2.10 / T05 判据 3）。
@@ -173,7 +174,9 @@ export function GraphCanvas(props: GraphCanvasProps) {
           onClick={() => {
             setZoom((current) => clampZoom(current / ZOOM_STEP))
           }}
+          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
+          <Icon name="search" size="28rpx" />
           <span className="GraphCanvas-toolLabel">{STRINGS.graph.zoomOut}</span>
         </div>
         <div
@@ -181,7 +184,9 @@ export function GraphCanvas(props: GraphCanvasProps) {
           onClick={() => {
             setZoom((current) => clampZoom(current * ZOOM_STEP))
           }}
+          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
+          <Icon name="plus" size="28rpx" />
           <span className="GraphCanvas-toolLabel">{STRINGS.graph.zoomIn}</span>
         </div>
         <div
@@ -191,7 +196,9 @@ export function GraphCanvas(props: GraphCanvasProps) {
             setPanX(0)
             setPanY(0)
           }}
+          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
+          <Icon name="close" size="28rpx" />
           <span className="GraphCanvas-toolLabel">{STRINGS.graph.reset}</span>
         </div>
       </div>

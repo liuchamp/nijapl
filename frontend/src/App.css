@@ -181,15 +181,28 @@ span {
 .TabBar-item {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
   cursor: pointer;
   user-select: none;
+  gap: 4rpx;
 }
 
 .TabBar-item--active {
   background-color: var(--color-primary-soft);
+}
+
+.TabBar-icon {
+  color: var(--color-text-muted);
+  width: 40rpx;
+  height: 40rpx;
+  flex-shrink: 0;
+}
+
+.TabBar-item--active .TabBar-icon {
+  color: var(--color-primary);
 }
 
 .TabBar-label {

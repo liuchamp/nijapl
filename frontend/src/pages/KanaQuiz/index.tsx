@@ -1,6 +1,7 @@
 import './index.css'
 import { useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
+import { Icon } from '../../components/Icon/index.js'
 import { TtsButton } from '../../components/TtsButton/index.js'
 import { kanaProgressKey } from '../../constants/kana.js'
 import { readKanaQuizGroup } from '../../constants/routes.js'
@@ -161,7 +162,12 @@ export function KanaQuizPage() {
   return (
     <div className="KanaQuiz">
       <div className="KanaQuiz-head">
-        <div className="KanaQuiz-back" onClick={nav.back}>
+        <div
+          className="KanaQuiz-back"
+          onClick={nav.back}
+          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
+        >
+          <Icon name="chevron-left" size="28rpx" />
           <span className="KanaQuiz-backLabel">{STRINGS.kana.quizBack}</span>
         </div>
         <span className="KanaQuiz-title">{STRINGS.kana.quizTitle}</span>

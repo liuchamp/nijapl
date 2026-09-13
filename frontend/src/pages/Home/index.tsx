@@ -1,4 +1,5 @@
 import './index.css'
+import { Icon } from '../../components/Icon/index.js'
 import { NodeStateBadge } from '../../components/NodeStateBadge/index.js'
 import { ProgressRing } from '../../components/ProgressRing/index.js'
 import { KANA_TOTAL } from '../../constants/kana.js'
@@ -148,21 +149,48 @@ export function HomePage() {
 
       <div className="Home-stats">
         <div className="Home-stat">
-          <span className="Home-statValue">{stats.newCount}</span>
+          <span
+            className="Home-statValue"
+            style={{ display: 'flex', alignItems: 'center', gap: '6rpx' }}
+          >
+            <Icon name="trophy" size="24rpx" />
+            {stats.newCount}
+          </span>
           <span className="Home-statLabel">{STRINGS.home.newLearned}</span>
         </div>
         <div className="Home-stat">
-          <span className="Home-statValue">{stats.reviewCount}</span>
+          <span
+            className="Home-statValue"
+            style={{ display: 'flex', alignItems: 'center', gap: '6rpx' }}
+          >
+            <Icon name="star" size="24rpx" />
+            {stats.reviewCount}
+          </span>
           <span className="Home-statLabel">{STRINGS.home.reviewed}</span>
         </div>
         <div className="Home-stat">
-          <span className="Home-statValue">
+          <span
+            className="Home-statValue"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6rpx',
+              color: '#F5A8BC',
+            }}
+          >
+            <Icon name="flame" size="24rpx" />
             {`${stats.streakDays}${STRINGS.home.dayUnit}`}
           </span>
           <span className="Home-statLabel">{STRINGS.home.streak}</span>
         </div>
         <div className="Home-stat">
-          <span className="Home-statValue">{stats.dueCount}</span>
+          <span
+            className="Home-statValue"
+            style={{ display: 'flex', alignItems: 'center', gap: '6rpx' }}
+          >
+            <Icon name="calendar" size="24rpx" />
+            {stats.dueCount}
+          </span>
           <span className="Home-statLabel">{STRINGS.home.dueToday}</span>
         </div>
       </div>

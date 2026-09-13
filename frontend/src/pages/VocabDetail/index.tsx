@@ -2,6 +2,7 @@ import './index.css'
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router'
 import { GrammarHighlightText } from '../../components/GrammarHighlightText/index.js'
+import { Icon } from '../../components/Icon/index.js'
 import { NodeStateBadge } from '../../components/NodeStateBadge/index.js'
 import { TtsButton } from '../../components/TtsButton/index.js'
 import { STRINGS } from '../../constants/strings.js'
@@ -93,7 +94,12 @@ export function VocabDetailPage() {
     return (
       <div className="Vocab">
         <div className="Vocab-head">
-          <div className="Vocab-back" onClick={nav.back}>
+          <div
+            className="Vocab-back"
+            onClick={nav.back}
+            style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
+          >
+            <Icon name="chevron-left" size="28rpx" />
             <span className="Vocab-backLabel">{STRINGS.common.back}</span>
           </div>
           <span className="Vocab-title">{STRINGS.vocab.title}</span>
@@ -108,7 +114,12 @@ export function VocabDetailPage() {
   return (
     <div className="Vocab">
       <div className="Vocab-head">
-        <div className="Vocab-back" onClick={nav.back}>
+        <div
+          className="Vocab-back"
+          onClick={nav.back}
+          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
+        >
+          <Icon name="chevron-left" size="28rpx" />
           <span className="Vocab-backLabel">{STRINGS.common.back}</span>
         </div>
         <span className="Vocab-title">{STRINGS.vocab.title}</span>

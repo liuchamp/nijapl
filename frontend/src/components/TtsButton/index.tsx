@@ -1,5 +1,6 @@
 import './index.css'
 import { useSyncExternalStore } from 'react'
+import { Icon } from '../../components/Icon/index.js'
 import { STRINGS } from '../../constants/strings.js'
 import { COLORS, FONT, RADIUS, SPACING } from '../../constants/theme.js'
 import { ttsController } from '../../services/ttsController.js'
@@ -61,11 +62,15 @@ export function TtsButton(props: TtsButtonProps) {
           paddingRight: SPACING.md,
           paddingTop: SPACING.sm,
           paddingBottom: SPACING.sm,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8rpx',
         }}
         onClick={() => {
           void ttsController.speak(props.text, props.settings)
         }}
       >
+        <Icon name="audio" size="28rpx" />
         <span
           className="TtsButton-label"
           style={{

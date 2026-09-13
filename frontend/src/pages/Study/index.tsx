@@ -2,6 +2,7 @@ import './index.css'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useParams } from 'react-router'
 import { DetailSheet } from '../../components/DetailSheet/index.js'
+import { Icon } from '../../components/Icon/index.js'
 import { WordCard } from '../../components/WordCard/index.js'
 import { STRINGS } from '../../constants/strings.js'
 import { repository } from '../../data/index.js'
@@ -240,7 +241,12 @@ export function StudyPage() {
     return (
       <div className="Study">
         <div className="Study-head">
-          <div className="Study-back" onClick={nav.back}>
+          <div
+            className="Study-back"
+            onClick={nav.back}
+            style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
+          >
+            <Icon name="chevron-left" size="28rpx" />
             <span className="Study-backLabel">{STRINGS.common.back}</span>
           </div>
           <span className="Study-title">{STRINGS.study.title}</span>
@@ -255,7 +261,12 @@ export function StudyPage() {
   return (
     <div className="Study">
       <div className="Study-head">
-        <div className="Study-back" onClick={nav.back}>
+        <div
+          className="Study-back"
+          onClick={nav.back}
+          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
+        >
+          <Icon name="chevron-left" size="28rpx" />
           <span className="Study-backLabel">{STRINGS.common.back}</span>
         </div>
         <span className="Study-title">
@@ -317,7 +328,9 @@ export function StudyPage() {
           onClick={() => {
             advance(-1)
           }}
+          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
+          <Icon name="chevron-left" size="28rpx" />
           <span className="Study-navLabel">{STRINGS.common.prev}</span>
         </div>
         <div className="Study-wrong" onClick={() => undefined}>
@@ -333,8 +346,10 @@ export function StudyPage() {
           onClick={() => {
             advance(1)
           }}
+          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
         >
           <span className="Study-navLabel">{STRINGS.common.next}</span>
+          <Icon name="chevron-right" size="28rpx" />
         </div>
       </div>
 

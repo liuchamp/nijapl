@@ -41,6 +41,7 @@ export type RouteKey = keyof typeof ROUTES
 export interface TabDefinition {
   path: string
   label: string
+  icon: string
 }
 
 /**
@@ -48,11 +49,11 @@ export interface TabDefinition {
  * TabBar 不占独立路由层，由 App 外壳依据 `isTabPath(location.pathname)` 决定是否渲染。
  */
 export const TABS: TabDefinition[] = [
-  { path: ROUTES.home, label: '首页' },
-  { path: ROUTES.stages, label: '阶段' },
-  { path: ROUTES.grammar, label: '语法' },
-  { path: ROUTES.review, label: '复习' },
-  { path: ROUTES.me, label: '我的' },
+  { path: ROUTES.home, label: '首页', icon: 'home' },
+  { path: ROUTES.stages, label: '阶段', icon: 'stages' },
+  { path: ROUTES.grammar, label: '语法', icon: 'book' },
+  { path: ROUTES.review, label: '复习', icon: 'review' },
+  { path: ROUTES.me, label: '我的', icon: 'settings' },
 ]
 
 /** 5 个 Tab 路径（唯一来源）。 */

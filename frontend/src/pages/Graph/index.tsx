@@ -2,6 +2,7 @@ import './index.css'
 import { useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
 import { GraphCanvas } from '../../components/GraphCanvas/index.js'
+import { Icon } from '../../components/Icon/index.js'
 import { STRINGS } from '../../constants/strings.js'
 import { layout } from '../../engine/graph/layout.js'
 import {
@@ -144,7 +145,12 @@ export function GraphPage() {
   return (
     <div className="Graph">
       <div className="Graph-head">
-        <div className="Graph-back" onClick={nav.back}>
+        <div
+          className="Graph-back"
+          onClick={nav.back}
+          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
+        >
+          <Icon name="chevron-left" size="28rpx" />
           <span className="Graph-backLabel">{STRINGS.common.back}</span>
         </div>
         <span className="Graph-title">{STRINGS.graph.title}</span>

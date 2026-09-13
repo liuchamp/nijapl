@@ -1,5 +1,6 @@
 import './index.css'
 import { useMemo, useState } from 'react'
+import { Icon } from '../../components/Icon/index.js'
 import { TtsButton } from '../../components/TtsButton/index.js'
 import { STRINGS } from '../../constants/strings.js'
 import { repository } from '../../data/index.js'
@@ -104,7 +105,12 @@ export function QuizPage() {
   return (
     <div className="Quiz">
       <div className="Quiz-head">
-        <div className="Quiz-back" onClick={nav.back}>
+        <div
+          className="Quiz-back"
+          onClick={nav.back}
+          style={{ display: 'flex', alignItems: 'center', gap: '8rpx' }}
+        >
+          <Icon name="chevron-left" size="28rpx" />
           <span className="Quiz-backLabel">{STRINGS.quiz.back}</span>
         </div>
         <span className="Quiz-title">{STRINGS.quiz.title}</span>

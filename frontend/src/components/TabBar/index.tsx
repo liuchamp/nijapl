@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router'
 import { TABS } from '../../constants/routes.js'
+import { Icon } from '../Icon/index.js'
 
 /**
  * 底部 5 Tab 导航（架构 §2.8）。
@@ -26,6 +27,7 @@ export function TabBar() {
               navigate(tab.path)
             }}
           >
+            <Icon name={tab.icon} className="TabBar-icon" />
             <span className="TabBar-label">{tab.label}</span>
           </div>
         )
