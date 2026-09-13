@@ -5,11 +5,11 @@ version: '3'
 
 # This information is used to generate the build assets.
 info:
-  companyName: "nijapl" # The name of the company
-  productName: "nijapl" # The name of the application
+  companyName: "Nijapl" # The name of the company
+  productName: "Nijapl" # The name of the application
   productIdentifier: "com.nijapl.app" # The unique product identifier
   description: "JLPT N3 日语词汇学习应用" # The application description
-  copyright: "(c) 2026, nijapl" # Copyright text
+  copyright: "(c) 2026, Nijapl" # Copyright text
   comments: "JLPT N3 日本語単語学習アプリ" # Comments
   version: "0.1.0" # The application version（与 frontend/package.json 保持一致）
   # cfBundleIconName: "appicon" # The macOS icon name in Assets.car icon bundles (optional)

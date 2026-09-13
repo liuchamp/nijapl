@@ -22,7 +22,7 @@ var assets embed.FS
 //   - System  ← SystemInfo / lynx.setClipboardData（平台信息与剪贴板兜底）
 func main() {
 	app := application.New(application.Options{
-		Name:        "nijapl",
+		Name:        "Nijapl",
 		Description: "JLPT N3 词汇学习应用",
 		Services: []application.Service{
 			application.NewService(services.NewKVStore()),
@@ -40,7 +40,7 @@ func main() {
 	// 窗口默认 420×860：宽高比贴近移动端竖屏，配合响应式 rpx 基准
 	// （--rpx: calc(100vw / 750)）保持与原 Lynx 页面一致的视觉比例。
 	app.Window.NewWithOptions(application.WebviewWindowOptions{
-		Title:  "nijapl",
+		Title:  "Nijapl",
 		Width:  420,
 		Height: 860,
 		Mac: application.MacWindow{
