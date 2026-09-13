@@ -48,11 +48,12 @@ frontend/src/services/      编排层：studySession / kanaWriteSession / ttsCon
 frontend/src/pages/         P0–P9 页面 + K 域（Kana / KanaStudy / KanaQuiz）（每页一目录：index.tsx + index.css）
 frontend/src/components/    C1/C2 + 通用组件 + K 域（KanaTable / KanaCanvas / KanaConfusableCard）（同目录结构）
 frontend/src/constants/     routes / strings / theme / srs / pos / tts / jumpRules / kana（唯一真相源，无路径别名）
-frontend/src/router/        routes.tsx + navigation.ts（MemoryRouter；页面一律 `useNavigation()`，禁用 `<Link>`）
+frontend/src/router/        index.tsx（AppShell + MemoryRouter 装配）/ routes.tsx / navigation.ts（页面一律 `useNavigation()`，禁用 `<Link>`）
 frontend/src/types/         domain / progress / graph / kana（K 域实体）
-frontend/src/data/          repository（索引 frontend/data/build/*.json，含独立的 kana.json）
-frontend/data/source/seed/  种子 TS；frontend/data/source/kana/ 为 K 域种子
-                            frontend/scripts/gen-data/ 为 seed→JSON 管线（含 schema/validate/build-kana/validate-kana）
+frontend/src/data/          repository.ts（唯一数据入口，组装 JSON；上层禁直读 JSON）
+frontend/data/build/        构建产物 *.json（words/modules/stages/sentences/grammar + 独立 kana.json，禁手改）
+frontend/data/source/       种子 TS：seed/（W 域）+ kana/（K 域）
+frontend/scripts/gen-data/  seed→JSON 管线（`npm run gen:data`；含 schema/validate/build-kana/validate-kana）
 frontend/tests/{audit,qa}/  P0 行为审计 / QA 集成与对抗用例
 frontend/bindings/          wails3 生成的类型安全绑定（生成后落盘但 gitignored，不入库，勿手改）
 docs/                       设计 / 迁移 / PRD / QA / 评审
@@ -143,4 +144,5 @@ docs/                       设计 / 迁移 / PRD / QA / 评审
 排查脚本在 `docs/migration/tools/`。子模块细则见 `frontend/src/engine/AGENTS.md`（TTS 细则下沉
 `frontend/src/engine/tts/AGENTS.md`）、`frontend/src/store/AGENTS.md`、`frontend/src/services/AGENTS.md`、
 `frontend/src/pages/AGENTS.md`、`frontend/src/components/AGENTS.md`、`frontend/src/constants/AGENTS.md`、
-`frontend/tests/AGENTS.md`、`internal/services/AGENTS.md`、`frontend/scripts/gen-data/AGENTS.md`。
+`frontend/src/router/AGENTS.md`、`frontend/src/types/AGENTS.md`、`frontend/tests/AGENTS.md`、
+`internal/services/AGENTS.md`、`frontend/scripts/gen-data/AGENTS.md`。
