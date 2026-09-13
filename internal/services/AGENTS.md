@@ -25,6 +25,8 @@ Go 服务：`kvstore.go`（KVStore）/ `tts.go`（TTS）/ `system.go`（System�
 ## COMMANDS
 
 ```bash
-go build ./... && go vet ./internal/... .
+go build ./internal/... . && go vet ./internal/... .
 go test ./internal/... .
 ```
+
+（`go build ./...` 会扫到 `build/ios` 等移动端包并报 `function main is undeclared`，不要用。）

@@ -17,7 +17,11 @@ func NewMobile() *Mobile { return &Mobile{} }
 func (m *Mobile) Available() bool { return application.System.IsMobile() }
 
 // Speak 原生实时合成。`application.Mobile.Speak` 无返回值（fire-and-forget），
-// 返回 true 表示「已派发」（移动端 OS 保证 TTS 引擎存在）。
+// 故本方法**恒返回 true**，语义仅为「已**派发**」，**不表示**合成 / 播放成功。
+//
+// 两处刻意保留的不对称（前端 `engine/tts/tts.mobile.ts` 按此契约乐观处理）：
+//   - 不校验空文本：传空串同样返回 true（HTTP 路径会先返回 `empty-text`）；
+//   - 不感知失败：Wails 侧无从得知 OS TTS 引擎的实际结果，前端只能乐观判定。
 func (m *Mobile) Speak(text string) bool {
 	application.Mobile.Speak(text)
 	return true

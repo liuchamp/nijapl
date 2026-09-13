@@ -26,7 +26,7 @@
  （Android→`tts-handler.ts`，Wails 宿主→`tts-client.wails.ts`，否则 `tts-client.ts` 调试回退）。
 - `player.ts` 只探测 **Web**（`player.native.ts` 已随迁移删除）；`player.web.ts` 用 DOM `<audio>` + Blob URL，
   `prime()` 必须在用户手势调用栈内同步执行、不得 await / 发网络请求。
-- **M1–M3 + M5 互斥编排必须保留**（**M4 作废**：原生模块已不存在）：无脑先停；所有 `stop()` 幂等；
+- **M1–M3 互斥编排必须保留**（`player.native.ts` 已随迁移删除，无 M4/M5）：无脑先停；所有 `stop()` 幂等；
   **禁止**先查 `isPlaying` 再决定；`player*.ts` / `tts*.ts` **禁止**交叉调用对方 `stop()`（互斥责任在 facade）。
 - 内存 LRU `audio-cache.ts`；并发去重 `inflight.ts`；参数映射 / `cacheKey` 在 `request.ts`。
 - 编码坑（H13）：query 拼装用 `URLSearchParams`（缺失时等价自实现）；Go 侧拼 query 必须

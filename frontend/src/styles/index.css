@@ -98,8 +98,13 @@
  *
  * 原因：`100vw / 750` 会把整站按视口宽度等比放大——1180px 窗口下 1rpx≈1.57px，
  * 正文 `--text-sm`(24rpx) 会涨到 ~38px、间距同步放大，PC 布局不可用。
- * 冻结为 1px 后，`max-w-[calc(480*var(--rpx))]` = 480px，贴近原 420 手机列，
- * 移动端（<768px，真机 / 窄窗）行为**完全不变**。
+ * 冻结为 1px 后，`max-w-[calc(480*var(--rpx))]` = 480px（PRD 选定的内容列宽，
+ * 略宽于原手机列 420px），移动端（<768px，真机 / 窄窗）行为**完全不变**。
+ *
+ * ⚠️ 本文件是全仓唯一 CSS，且断点语法依赖 `vite.config.ts` 的 `build.cssTarget`：
+ * Tailwind v4 内部用 Lightning CSS，未声明 targets 时会把 `min-width` 输出成
+ * `(width>=768px)` 的 L4 range 语法，而 Ubuntu 22.04 的 WebKitGTK 2.36 不支持它，
+ * 会让本断点静默失效。改动构建配置时不要移除 `cssTarget`。
  */
 @media (min-width: 768px) {
   :root {

@@ -4,7 +4,7 @@ TTS 端口实现。选路：`index.ts`（Android→`tts-handler`，Wails 宿主�
 
 ## WHERE TO LOOK
 
-- `index.ts`：三路编排 + M1–M3/M5 互斥（**M4 作废**：`player.native.ts` 已删）。
+- `index.ts`：三路编排 + M1–M3 互斥（`player.native.ts` 已删，无 M4/M5）。
 - `request.ts`：参数映射 / `cacheKey`（6 段 `\0` 连接）；`audio-cache.ts`：内存 LRU；
   `inflight.ts`：在途去重（迟到响应按代际丢弃）。
 - `tts-client.wails.ts`：Go 绑定适配；`tts-handler.ts`：APK `/wails/tts` 转发；

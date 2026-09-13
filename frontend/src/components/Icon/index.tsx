@@ -6,6 +6,7 @@
  * 原始契约不变。颜色语义：`check` → Sage `#8FB89B`、`flame` → Sakura `#F5A8BC`，
  * 其余默认 `currentColor`（跟随文字色，品牌规范 §4）。
  */
+
 import audioSvg from '../../assets/icons/audio.svg?raw'
 import bookSvg from '../../assets/icons/book.svg?raw'
 import calendarSvg from '../../assets/icons/calendar.svg?raw'
@@ -24,27 +25,15 @@ import stagesSvg from '../../assets/icons/stages.svg?raw'
 import starSvg from '../../assets/icons/star.svg?raw'
 import studySvg from '../../assets/icons/study.svg?raw'
 import trophySvg from '../../assets/icons/trophy.svg?raw'
+import type { IconName } from '../../constants/icons.js'
 
-/** 18 个品牌图标名称（与 `assets/icons/*.svg` 一一对应）。 */
-export type IconName =
-  | 'audio'
-  | 'book'
-  | 'calendar'
-  | 'check'
-  | 'chevron-left'
-  | 'chevron-right'
-  | 'close'
-  | 'flame'
-  | 'graph'
-  | 'home'
-  | 'plus'
-  | 'review'
-  | 'search'
-  | 'settings'
-  | 'stages'
-  | 'star'
-  | 'study'
-  | 'trophy'
+/**
+ * 图标名联合类型 —— **真相源在 `constants/icons.ts`**（与 `assets/icons/*.svg` 一一对应，
+ * 18 个）。此处 re-export 仅为兼容既有 `import type { IconName } from '.../Icon/index.js'`
+ * 的调用方；新增图标请改 `constants/icons.ts` 的 `ICON_NAMES`，`SVG_MAP` 会因
+ * `Record<IconName, string>` 约束而编译期报错，漏不掉。
+ */
+export type { IconName }
 
 /** SVG 原文映射（`?raw` 导入，零运行时 fetch）。 */
 const SVG_MAP: Record<IconName, string> = {

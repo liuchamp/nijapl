@@ -10,6 +10,8 @@
 - 系统设计 / 迁移规格：`docs/design/ARCH-系统设计.md`、`docs/migration/spec-*.md`
 - 迁移差异与保真决策：`docs/migration/PORTING-NOTES.md`、`docs/migration/PLAN.md`（§9 红线）
 - 学习交互全图：`docs/design/learning-flow.mermaid`
+- TTS 集成细则：`docs/design/TTS-集成方案.md`（v3.0，降级链 / M1–M3 互斥 / 超时重试口径以它为准）
+- 多平台升级：`docs/design/ARCH-多平台升级.md`（Android / iOS 增量，含 `TTS_BASE_URL` 烘入）
 - 品牌图标规范：`docs/design/BRAND-Nijapl-品牌规范.md`（`components/Icon` 语义色依据）
 
 ## 常用命令
@@ -34,8 +36,13 @@
 ## 提交前门禁
 
 - 前端：`cd frontend && npm run typecheck && npm run check && npm test` 必须全绿。
-- Go 改动：`go build ./... && go vet ./internal/... .`（另跑 `go test ./internal/... .`；
+- Go 改动：`go build ./internal/... . && go vet ./internal/... .`（另跑 `go test ./internal/... .`；
   真实 TTS 集成用例在服务不可达时自动跳过、并在报告中标注「未执行」）。
+  **不要用 `go build ./...`**：移动端入口带构建标签（`build/ios/main_ios.go` = `//go:build ios`、
+  `build/android/main_android.go` = `//go:build android`），无标签时 `build/ios` 只剩
+  `app_options_default.go`（`//go:build !ios`，无 `func main()`），必然报
+  `function main is undeclared in the main package`（`build/android` 则被 `./...` 静默跳过）。
+  移动端包需单独带标签构建（如 `go build -tags ios ./build/ios`），且依赖对应平台 SDK / CGO 工具链。
 
 ## 目录结构
 
@@ -92,6 +99,7 @@ docs/                       设计 / 迁移 / PRD / QA / 评审
   词=`kana`、例句=`sentence.ja`；词性用显式枚举（`constants/pos.ts`），禁止单字匹配。
 - **禁止硬编码**：中文 UI 文案一律 `constants/strings.ts`（`STRINGS.*`）；TTS 地址一律
   `constants/tts.ts` 的 `TTS_BASE_URL`（业务代码禁止出现 IP / 域名字面量）。
+  地址覆盖优先级：`NIJAPL_TTS_BASE_URL` 环境变量 > 构建期 `TTS_BASE_URL` 烘入 > 默认值（见 README）。
 - **不要"顺手修好"**：要求与原 Lynx 行为逐处一致，包括反直觉之处；红线清单见
    `docs/migration/PLAN.md` §9。已知有意保留项：Quiz 无入口、Graph 暗色下白圈边线、
    TTS 降级时 `.WordCard-reveal` 被压窄（18 个 SVG 图标**已**按品牌规范接入 `components/Icon`，不再是保留项）。

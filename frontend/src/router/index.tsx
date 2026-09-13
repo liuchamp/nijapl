@@ -33,7 +33,13 @@ function NarrowShell() {
   )
 }
 
-/** 宽窗（≥768px）：左侧栏 + 居中限宽内容区（贴近原 420 手机列）。 */
+/**
+ * 宽窗（≥768px）：左侧栏 + 居中限宽内容区。
+ *
+ * 内容列宽 **480rpx**（PRD §响应式方案；宽屏下 `--rpx` 已冻结为 1px，即 480px）。
+ * 注意与原手机列 **420px 并非同一个值**——480 是 PRD 选定的、略宽于原列的阅读宽度，
+ * 见 `styles/index.css` 末段的断点说明。
+ */
 function WideShell() {
   return (
     <div className="Shell flex-1 flex flex-row w-full min-h-0 overflow-hidden">

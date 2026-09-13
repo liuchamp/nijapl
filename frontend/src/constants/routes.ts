@@ -1,4 +1,5 @@
 import type { GraphMode } from '../types/graph.js'
+import type { IconName } from './icons.js'
 
 /**
  * 路由路径唯一来源（架构 §8.2）。
@@ -41,7 +42,8 @@ export type RouteKey = keyof typeof ROUTES
 export interface TabDefinition {
   path: string
   label: string
-  icon: string
+  /** 图标名；用 `IconName` 而非 `string`，拼错在 `tsc` 阶段即报错。 */
+  icon: IconName
 }
 
 /**
@@ -83,8 +85,8 @@ export type SidebarAction =
 export interface SidebarItem {
   /** 导航动作（决定文案与跳转）。 */
   action: SidebarAction
-  /** 图标名（`components/Icon` 的 18 个品牌图标之一）。 */
-  icon: string
+  /** 图标名（`components/Icon` 的 18 个品牌图标之一）；用 `IconName` 而非 `string`，拼错在 `tsc` 阶段即报错。 */
+  icon: IconName
   /** 活跃态判定的**路径前缀**（取最长匹配，见 `matchSidebarAction`）。 */
   match: string
 }

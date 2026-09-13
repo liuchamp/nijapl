@@ -32,8 +32,8 @@
 | 播放通道 | 原生 `playBytes` / Web `<audio>`（待实测 V-6） | **DOM `<audio>` + Blob URL**（`player.web.ts`，见 §4）；`speechSynthesis` 退居兜底 |
 | 列表 / 分页 | `<list>` + `<viewpager>`（含 Web 降级） | `<ul>/<li>/div` + **CSS `scroll-snap` 横滑**；`platform.ts` / `pagerSeek.ts` / `swipe.ts` 已删 |
 | SVG / 手势 | `<svg content={string}>` + `'main thread'` + `setStyleProperty` | `dangerouslySetInnerHTML`（纯函数 `toSvg`，仅数字坐标）+ `ref.style.transform`（px，见 §7/§9） |
-| 单位 | `rpx`（Lynx 原生） | CSS 照写 `rpx`，**构建期 PostCSS 改写**为 `calc(N * var(--rpx))`（见 §9） |
-| 样式 | 内联 `style` 为主 + `<text>` | `className(.css)` 为主 + 少量内联；`<div>/<span>`；`body` 14px 对齐（见 §9） |
+| 单位 | `rpx`（Lynx 原生） | `rpx` **语义保留**，经 Tailwind v4 落地：`--spacing: calc(1 * var(--rpx))`，故 `p-24` ≡ 24rpx（原 PostCSS 改写插件已删，见 §9） |
+| 样式 | 内联 `style` 为主 + `<text>` | **Tailwind v4 工具类**为主（原各 `index.css` 已全量迁移并删除）+ 语义类名锚点；`<div>/<span>`；`body` 14px 对齐（见 §9） |
 | 数据域 | 仅 W 域（词 / 语法 / 例句） | **W 域 + K 域（五十音，104 音 / 12 关）**并存、相互隔离（见 §6） |
 | 任务分解 | T01–T05（Lynx 施工顺序） | 作废，见 §11 |
 
@@ -45,7 +45,7 @@
 
 | 层 | 选型 | 版本 / 说明 |
 |---|---|---|
-| 桌面宿主 | **Wails v3** | `go 1.25.0`，`wailsapp/wails/v3 v3.0.0-beta.20`；入口 `main.go`（窗口 420×860，见 §3） |
+| 桌面宿主 | **Wails v3** | `go 1.25.0`，`wailsapp/wails/v3 v3.0.0-beta.20`；入口 `main.go`（窗口 1180×800 / 最小 900×640，见 §3） |
 | 前端框架 | **React 18** + Vite | `react/react-dom ^18.2.0`，`vite ^8.0.5` + `@vitejs/plugin-react ^6.0.0` + `@wailsio/runtime/plugins/vite`；`frontend` 单独 `npm run dev` 端口 **9245** |
 | 路由 | **`react-router@6` + `MemoryRouter`** | `react-router ^6.28.0`；桌面无地址栏，规避 `wails://` 路径问题；**不用 `<Link>`/`<NavLink>`**，统一 `useNavigate()` |
 | 状态 | **zustand v4 vanilla** | `zustand ^4.5.5`；`createStore` + `persist` + 自研 `portableStorage`（见 §5）。**不升 v5**：与 Lynx 版同版本，最小改动搬运 |
@@ -112,9 +112,9 @@ frontend/src/engine/             wails.ts + 纯引擎（srs/progress/jumpRules/c
 frontend/src/engine/tts|storage/ 端口 facade + 平台实现
 frontend/src/store/              index/actions/selectors/hooks/persistence
 frontend/src/services/           studySession/jumpService/ttsController/quiz/highlight/graphNav/grammarView/ttsPrefetch/clipboard
-frontend/src/pages/              P0–P9（每页一目录：index.tsx + index.css）
-frontend/src/components/         TabBar/WordCard/TtsButton/DetailSheet/ProgressRing/GraphCanvas/StatTimeline/NodeStateBadge/GrammarHighlightText
-frontend/src/constants/          routes/strings/theme/srs/pos/tts/jumpRules/kana
+frontend/src/pages/              P0–P9 + K 域 Kana/KanaStudy/KanaQuiz（每页一目录，仅 index.tsx；样式走 Tailwind 工具类）
+frontend/src/components/         TabBar/Sidebar/WordCard/TtsButton/DetailSheet/ProgressRing/GraphCanvas/StatTimeline/GrammarHighlightText/Icon/Kana*
+frontend/src/constants/          routes/strings/theme/srs/pos/tts/jumpRules/kana/icons
 frontend/src/types/              domain/graph/progress/ports/tts/kana (+index barrel)
 frontend/src/data/               repository（索引 frontend/data/build/*.json）
 frontend/data/source/seed|kana/  种子 TS；frontend/scripts/gen-data/ 为 seed→JSON 管线
@@ -124,12 +124,14 @@ frontend/bindings/               wails3 生成物（不入库）
 
 ## 3. Go 侧服务（`main.go` + `internal/`）
 
-`main.go` 注册 3 个服务并给出 420×860 竖屏窗口（`--rpx: calc(100vw / 750)` 的视觉基准，
-`BackgroundColour #0b1020`，macOS 隐藏式标题栏）：
+`main.go` 注册 **4** 个服务并给出 **1180×800（最小 900×640）** 窗口（`--rpx: calc(100vw / 750)`
+的视觉基准；`≥768px` 时由 `frontend/src/styles/index.css` 冻结为 `1px`，见 T05 响应式），
+`BackgroundColour #0b1020`，macOS 隐藏式标题栏：
 
 - `services.NewKVStore()` —— 替代 `NativeModules.LynxStorage`；
 - `services.NewTTS()`（`Route: "/wails/tts"`）—— 替代前端 `fetch` 直连，规避桌面 WebView 同源策略；
-- `services.NewSystem()` —— 替代 `SystemInfo` / `lynx.setClipboardData`。
+- `services.NewSystem()` —— 替代 `SystemInfo` / `lynx.setClipboardData`；
+- `services.NewMobile()` —— 移动端原生能力（实时 TTS / 屏幕常亮 / 触觉 / 安全区）经 `application.Mobile` 转发；桌面由 `mobile_stub.go`（`//go:build !ios && !android`）提供 no-op，故无需 build tag。
 
 | 服务 | API（永不抛错到前端） | 要点 |
 |---|---|---|
@@ -171,8 +173,10 @@ frontend/bindings/               wails3 生成物（不入库）
 - 迟到响应丢弃：`speak()`/`stop()` 递增 `gen`，过期结果返回良性成功不出声、不误报文案。
 - 内部件：`request.ts`（参数映射 + `cacheKey`，`buildSpeechUrl` 必须 `URLSearchParams`）、
   `audio-cache.ts`（内存 LRU 条目 + 字节双限，淘汰 revoke `objectUrl`）、`inflight.ts`（singleflight，失败不缓存）。
-- 运行时探测：`engine/wails.ts` 的 `hasWailsRuntime()`（`window._wails.environment` 存在性）与
-  `isAndroid()`（UA 守卫式探测，永不 throw）。
+- 运行时探测（`engine/platform/index.ts`；原 `engine/wails.ts` 已并入并删除）：`hasWailsRuntime()`
+  （`window._wails.environment` 存在性，**实时读取、不缓存**）与 `detectPlatform()`（守卫式，永不 throw；
+  宿主 `_wails.environment.OS` 优先，缺失时 UA 兜底）。注意 `detectPlatform()` **不锁定 UA 兜底得到的
+  `'web'`**——桌面 Wails 的 UA 与普通浏览器无法区分，锁定会让它与 `hasWailsRuntime()` 永久背离。
 - `services/clipboard.ts`（**端口外例外**）：优先 `navigator.clipboard.writeText`，再兜底 Go `System.SetClipboard`；
   都不可用返回 `false`，由 P9 导出给出明确降级展示。
 
@@ -247,13 +251,17 @@ frontend/bindings/               wails3 生成物（不入库）
   `/vocab/:wordId`（P3）/ `/grammar/:grammarId`（P5）/ `/graph`（P6，`?view=overview|word|grammar&focus=:id`）/
   `/quiz`（P8，**已实现但无入口**，保真红线）为二级。路径唯一来源 `constants/routes.ts`
   （含 `studyPath/vocabPath/grammarDetailPath/graphPath` 构造器与 `isTabPath`）。
-- 外壳（`App.tsx` + `router/index.tsx` + `App.css`）：hydration 未完成渲染极简 Splash
- （`JLPT N3 単語` / `正在恢复学习进度…`）；完成后挂载 `MemoryRouter` + `AppShell`
-  （`.Shell` 纵向 flex，`.Shell-content` `overflow-y:auto` 滚动、TabBar 固定底部，决策 D）。
-  TabBar 5 项（110rpx 高，整格选中底 `rgba(91,140,255,0.16)`，无图标）。
-- 样式：CSS 直接写 `rpx`，`vite.config.ts` PostCSS 在构建期改写为 `calc(N * var(--rpx))`
- （`--rpx: calc(100vw / 750)`，`<320px` 退化 `0.5px`）；**JS 尺寸常量**（`constants/theme.ts`）必须手写
-  `'calc(N * var(--rpx))'`（不经 PostCSS，`'Nrpx'` 在浏览器无效）。设计令牌 CSS 变量与 JS 常量同名双份。
+- 外壳（`App.tsx` + `router/index.tsx`；原 `App.css` 已迁移删除）：hydration 未完成渲染极简 Splash
+ （`JLPT N3 単語` / `正在恢复学习进度…`）；完成后挂载 `MemoryRouter` + `AppShell`，按窗口宽度二选一：
+  `<768px` → `NarrowShell`（纵向 flex + `overflow-y:auto` 内容区 + TabBar 固定底部，决策 D）；
+  `≥768px` → `WideShell`（左侧 `Sidebar` + 居中限宽 480rpx 内容区，**不渲染 TabBar**，T05 决策 5）。
+  切换由 `router/useIsWide.ts` 的 `matchMedia('(min-width: 768px)')` 判定（JS 分支，非 CSS 断点）。
+  TabBar 5 项（110rpx 高，整格选中底 `rgba(91,140,255,0.16)`，**图标经 `components/Icon` 接入**）。
+- 样式：**全量 Tailwind v4**（`src/styles/index.css` 是全仓唯一 CSS 文件）。数字工具类基于
+ `--spacing: calc(1 * var(--rpx))`，故 `p-24` ≡ 24rpx、`gap-8` ≡ 8rpx；`--rpx: calc(100vw / 750)`，
+ `≥768px` 冻结为 `1px`、`<320px` 退化 `0.5px`（后两者见该文件末段的两个 `@media`）。
+ 原 PostCSS `rpxPlugin` 已从 `vite.config.ts` 移除——**内联 `style` 里禁止裸 `rpx`**（会被浏览器
+ 整条丢弃）；**JS 尺寸常量**（`constants/theme.ts`）手写 `'calc(N * var(--rpx))'`。
   `body` 显式 `font-size: 14px` 对齐 Lynx 默认字号；字体栈
   `PingFang SC, MiSans, Noto Sans JP, …`；`div/span` 统一 `box-sizing: border-box`。
 - Lynx→Web 语义补齐（PORTING-NOTES §3）：含多 `<span>` / `<svg>` 的容器补
